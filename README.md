@@ -1,6 +1,6 @@
 SWP2 Codename: Stegano
 =====================
 
-Projectmembers:
+#Projectmembers:
 * Niki Hausammann
 * Renato Estermann
