@@ -1,4 +1,4 @@
-SWP Codename: Stegano
+SWP2 Codename: Stegano
 =====================
 
 Projectmembers:
