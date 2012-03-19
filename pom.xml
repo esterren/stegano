@@ -36,33 +36,32 @@
 	</dependencies>
 	<build>
 		<plugins>
-	    	<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-        			<formats>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<formats>
 						<format>xml</format>
 					</formats>
-          			<instrumentation>
-            			<!--ignores>
-              				<ignore>ch.hszt.groupf.fallstudie.client.gui*</ignore>
-            			</ignores-->
-            			<excludes>
-            			    <exclude>ch/zhaw/swp2/stegano/gui/*.class</exclude>
-              				<!--exclude>com/example/dullcode/**/*.class</exclude-->
-              				<!--exclude>com/example/**/*Test.class</exclude-->
-            			</excludes>
-          			</instrumentation>
-        		</configuration>
-                <executions>
-          			<execution>
-            			<goals>
-              				<goal>clean</goal>
-            			</goals>
-          			</execution>
-        		</executions>
-            </plugin>
+					<instrumentation>
+						<!--ignores> <ignore>ch.hszt.groupf.fallstudie.client.gui*</ignore> 
+							</ignores -->
+						<excludes>
+							<exclude>ch/zhaw/swp2/stegano/gui/*.class</exclude>
+							<!--exclude>com/example/dullcode/**/*.class</exclude -->
+							<!--exclude>com/example/**/*Test.class</exclude -->
+						</excludes>
+					</instrumentation>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -99,12 +98,12 @@
 		</plugins>
 	</build>
 	<reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.5.1</version>
-      </plugin>
-    </plugins>
-  </reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.1</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
