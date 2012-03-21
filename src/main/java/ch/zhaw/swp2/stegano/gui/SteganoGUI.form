@@ -23,7 +23,6 @@
                   <KeyStroke key="Ctrl+I"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Import Message-File"/>
-                <Property name="actionCommand" type="java.lang.String" value="Import Message-File"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -38,6 +37,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Stegano"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="_jMenuBar1"/>

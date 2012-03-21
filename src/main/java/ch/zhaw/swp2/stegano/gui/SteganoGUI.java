@@ -10,15 +10,23 @@
  */
 package ch.zhaw.swp2.stegano.gui;
 
+import ch.zhaw.swp2.stegano.controller.Controller;
+import ch.zhaw.swp2.stegano.controller.IfcUserInterface;
+
 /**
  *
  * @author rest
  */
-public class SteganoGUI extends javax.swing.JFrame {
+public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
 
+    private final Controller _controller;
     /** Creates new form SteganoGUI */
-    public SteganoGUI() {
+    public SteganoGUI(Controller inController)  {
+        
+        _controller = inController;
+        init();
         initComponents();
+        setVisible(true);
     }
 
     /** This method is called from within the constructor to
@@ -37,6 +45,7 @@ public class SteganoGUI extends javax.swing.JFrame {
         _jMenuEdit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Stegano");
 
         _jMenuFile.setText("File");
 
@@ -46,7 +55,6 @@ public class SteganoGUI extends javax.swing.JFrame {
 
         jMenuItemIM.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemIM.setText("Import Message-File");
-        jMenuItemIM.setActionCommand("Import Message-File");
         _jMenuFile.add(jMenuItemIM);
 
         _jMenuBar1.add(_jMenuFile);
@@ -73,7 +81,7 @@ public class SteganoGUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void init() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -99,9 +107,7 @@ public class SteganoGUI extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
-                new SteganoGUI().setVisible(true);
             }
         });
     }
@@ -112,4 +118,14 @@ public class SteganoGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem _jMenuItemOB;
     private javax.swing.JMenuItem jMenuItemIM;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void displayBaseFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void displayModBaseFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
