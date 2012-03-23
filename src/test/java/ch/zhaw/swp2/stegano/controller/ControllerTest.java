@@ -21,7 +21,7 @@ public class ControllerTest {
 	public void setUp() throws Exception {
 		_ctrl = new Controller() {
 			@Override
-			protected IfcUserInterface getNewSteganoGUI(Controller inController) {
+			protected IfcUserInterface getNewSteganoGUI() {
 				return _userInterface;
 			}
 		};
