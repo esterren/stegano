@@ -43,8 +43,10 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jTabbedPane3 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
         _jLabelBaseFile = new javax.swing.JLabel();
         _jLabelBaseFilePath = new javax.swing.JLabel();
         _jLabelHiddenFile = new javax.swing.JLabel();
@@ -60,8 +62,41 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Stegano");
 
-        jTabbedPane1.addTab("Hidden in Picture", jTabbedPane2);
-        jTabbedPane1.addTab("Hidden in Audio", jTabbedPane3);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Hidden in Picture", jPanel1);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1088, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 612, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Hidden in Audio", jPanel2);
 
         _jLabelBaseFile.setText("Basefile-Path:");
 
@@ -86,7 +121,6 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
 
         jMenuItemIH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemIH.setText("Import Hiding-File");
-        jMenuItemIH.setActionCommand("Import Hiding-File");
         jMenuItemIH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importHiddenFileActionListener(evt);
@@ -108,9 +142,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1057, Short.MAX_VALUE)
-                        .addContainerGap())
+                    .addComponent(jTabbedPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(_jLabelBaseFile)
@@ -118,13 +150,10 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(_jLabelHiddenFilePath)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(_jLabelBaseFilePath)
-                                .addContainerGap(948, Short.MAX_VALUE))))
+                            .addComponent(_jLabelBaseFilePath)))
                     .addComponent(jButton1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 1057, Short.MAX_VALUE)
-                        .addContainerGap())))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 1093, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,13 +179,20 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
     }// </editor-fold>//GEN-END:initComponents
 
 private void importBaseFileActionlistener(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importBaseFileActionlistener
-    _baseFile = openFileChooser();
-    _jLabelBaseFilePath.setText(_baseFile.getAbsolutePath());
+
+    File file = openFileChooser();
+    if(file != null){
+        _baseFile = file;
+        _jLabelBaseFilePath.setText(_baseFile.getAbsolutePath());        
+    }
 }//GEN-LAST:event_importBaseFileActionlistener
 
 private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importHiddenFileActionListener
-    _hiddenFile = openFileChooser();
-    _jLabelHiddenFilePath.setText(_hiddenFile.getAbsolutePath());
+    File file = openFileChooser();
+    if(file != null){
+        _hiddenFile = file;
+        _jLabelHiddenFilePath.setText(_hiddenFile.getAbsolutePath());        
+    }
 }//GEN-LAST:event_importHiddenFileActionListener
 
     /**
@@ -203,10 +239,12 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {//G
     private javax.swing.JMenuItem _jMenuItemOB;
     private javax.swing.JButton jButton1;
     private javax.swing.JMenuItem jMenuItemIH;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTabbedPane jTabbedPane3;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -225,7 +263,10 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {//G
     private File openFileChooser(){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(false);
-        fileChooser.showOpenDialog(this);
-        return fileChooser.getSelectedFile();
+        int returnValue = fileChooser.showOpenDialog(this);
+        if(returnValue== JFileChooser.APPROVE_OPTION){
+            return fileChooser.getSelectedFile();      
+        }
+        return null;
     }
 }
