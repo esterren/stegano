@@ -13,7 +13,12 @@ package ch.zhaw.swp2.stegano.gui;
 import ch.zhaw.swp2.stegano.controller.Controller;
 import ch.zhaw.swp2.stegano.controller.IfcUserInterface;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 
 /**
@@ -24,6 +29,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
 
     private File _baseFile;
     private File _hiddenFile;
+    private BufferedImage _baseImg;
     
     /** Creates new form SteganoGUI */
     public SteganoGUI()  {
@@ -54,10 +60,11 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
         jButton1 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         _jMenuBar1 = new javax.swing.JMenuBar();
-        _jMenuFile = new javax.swing.JMenu();
+        _jMenuHideInfo = new javax.swing.JMenu();
         _jMenuItemOB = new javax.swing.JMenuItem();
-        jMenuItemIH = new javax.swing.JMenuItem();
-        _jMenuEdit = new javax.swing.JMenu();
+        _jMenuItemIH = new javax.swing.JMenuItem();
+        _jMenuSeekInfo = new javax.swing.JMenu();
+        _jMenuItemMBF = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Stegano");
@@ -108,30 +115,35 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface{
 
         jButton1.setText("Run Steganographie");
 
-        _jMenuFile.setText("File");
+        _jMenuHideInfo.setText("Hide");
 
         _jMenuItemOB.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        _jMenuItemOB.setText("Import Basefile");
+        _jMenuItemOB.setText("Import Base-File");
         _jMenuItemOB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importBaseFileActionlistener(evt);
             }
         });
-        _jMenuFile.add(_jMenuItemOB);
+        _jMenuHideInfo.add(_jMenuItemOB);
 
-        jMenuItemIH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemIH.setText("Import Hiding-File");
-        jMenuItemIH.addActionListener(new java.awt.event.ActionListener() {
+        _jMenuItemIH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        _jMenuItemIH.setText("Import Hidden-File");
+        _jMenuItemIH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importHiddenFileActionListener(evt);
             }
         });
-        _jMenuFile.add(jMenuItemIH);
+        _jMenuHideInfo.add(_jMenuItemIH);
 
-        _jMenuBar1.add(_jMenuFile);
+        _jMenuBar1.add(_jMenuHideInfo);
 
-        _jMenuEdit.setText("Edit");
-        _jMenuBar1.add(_jMenuEdit);
+        _jMenuSeekInfo.setText("Seek");
+
+        _jMenuItemMBF.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        _jMenuItemMBF.setText("Import modified Base-File");
+        _jMenuSeekInfo.add(_jMenuItemMBF);
+
+        _jMenuBar1.add(_jMenuSeekInfo);
 
         setJMenuBar(_jMenuBar1);
 
@@ -185,6 +197,15 @@ private void importBaseFileActionlistener(java.awt.event.ActionEvent evt) {//GEN
         _baseFile = file;
         _jLabelBaseFilePath.setText(_baseFile.getAbsolutePath());        
     }
+    //TODO Check for PNG and BMP Images => Validator
+        try {
+            _baseImg = ImageIO.read(_baseFile);
+        } catch (IOException ex) {
+            Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    
 }//GEN-LAST:event_importBaseFileActionlistener
 
 private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importHiddenFileActionListener
@@ -234,11 +255,12 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {//G
     private javax.swing.JLabel _jLabelHiddenFile;
     private javax.swing.JLabel _jLabelHiddenFilePath;
     private javax.swing.JMenuBar _jMenuBar1;
-    private javax.swing.JMenu _jMenuEdit;
-    private javax.swing.JMenu _jMenuFile;
+    private javax.swing.JMenu _jMenuHideInfo;
+    private javax.swing.JMenuItem _jMenuItemIH;
+    private javax.swing.JMenuItem _jMenuItemMBF;
     private javax.swing.JMenuItem _jMenuItemOB;
+    private javax.swing.JMenu _jMenuSeekInfo;
     private javax.swing.JButton jButton1;
-    private javax.swing.JMenuItem jMenuItemIH;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
