@@ -36,4 +36,9 @@ public class ControllerTest {
 		assertTrue(true);
 
 	}
+
+	@Test
+	public void actionPerformedRunStegano() {
+
+	}
 }
