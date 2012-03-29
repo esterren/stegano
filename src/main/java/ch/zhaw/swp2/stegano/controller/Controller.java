@@ -36,7 +36,7 @@ public class Controller {
 
 	private void onRunStegano() {
 		_steganoStrategy = new InPictureStrategy();
-		_steganoStrategy.runHide(_userInterface.getBaseFile(), _userInterface.getHiddenFile());
+		_steganoStrategy.runHide(_userInterface.getBaseFile(), _userInterface.getHiddenFile(), 1);
 
 	}
 }
