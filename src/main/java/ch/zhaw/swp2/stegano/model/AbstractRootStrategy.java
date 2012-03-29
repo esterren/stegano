@@ -13,16 +13,17 @@ public abstract class AbstractRootStrategy implements SteganoStrategy {
 
 		// TODO switch statement for diverent Image extensions
 		// TODO Error Handling, Exception throw
-		if (FileNameFactory.getExtension(inBasefile).equals("png") || this instanceof InPictureStrategy) {
-			_baseFile = inBasefile;
-
-		}
+		// if (FileNameFactory.getExtension(inBasefile).equals("png") || this
+		// instanceof InPictureStrategy) {
+		// _baseFile = inBasefile;
+		//
+		// }
 
 		// TODO define Header (extension + length) based on HiddenFile
 		// TODO Implement Strategy Pattern for different HiddenFileTypes
 		// TODO Error Handling, Exception throw
-		if (FileNameFactory.getExtension(inHiddenFile).equals("txt")) {
-			_hiddenFile = inHiddenFile;
-		}
+		// if (FileNameFactory.getExtension(inHiddenFile).equals("txt")) {
+		// _hiddenFile = inHiddenFile;
+		// }
 	}
 }

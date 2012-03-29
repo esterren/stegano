@@ -38,7 +38,8 @@ public class InPictureTest {
 
 	@Test
 	public void testInPictureStrategy() {
-		_inPictureStrategy = new InPictureStrategy(_testBaseFile1, _testBaseFile1);
+		// _inPictureStrategy = new InPictureStrategy(_testBaseFile1,
+		// _testBaseFile1);
 	}
 
 }
