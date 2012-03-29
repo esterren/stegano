@@ -12,7 +12,7 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	@Override
-	public File runHide(File inBaseFile, File inHiddenFile) {
+	public File runHide(File inBaseFile, File inHiddenFile, int inPollution) {
 		if (inBaseFile == null || inHiddenFile == null) {
 			throw new IllegalArgumentException();
 		}

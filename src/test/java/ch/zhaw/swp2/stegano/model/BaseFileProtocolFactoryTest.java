@@ -10,19 +10,19 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
-public class InPictureTest {
+public class BaseFileProtocolFactoryTest {
 
 	@Rule
 	public TemporaryFolder _tmpFolder = new TemporaryFolder();
 	@Rule
 	public ExpectedException _exception = ExpectedException.none();
 
-	private File _testBaseFile1;
-	private File _testHiddenFile1;
-
+	private FileNameFactory _feFactory;
+	private File _testHFile1;
+	private File _testBFile1;
+	private File _testHFile2;
+	private File _testBFile2;
 	private File _testFileNull;
-
-	private SteganoStrategy _inPictureStrategy;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -30,11 +30,12 @@ public class InPictureTest {
 
 	@Before
 	public void setUp() throws Exception {
-		_inPictureStrategy = new InPictureStrategy();
-		_testBaseFile1 = _tmpFolder.newFile("test.png");
-		_testHiddenFile1 = _tmpFolder.newFile("test.txt");
-
+		_testHFile1 = _tmpFolder.newFile("test.txt");
+		_testBFile1 = _tmpFolder.newFile("FirstPicture.png");
+		_testHFile2 = _tmpFolder.newFile("TEST.TXT");
+		_testHFile2 = _tmpFolder.newFile("FirstPicture.bmp");
 		_testFileNull = null;
+
 	}
 
 	@After
@@ -42,15 +43,10 @@ public class InPictureTest {
 	}
 
 	@Test
-	public void testInPictureStrategy() {
-		// _inPictureStrategy = new InPictureStrategy(_testBaseFile1,
-		// _testBaseFile1);
-	}
+	public void testGenerateHeaderWithNull() {
 
-	@Test
-	public void testRunHideWithNull() {
 		_exception.expect(IllegalArgumentException.class);
-		_inPictureStrategy.runHide(_testFileNull, _testFileNull, 0);
+		BaseFileProtocolFactory.generateHeader(_testFileNull, _testFileNull);
 	}
 
 }

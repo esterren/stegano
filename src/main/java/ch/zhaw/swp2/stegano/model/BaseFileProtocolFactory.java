@@ -24,6 +24,9 @@ public final class BaseFileProtocolFactory {
 	 */
 	public static final byte[] generateHeader(File inBaseFile, File inHiddenFile) {
 
+		if (inBaseFile == null || inHiddenFile == null) {
+			throw new IllegalArgumentException();
+		}
 		return null;
 	}
 

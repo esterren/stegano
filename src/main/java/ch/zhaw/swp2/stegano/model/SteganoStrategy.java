@@ -13,9 +13,11 @@ public interface SteganoStrategy {
 	 *            The BaseFile on which the Algorithm will process the hiding.
 	 * @param inHiddenFile
 	 *            The File to hide.
+	 * @param pollution
+	 * 
 	 * @return is the modified BaseFile with the hidden Information
 	 */
-	public File runHide(File inBaseFile, File inHiddenFile);
+	public File runHide(File inBaseFile, File inHiddenFile, int pollution);
 
 	/**
 	 * This Method is called by the Controller to run the Staganographie
