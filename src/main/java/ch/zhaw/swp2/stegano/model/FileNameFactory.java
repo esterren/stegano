@@ -29,9 +29,9 @@ public class FileNameFactory {
 		String fileName = inFile.getName();
 		int index = fileName.lastIndexOf('.');
 
-		if (index > 0 && index < fileName.length() - 1)
+		if (index > 0 && index < fileName.length() - 1) {
 			extension = fileName.substring(index + 1).toLowerCase();
-
+		}
 		if (extension == null) {
 			return "";
 		}
