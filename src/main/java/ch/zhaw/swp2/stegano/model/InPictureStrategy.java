@@ -1,27 +1,15 @@
 package ch.zhaw.swp2.stegano.model;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
 public class InPictureStrategy implements SteganoStrategy {
-
-	private File _baseFile;
-	private BufferedImage _baseFileImg;
-	private File _hiddenFile;
-	private File _modBaseFile;
-	private BufferedImage _modBaseFileImg;
-	private byte _pollution;
-	private byte[] _byteHiddenFile;
-	private byte[] _header;
 
 	public InPictureStrategy() {
 		// super(inBaseFile, inHiddenFile);
@@ -32,18 +20,82 @@ public class InPictureStrategy implements SteganoStrategy {
 		if (inBaseFile == null || inHiddenFile == null) {
 			throw new IllegalArgumentException();
 		}
-		_pollution = inPollution;
-		_baseFile = inBaseFile;
-		_hiddenFile = inHiddenFile;
 
-		_header = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(_hiddenFile),
-				getLengthHF(_hiddenFile), _pollution);
-		_baseFileImg = ImageIO.read(_baseFile);
-		_modBaseFileImg = new BufferedImage(_baseFileImg.getWidth(), _baseFileImg.getHeight(),
-				BufferedImage.TYPE_3BYTE_BGR);
-		_modBaseFileImg = getModBaseFileImg();
+		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
+				getLengthHF(inHiddenFile), inPollution);
 
-		return _modBaseFileImg;
+		BufferedImage baseFileImg = ImageIO.read(inBaseFile);
+		byte[] bHiddenFile = getByteArrayFromHiddenFile(inHiddenFile);
+		byte[] msg = concatHeaderAndHF(bHeader, bHiddenFile);
+		// _baseFileImg = ImageIO.read(inBaseFile);
+		// _modBaseFileImg = new BufferedImage(_baseFileImg.getWidth(),
+		// _baseFileImg.getHeight(),
+		// BufferedImage.TYPE_3BYTE_BGR);
+
+		// byte[] byteMBFImg = getByteArrayFromImage(_baseFileImg);
+		// byte[] byteMBFImg = getModBaseFileImg();
+
+		// InputStream in = new ByteArrayInputStream(byteMBFImg);
+		// return ImageIO.read(in);
+		// _modBaseFileImg =
+		// Toolkit.getDefaultToolkit().createImage(byteMBFImg);
+
+		return hideMessage(baseFileImg, msg);
+	}
+
+	private BufferedImage hideMessage(BufferedImage img, byte[] message) {
+
+		// Text in Bytes umwandeln
+		byte[] b = message;
+		// Farbkanal
+		Color channel = Color.RED;
+		// Alle Bytes durchlaufen
+		for (int i = 0, x = 0, y = 0; i < b.length; i++) {
+			// Alle Bits durchlaufen
+			for (int j = 7; j > -1; j--) {
+
+				// Wert des Bits auslesen
+				int bit = ((b[i] & 0xFF) >> j) & 1;
+				// Farbe an der aktuellen Position auslesen
+				int rgb = img.getRGB(x, y);
+				// Den aktuellen Farbkanal auslesen
+				int color = (rgb >> channel.getShift()) & 0xFF;
+
+				// Farbkanal manipulieren
+				if ((color & 1) != bit) {
+					// Den ausgelesenen Farbkanal der Farbe auf 0 setzen
+					rgb &= channel.getRGBManipulator();
+					switch (bit) {
+					case 1:
+						color = color + 1;
+						break;
+					default:
+						color = color - 1;
+					}
+					// Farbkanal zurückschreiben
+					rgb |= color << channel.getShift();
+					img.setRGB(x, y, rgb);
+				}
+
+				// nächsten Farbkanal setzen
+				channel = channel.getNext();
+				// Falls Farbkanal = RED => X-Position verändern
+				if (channel.equals(Color.RED)) {
+					x++;
+					// Falls x größer als Breite des Bildes => Y-Positon
+					// verändern
+					if (x >= img.getWidth()) {
+						x = 0;
+						y++;
+						// Falls y größer als Höhe des Bildes => Fehler
+						if (y >= img.getHeight()) {
+							return null;
+						}
+					}
+				}
+			}
+		}
+		return img;
 	}
 
 	@Override
@@ -54,35 +106,57 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	// ByteArray aus dem Basisfile auslesen
-	private byte[] getByteArrayFromImage(BufferedImage inBaseFileImg) {
+	private byte[] getByteArrayFromImage(BufferedImage inBaseFileImg) throws IOException {
 
-		WritableRaster raster = inBaseFileImg.getRaster();
-		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
+		byte[] imageInByte;
 
-		return buffer.getData();
+		// convert BufferedImage to byte array
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(inBaseFileImg, "bmp", baos);
+		baos.flush();
+		imageInByte = baos.toByteArray();
+		baos.close();
+
+		return imageInByte;
+
+		// WritableRaster raster = inBaseFileImg.getRaster();
+		// DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
+		//
+		// return buffer.getData();
+	}
+
+	private byte[] getByteArrayFromHiddenFile(File inHiddenFile) throws IOException {
+		FileInputStream fis = new FileInputStream(inHiddenFile);
+
+		byte[] byteArrayHiddenFile = new byte[getLengthHF(inHiddenFile)];
+		fis.read(byteArrayHiddenFile);
+		fis.close();
+		return byteArrayHiddenFile;
 	}
 
 	// Verstecken BaseFile
-	private BufferedImage getModBaseFileImg() throws IOException {
-		FileInputStream fis = new FileInputStream(_hiddenFile);
+	// private byte[] getModBaseFileImg() throws IOException {
+	// FileInputStream fis = new FileInputStream(_hiddenFile);
+	//
+	// _byteHiddenFile = new byte[getLengthHF(_hiddenFile)];
+	// fis.read(_byteHiddenFile);
+	// fis.close();
+	//
+	// byte[] byteMBI = encode_text(getByteArrayFromImage(_baseFileImg),
+	// concatHeaderAndMsg(_header, _byteHiddenFile),
+	// 0);
+	// // InputStream in = new ByteArrayInputStream(byteMBI);
+	// // return ImageIO.read(in);
+	// return byteMBI;
+	// }
 
-		_byteHiddenFile = new byte[getLengthHF(_hiddenFile)];
-		fis.read(_byteHiddenFile);
-		fis.close();
-
-		byte[] byteMBI = encode_text(getByteArrayFromImage(_baseFileImg), concatHeaderAndMsg(_header, _byteHiddenFile),
-				0);
-		InputStream in = new ByteArrayInputStream(byteMBI);
-		return ImageIO.read(in);
-	}
-
-	private byte[] concatHeaderAndMsg(byte[] header, byte[] msg) {
-		int lenH = header.length;
-		int lenM = msg.length;
+	private byte[] concatHeaderAndHF(byte[] inHeader, byte[] inHiddenFile) {
+		int lenH = inHeader.length;
+		int lenM = inHiddenFile.length;
 
 		ByteBuffer buffer = ByteBuffer.allocate(lenH + lenM);
-		buffer.put(_header);
-		buffer.put(_byteHiddenFile);
+		buffer.put(inHeader);
+		buffer.put(inHiddenFile);
 		return buffer.array();
 
 	}
