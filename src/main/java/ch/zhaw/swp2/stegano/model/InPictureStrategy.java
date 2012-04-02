@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -99,10 +100,50 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	@Override
-	public File runUnHide(File inModBaseFile) {
-		// TODO
+	public File runUnHide(File inModBaseFile) throws IOException {
+		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
+
+		ByteBuffer buffHeader = ByteBuffer.allocate(BaseFileProtocolFactory.HEADER_BYTE_LENGTH);
+		// ArrayList für gelesene Bytes
+		ArrayList<Byte> bytes = new ArrayList<Byte>();
+		// Alle horizontalen Pixel durchlaufen
+		for (int y = 0, count = 7, value = 0; y < modBaseFileImg.getHeight(); y++) {
+			// Alle vertikalen Pixel durchlaufen
+			for (int x = 0; x < modBaseFileImg.getWidth(); x++) {
+				// Aktuelle Farbe auslesen
+				int rgb = modBaseFileImg.getRGB(x, y);
+				// Alle Farbkanäle durchlaufen
+				for (Color c : Color.values()) {
+					// Aktuelles Byte befüllen
+					value |= (((rgb >> c.getShift()) & 0xFF) & 1) << count--;
+					// Aktuelles Byte ist voll
+					if (count == -1) {
+						// Byte == 0 (Nachrichtende)
+						// if ((byte) value == 0) {
+						// Nachricht in String umwandeln und zurückgeben
+						// return bytesToString(bytes.toArray(new Byte[0]));
+						// }
+						// Byte-ArrayList das aktuelle Byte hinzufügen
+						bytes.add((byte) value);
+						// Zählvariablen zurücksetzen
+						value = 0;
+						count = 7;
+					}
+				}
+			}
+		}
+		// return bytesToString(bytes.toArray(new Byte[0]));
 
 		return null;
+	}
+
+	private String bytesToString(Byte[] barr) {
+
+		byte[] barrPrim = new byte[barr.length];
+		for (int i = 0; i < barr.length; i++) {
+			barrPrim[i] = barr[i];
+		}
+		return new String(barrPrim);
 	}
 
 	// ByteArray aus dem Basisfile auslesen
@@ -161,33 +202,33 @@ public class InPictureStrategy implements SteganoStrategy {
 
 	}
 
-	private byte[] encode_text(byte[] image, byte[] addition, int offset) {
-		// check that the data + offset will fit in the image
-		if (addition.length + offset > image.length) {
-			throw new IllegalArgumentException("File not long enough!");
-		}
-		// loop through each addition byte
-		for (int i = 0; i < addition.length; ++i) {
-			// loop through the 8 bits of each byte
-			int add = addition[i];
-			for (int bit = 7; bit >= 0; --bit, ++offset) // ensure the new
-															// offset value
-															// carries on
-															// through both
-															// loops
-			{
-				// assign an integer to b, shifted by bit spaces AND 1
-				// a single bit of the current byte
-				int b = (add >>> bit) & 1;
-				// assign the bit by taking: [(previous byte value) AND 0xfe] OR
-				// bit to add
-				// changes the last bit of the byte in the image to be the bit
-				// of addition
-				image[offset] = (byte) ((image[offset] & 0xFE) | b);
-			}
-		}
-		return image;
-	}
+	// private byte[] encode_text(byte[] image, byte[] addition, int offset) {
+	// // check that the data + offset will fit in the image
+	// if (addition.length + offset > image.length) {
+	// throw new IllegalArgumentException("File not long enough!");
+	// }
+	// // loop through each addition byte
+	// for (int i = 0; i < addition.length; ++i) {
+	// // loop through the 8 bits of each byte
+	// int add = addition[i];
+	// for (int bit = 7; bit >= 0; --bit, ++offset) // ensure the new
+	// // offset value
+	// // carries on
+	// // through both
+	// // loops
+	// {
+	// // assign an integer to b, shifted by bit spaces AND 1
+	// // a single bit of the current byte
+	// int b = (add >>> bit) & 1;
+	// // assign the bit by taking: [(previous byte value) AND 0xfe] OR
+	// // bit to add
+	// // changes the last bit of the byte in the image to be the bit
+	// // of addition
+	// image[offset] = (byte) ((image[offset] & 0xFE) | b);
+	// }
+	// }
+	// return image;
+	// }
 
 	// Länge des HiddenFile auslesen
 	private int getLengthHF(File inHiddenFile) throws IllegalArgumentException {

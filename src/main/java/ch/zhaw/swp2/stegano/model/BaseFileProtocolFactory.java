@@ -13,11 +13,8 @@ import java.nio.ByteBuffer;
  */
 public class BaseFileProtocolFactory {
 
-	private static byte[] _byteHFExtension;
-	private static byte[] _byteHFLength;
-	private static byte _pollution;
-
 	private static final int MAX_POLLUTION = 8;
+	public static final int HEADER_BYTE_LENGTH = 8;
 
 	public BaseFileProtocolFactory() {
 	}
@@ -40,15 +37,20 @@ public class BaseFileProtocolFactory {
 			throw new IllegalArgumentException();
 		}
 
-		_byteHFExtension = inHiddenFileExtension.getBytes("ASCII");
-		_byteHFLength = convertIntToByteArray(inHiddenFileLength);
-		_pollution = inPollution;
+		byte[] byteHFExtension = inHiddenFileExtension.getBytes("ASCII");
+		byte[] byteHFLength = convertIntToByteArray(inHiddenFileLength);
+		byte pollution = inPollution;
 
-		ByteBuffer bheader = ByteBuffer.allocate(_byteHFExtension.length + _byteHFLength.length + 1);
+		int headerByteLength = byteHFExtension.length + byteHFLength.length + 1;
 
-		bheader.put(_byteHFExtension);
-		bheader.put(_byteHFLength);
-		bheader.put(_pollution);
+		if (headerByteLength != HEADER_BYTE_LENGTH) {
+			throw new IllegalArgumentException();
+		}
+		ByteBuffer bheader = ByteBuffer.allocate(headerByteLength);
+
+		bheader.put(byteHFExtension);
+		bheader.put(byteHFLength);
+		bheader.put(pollution);
 		return bheader.array();
 	}
 
