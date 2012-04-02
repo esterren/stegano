@@ -45,10 +45,10 @@ public class BaseFileProtocolFactoryTest {
 	}
 
 	@Test
-	public void testGenerateHeaderWithNull() throws IllegalArgumentException, IOException {
+	public void testGenerateHeaderWrongExtension() throws IllegalArgumentException, IOException {
 
 		_exception.expect(IllegalArgumentException.class);
-		_BFPFactory.generateHeader(_testFileNull, _testFileNull, 1);
+		_BFPFactory.generateHeader("txtx", 1024, (byte) 1);
 	}
 
 }

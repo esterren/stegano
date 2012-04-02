@@ -1,7 +1,7 @@
 package ch.zhaw.swp2.stegano.model;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * The BaseFileProtocolFactory calculates the Header, based on the Base-File and
@@ -13,10 +13,11 @@ import java.io.IOException;
  */
 public class BaseFileProtocolFactory {
 
-	private byte[] _byteExtension;
-	private byte _bytePollution;
+	private static byte[] _byteHFExtension;
+	private static byte[] _byteHFLength;
+	private static byte _pollution;
+
 	private static final int MAX_POLLUTION = 8;
-	private String _hiddenFileExtension;
 
 	public BaseFileProtocolFactory() {
 	}
@@ -29,23 +30,30 @@ public class BaseFileProtocolFactory {
 	 * @return a Byte-Array representing the Header
 	 * @throws IOException
 	 */
-	public byte[] generateHeader(File inBaseFile, File inHiddenFile, int pollution) throws IllegalArgumentException,
-			IOException {
+	public static byte[] generateHeader(String inHiddenFileExtension, int inHiddenFileLength, byte inPollution)
+			throws IllegalArgumentException, IOException {
 
-		if (inBaseFile == null || inHiddenFile == null) {
+		if (inPollution < 1 || inPollution > MAX_POLLUTION) {
 			throw new IllegalArgumentException();
 		}
-		if (pollution < 1 || pollution > MAX_POLLUTION) {
-			throw new IllegalArgumentException();
-		}
-
-		_hiddenFileExtension = FileNameFactory.getExtension(inHiddenFile);
-		if (_hiddenFileExtension.length() != 3) {
+		if (inHiddenFileExtension.length() != 3) {
 			throw new IllegalArgumentException();
 		}
 
-		_byteExtension = _hiddenFileExtension.getBytes("ASCII");
-		// _bytePollution =
-		return null;
+		_byteHFExtension = inHiddenFileExtension.getBytes("ASCII");
+		_byteHFLength = convertIntToByteArray(inHiddenFileLength);
+		_pollution = inPollution;
+
+		ByteBuffer bheader = ByteBuffer.allocate(_byteHFExtension.length + _byteHFLength.length + 1);
+
+		bheader.put(_byteHFExtension);
+		bheader.put(_byteHFLength);
+		bheader.put(_pollution);
+		return bheader.array();
+	}
+
+	private static byte[] convertIntToByteArray(int inLength) {
+
+		return ByteBuffer.allocate(4).putInt(inLength).array();
 	}
 }

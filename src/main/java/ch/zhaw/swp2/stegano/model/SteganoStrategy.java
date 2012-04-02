@@ -1,5 +1,6 @@
 package ch.zhaw.swp2.stegano.model;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 public interface SteganoStrategy {
@@ -17,7 +18,7 @@ public interface SteganoStrategy {
 	 * 
 	 * @return is the modified BaseFile with the hidden Information
 	 */
-	public File runHide(File inBaseFile, File inHiddenFile, int pollution);
+	public BufferedImage runHide(File inBaseFile, File inHiddenFile, byte pollution) throws Exception;
 
 	/**
 	 * This Method is called by the Controller to run the Staganographie
