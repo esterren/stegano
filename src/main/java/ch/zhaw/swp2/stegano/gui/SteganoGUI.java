@@ -30,7 +30,9 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
 	private File _baseFile;
 	private File _hiddenFile;
-	private BufferedImage _baseImg;
+        private File _modBaseFile;
+	private BufferedImage _baseFileImg;
+        private BufferedImage _modBaseFileImg;
 
 	/** Creates new form SteganoGUI */
 	public SteganoGUI() {
@@ -47,155 +49,193 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
-	// desc="Generated Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		jTabbedPane1 = new javax.swing.JTabbedPane();
-		jPanel1 = new javax.swing.JPanel();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		jScrollPane2 = new javax.swing.JScrollPane();
-		jPanel2 = new javax.swing.JPanel();
-		_jLabelBaseFile = new javax.swing.JLabel();
-		_jLabelBaseFilePath = new javax.swing.JLabel();
-		_jLabelHiddenFile = new javax.swing.JLabel();
-		_jLabelHiddenFilePath = new javax.swing.JLabel();
-		jButton1 = new javax.swing.JButton();
-		jSeparator1 = new javax.swing.JSeparator();
-		_jMenuBar1 = new javax.swing.JMenuBar();
-		_jMenuHideInfo = new javax.swing.JMenu();
-		_jMenuItemOB = new javax.swing.JMenuItem();
-		_jMenuItemIH = new javax.swing.JMenuItem();
-		_jMenuSeekInfo = new javax.swing.JMenu();
-		_jMenuItemMBF = new javax.swing.JMenuItem();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
+        _jLabelBaseFile = new javax.swing.JLabel();
+        _jLabelBaseFilePath = new javax.swing.JLabel();
+        _jLabelHiddenFile = new javax.swing.JLabel();
+        _jLabelHiddenFilePath = new javax.swing.JLabel();
+        _jButtonHide = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        _jButtonSeek = new javax.swing.JButton();
+        _jLabelModBaseFile = new javax.swing.JLabel();
+        _jLabelModBaseFilePath = new javax.swing.JLabel();
+        _jMenuBar1 = new javax.swing.JMenuBar();
+        _jMenuHideInfo = new javax.swing.JMenu();
+        _jMenuItemOB = new javax.swing.JMenuItem();
+        _jMenuItemIH = new javax.swing.JMenuItem();
+        _jMenuSeekInfo = new javax.swing.JMenu();
+        _jMenuItemMBF = new javax.swing.JMenuItem();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		setTitle("Stegano");
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Stegano");
 
-		javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						javax.swing.GroupLayout.Alignment.TRAILING,
-						jPanel1Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
-								.addGap(18, 18, 18)
-								.addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
-								.addContainerGap()));
-		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						jPanel1Layout
-								.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(
-										jPanel1Layout
-												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING,
-														javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
-												.addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING,
-														javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE))
-								.addContainerGap()));
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE))
+                .addContainerGap())
+        );
 
-		jTabbedPane1.addTab("Hidden in Picture", jPanel1);
+        jTabbedPane1.addTab("Hidden in Picture", jPanel1);
 
-		javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-		jPanel2.setLayout(jPanel2Layout);
-		jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGap(0, 1088, Short.MAX_VALUE));
-		jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGap(0, 612, Short.MAX_VALUE));
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 587, Short.MAX_VALUE)
+        );
 
-		jTabbedPane1.addTab("Hidden in Audio", jPanel2);
+        jTabbedPane1.addTab("Hidden in Audio", jPanel2);
 
-		_jLabelBaseFile.setText("Basefile-Path:");
+        _jLabelBaseFile.setText("Basefile-Path:");
 
-		_jLabelBaseFilePath.setText("none");
+        _jLabelBaseFilePath.setText("none");
 
-		_jLabelHiddenFile.setText("Hiddenfile-Path:");
+        _jLabelHiddenFile.setText("Hiddenfile-Path:");
 
-		_jLabelHiddenFilePath.setText("none");
+        _jLabelHiddenFilePath.setText("none");
 
-		jButton1.setText("Run Steganographie");
+        _jButtonHide.setText("Run Hide");
 
-		_jMenuHideInfo.setText("Hide");
+        _jButtonSeek.setText("Run Seek");
 
-		_jMenuItemOB.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O,
-				java.awt.event.InputEvent.CTRL_MASK));
-		_jMenuItemOB.setText("Import Base-File");
-		_jMenuItemOB.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				importBaseFileActionlistener(evt);
-			}
-		});
-		_jMenuHideInfo.add(_jMenuItemOB);
+        _jLabelModBaseFile.setText("Modified Basefile-Path:");
 
-		_jMenuItemIH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H,
-				java.awt.event.InputEvent.CTRL_MASK));
-		_jMenuItemIH.setText("Import Hidden-File");
-		_jMenuItemIH.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				importHiddenFileActionListener(evt);
-			}
-		});
-		_jMenuHideInfo.add(_jMenuItemIH);
+        _jLabelModBaseFilePath.setText("none");
 
-		_jMenuBar1.add(_jMenuHideInfo);
+        _jMenuHideInfo.setText("Hide");
 
-		_jMenuSeekInfo.setText("Seek");
+        _jMenuItemOB.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        _jMenuItemOB.setText("Import Base-File");
+        _jMenuItemOB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importBaseFileActionlistener(evt);
+            }
+        });
+        _jMenuHideInfo.add(_jMenuItemOB);
 
-		_jMenuItemMBF.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B,
-				java.awt.event.InputEvent.CTRL_MASK));
-		_jMenuItemMBF.setText("Import modified Base-File");
-		_jMenuSeekInfo.add(_jMenuItemMBF);
+        _jMenuItemIH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        _jMenuItemIH.setText("Import Hidden-File");
+        _jMenuItemIH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importHiddenFileActionListener(evt);
+            }
+        });
+        _jMenuHideInfo.add(_jMenuItemIH);
 
-		_jMenuBar1.add(_jMenuSeekInfo);
+        _jMenuBar1.add(_jMenuHideInfo);
 
-		setJMenuBar(_jMenuBar1);
+        _jMenuSeekInfo.setText("Seek");
 
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-				layout.createSequentialGroup()
-						.addContainerGap()
-						.addGroup(
-								layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(jTabbedPane1)
-										.addGroup(
-												layout.createSequentialGroup()
-														.addGroup(
-																layout.createParallelGroup(
-																		javax.swing.GroupLayout.Alignment.LEADING)
-																		.addComponent(_jLabelBaseFile)
-																		.addComponent(_jLabelHiddenFile))
-														.addGap(18, 18, 18)
-														.addGroup(
-																layout.createParallelGroup(
-																		javax.swing.GroupLayout.Alignment.LEADING)
-																		.addComponent(_jLabelHiddenFilePath)
-																		.addComponent(_jLabelBaseFilePath)))
-										.addComponent(jButton1)
-										.addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 1093,
-												Short.MAX_VALUE)).addContainerGap()));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-				layout.createSequentialGroup()
-						.addContainerGap()
-						.addGroup(
-								layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-										.addComponent(_jLabelBaseFile).addComponent(_jLabelBaseFilePath))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(
-								layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-										.addComponent(_jLabelHiddenFile).addComponent(_jLabelHiddenFilePath))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jButton1)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)
-						.addContainerGap()));
+        _jMenuItemMBF.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        _jMenuItemMBF.setText("Import modified Base-File");
+        _jMenuItemMBF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importModBaseFileActionListener(evt);
+            }
+        });
+        _jMenuSeekInfo.add(_jMenuItemMBF);
 
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+        _jMenuBar1.add(_jMenuSeekInfo);
+
+        setJMenuBar(_jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(_jLabelBaseFile)
+                    .addComponent(_jLabelHiddenFile)
+                    .addComponent(_jLabelModBaseFile))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(_jLabelBaseFilePath)
+                    .addComponent(_jLabelHiddenFilePath)
+                    .addComponent(_jLabelModBaseFilePath))
+                .addContainerGap(934, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(_jButtonHide)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(_jButtonSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(919, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 1105, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1105, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(_jLabelBaseFile)
+                    .addComponent(_jLabelBaseFilePath))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(_jLabelHiddenFile)
+                    .addComponent(_jLabelHiddenFilePath))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(_jLabelModBaseFile)
+                    .addComponent(_jLabelModBaseFilePath))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(_jButtonHide)
+                    .addComponent(_jButtonSeek))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+private void importModBaseFileActionListener(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importModBaseFileActionListener
+File file = openFileChooser();
+		if (file != null) {
+			_modBaseFile = file;
+			_jLabelModBaseFilePath.setText(_modBaseFile.getAbsolutePath());
+		}
+		// TODO Check for PNG and BMP Images => Validator
+		try {
+			_modBaseFileImg = ImageIO.read(_modBaseFile);
+		} catch (IOException ex) {
+			Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+		}
+}//GEN-LAST:event_importModBaseFileActionListener
 
 	private void importBaseFileActionlistener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importBaseFileActionlistener
 
@@ -206,7 +246,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 		}
 		// TODO Check for PNG and BMP Images => Validator
 		try {
-			_baseImg = ImageIO.read(_baseFile);
+			_baseFileImg = ImageIO.read(_baseFile);
 		} catch (IOException ex) {
 			Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -264,26 +304,28 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 		});
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JLabel _jLabelBaseFile;
-	private javax.swing.JLabel _jLabelBaseFilePath;
-	private javax.swing.JLabel _jLabelHiddenFile;
-	private javax.swing.JLabel _jLabelHiddenFilePath;
-	private javax.swing.JMenuBar _jMenuBar1;
-	private javax.swing.JMenu _jMenuHideInfo;
-	private javax.swing.JMenuItem _jMenuItemIH;
-	private javax.swing.JMenuItem _jMenuItemMBF;
-	private javax.swing.JMenuItem _jMenuItemOB;
-	private javax.swing.JMenu _jMenuSeekInfo;
-	private javax.swing.JButton jButton1;
-	private javax.swing.JPanel jPanel1;
-	private javax.swing.JPanel jPanel2;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JScrollPane jScrollPane2;
-	private javax.swing.JSeparator jSeparator1;
-	private javax.swing.JTabbedPane jTabbedPane1;
-
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton _jButtonHide;
+    private javax.swing.JButton _jButtonSeek;
+    private javax.swing.JLabel _jLabelBaseFile;
+    private javax.swing.JLabel _jLabelBaseFilePath;
+    private javax.swing.JLabel _jLabelHiddenFile;
+    private javax.swing.JLabel _jLabelHiddenFilePath;
+    private javax.swing.JLabel _jLabelModBaseFile;
+    private javax.swing.JLabel _jLabelModBaseFilePath;
+    private javax.swing.JMenuBar _jMenuBar1;
+    private javax.swing.JMenu _jMenuHideInfo;
+    private javax.swing.JMenuItem _jMenuItemIH;
+    private javax.swing.JMenuItem _jMenuItemMBF;
+    private javax.swing.JMenuItem _jMenuItemOB;
+    private javax.swing.JMenu _jMenuSeekInfo;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    // End of variables declaration//GEN-END:variables
 
 	@Override
 	public void displayBaseFile() {
@@ -295,8 +337,9 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	public void setListeners(ActionListener buttonRunStegano) {
-		jButton1.addActionListener(buttonRunStegano);
+	public void setListeners(ActionListener buttonRunHide, ActionListener buttonRunSeek) {
+		_jButtonHide.addActionListener(buttonRunHide);
+                _jButtonSeek.addActionListener(buttonRunSeek);
 	}
 
 	@Override
@@ -311,8 +354,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
 	@Override
 	public File getModifiedBaseFile() {
-		// TODO Auto-generated method stub
-		return null;
+		return _modBaseFile;
 	}
 
 	private File openFileChooser() {

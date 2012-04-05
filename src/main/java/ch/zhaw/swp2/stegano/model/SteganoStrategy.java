@@ -31,6 +31,6 @@ public interface SteganoStrategy {
 	 * @return is the a File, the Steganographie-Algorithm found in the modified
 	 *         BaseFile.
 	 */
-	public File runUnHide(File inModBaseFile) throws Exception;
+	public File runSeek(File inModBaseFile) throws Exception;
 
 }

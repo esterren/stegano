@@ -14,13 +14,21 @@ import ch.zhaw.swp2.stegano.model.SteganoStrategy;
 public class Controller {
 
 	private SteganoStrategy _steganoStrategy;
-	private ActionListener _listenerRunStegano = new ActionListener() {
+	private ActionListener _listenerHideStegano = new ActionListener() {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			onRunStegano();
+			onRunHideStegano();
 		}
 	};;;
+	private ActionListener _listenerSeekStegano = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			onRunSeekStegano();
+
+		}
+	};
 	private IfcUserInterface _userInterface;
 
 	public static void main(String[] args) {
@@ -30,7 +38,7 @@ public class Controller {
 
 	public Controller() {
 		_userInterface = getNewSteganoGUI();
-		_userInterface.setListeners(_listenerRunStegano);
+		_userInterface.setListeners(_listenerHideStegano, _listenerSeekStegano);
 
 	}
 
@@ -38,7 +46,7 @@ public class Controller {
 		return new SteganoGUI();
 	}
 
-	private void onRunStegano() {
+	private void onRunHideStegano() {
 
 		_steganoStrategy = new InPictureStrategy();
 
@@ -53,5 +61,16 @@ public class Controller {
 			e.printStackTrace();
 		}
 
+	}
+
+	private void onRunSeekStegano() {
+		_steganoStrategy = new InPictureStrategy();
+
+		try {
+			File hiddenFile = _steganoStrategy.runSeek(_userInterface.getModifiedBaseFile());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

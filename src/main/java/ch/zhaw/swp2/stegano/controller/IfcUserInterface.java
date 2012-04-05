@@ -32,7 +32,7 @@ public interface IfcUserInterface {
 	 * 
 	 * @param runStegano
 	 */
-	public void setListeners(ActionListener runStegano);
+	public void setListeners(ActionListener runHideStegano, ActionListener runSeekStegano);
 
 	/**
 	 * This Method is called by the Controller to get the BaseFile.

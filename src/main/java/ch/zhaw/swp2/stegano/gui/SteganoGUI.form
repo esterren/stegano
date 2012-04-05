@@ -45,6 +45,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Import modified Base-File"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importModBaseFileActionListener"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -74,25 +77,35 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="_jLabelBaseFile" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="_jLabelHiddenFile" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="_jLabelHiddenFilePath" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="_jLabelBaseFilePath" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Component id="jButton1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jSeparator1" alignment="0" pref="1093" max="32767" attributes="0"/>
+                  <Component id="_jLabelBaseFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="_jLabelHiddenFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="_jLabelModBaseFile" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="_jLabelBaseFilePath" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="_jLabelHiddenFilePath" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="_jLabelModBaseFilePath" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="934" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+              <Component id="_jButtonHide" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="_jButtonSeek" min="-2" pref="96" max="-2" attributes="0"/>
+              <EmptySpace pref="919" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+              <Component id="jSeparator1" pref="1105" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+              <Component id="jTabbedPane1" pref="1105" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -109,12 +122,20 @@
                   <Component id="_jLabelHiddenFile" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="_jLabelHiddenFilePath" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="1"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="_jLabelModBaseFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="_jLabelModBaseFilePath" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="_jButtonHide" alignment="3" min="-2" max="-2" attributes="1"/>
+                  <Component id="_jButtonSeek" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="642" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" min="-2" pref="617" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -139,9 +160,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="523" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="529" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" pref="523" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" pref="529" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -151,8 +172,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" alignment="1" pref="586" max="32767" attributes="0"/>
-                          <Component id="jScrollPane2" alignment="1" pref="586" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" alignment="1" pref="561" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" alignment="1" pref="561" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -182,12 +203,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1088" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1100" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="612" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="587" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -214,12 +235,27 @@
         <Property name="text" type="java.lang.String" value="none"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="_jButtonHide">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Run Steganographie"/>
+        <Property name="text" type="java.lang.String" value="Run Hide"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
+    </Component>
+    <Component class="javax.swing.JButton" name="_jButtonSeek">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Run Seek"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="_jLabelModBaseFile">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Modified Basefile-Path:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="_jLabelModBaseFilePath">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="none"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
