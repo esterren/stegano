@@ -120,9 +120,10 @@ public class InPictureStrategy implements SteganoStrategy {
 		int pixelCounter = ((startByte * 8) / 3);
 		int colorOffest = (startByte * 8) % 3;
 		// System.out.println(pixelCounter + " " + colorOffest);
-		for (int y = (pixelCounter / inModBaseFileImg.getWidth()); y < inModBaseFileImg.getHeight(); y++) {
-			int count = 7;
-			int value = 0;
+		for (int y = (pixelCounter / inModBaseFileImg.getWidth()), count = 7, value = 0; y < inModBaseFileImg
+				.getHeight(); y++) {
+			// int count = 7;
+			// int value = 0;
 			// Alle vertikalen Pixel durchlaufen
 			for (int x = (pixelCounter % inModBaseFileImg.getWidth()); x < inModBaseFileImg.getWidth(); x++) {
 				// Aktuelle Farbe auslesen
