@@ -114,24 +114,39 @@ public class InPictureStrategy implements SteganoStrategy {
 			throw new IllegalArgumentException();
 		}
 
+		boolean hasPixLineOffset = false;
 		// ArrayList für gelesene Bytes
 		ArrayList<Byte> bytes = new ArrayList<Byte>(0);
 		// Alle horizontalen Pixel durchlaufen
 		int pixelCounter = ((startByte * 8) / 3);
+
 		int colorOffest = (startByte * 8) % 3;
+		if (pixelCounter % inModBaseFileImg.getWidth() != 0) {
+			hasPixLineOffset = true;
+		}
+
 		// System.out.println(pixelCounter + " " + colorOffest);
 		for (int y = (pixelCounter / inModBaseFileImg.getWidth()), count = 7, value = 0; y < inModBaseFileImg
 				.getHeight(); y++) {
-			// int count = 7;
-			// int value = 0;
 			// Alle vertikalen Pixel durchlaufen
-			for (int x = (pixelCounter % inModBaseFileImg.getWidth()); x < inModBaseFileImg.getWidth(); x++) {
+			// TODO Problem liegt hier bei der modulo Operation, da 21 % 10 = 1
+			// und es sollte 0 sein
+			// (pixelCounter % ..getWith() darf nur in der ersten Pixelreihe mit
+			// versetztem Anfang berechntet werden, ansonsten muss x = 0 sein!!
+			int x = 0;
+			if (hasPixLineOffset) {
+				x = (pixelCounter % inModBaseFileImg.getWidth());
+				hasPixLineOffset = false;
+			}
+			while (x < inModBaseFileImg.getWidth()) {
 				// Aktuelle Farbe auslesen
 				int rgb = inModBaseFileImg.getRGB(x, y);
 				if (colorOffest != 0) {
 					switch (colorOffest) {
 					case 2:
 						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
+						// value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) &
+						// 1) << count;
 						colorOffest = 0;
 						break;
 					case 1:
@@ -148,12 +163,6 @@ public class InPictureStrategy implements SteganoStrategy {
 						value |= (((rgb >> c.getShift()) & 0xFF) & 1) << count--;
 						// Aktuelles Byte ist voll
 						if (count == -1) {
-							// Byte == 0 (Nachrichtende)
-							// if ((byte) value == 0) {
-							// Nachricht in String umwandeln und zurückgeben
-							// return bytesToString(bytes.toArray(new Byte[0]));
-							// }
-							// Byte-ArrayList das aktuelle Byte hinzufügen
 
 							// TODO Hier werden die Bytes (der Versteckten
 							// Datei)
@@ -180,7 +189,65 @@ public class InPictureStrategy implements SteganoStrategy {
 						}
 					}
 				}
+				x++;
 			}
+
+			// for (int x = (pixelCounter % inModBaseFileImg.getWidth()); x <
+			// inModBaseFileImg.getWidth(); x++) {
+			// // Aktuelle Farbe auslesen
+			// int rgb = inModBaseFileImg.getRGB(x, y);
+			// if (colorOffest != 0) {
+			// switch (colorOffest) {
+			// case 2:
+			// value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) <<
+			// count--;
+			// // value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) &
+			// // 1) << count;
+			// colorOffest = 0;
+			// break;
+			// case 1:
+			// value |= (((rgb >> Color.GREEN.getShift()) & 0xFF) & 1) <<
+			// count--;
+			// value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) <<
+			// count--;
+			// colorOffest = 0;
+			// default:
+			// break;
+			// }
+			// } else {
+			// // Alle Farbkanäle durchlaufen
+			// for (Color c : Color.values()) {
+			// // Aktuelles Byte befüllen
+			// value |= (((rgb >> c.getShift()) & 0xFF) & 1) << count--;
+			// // Aktuelles Byte ist voll
+			// if (count == -1) {
+			//
+			// // TODO Hier werden die Bytes (der Versteckten
+			// // Datei)
+			// // aus der modifizierten Trägerdatei ausgelesen.
+			// // Die ersten drei Bytes müssen als
+			// // HiddenFile-Extension
+			// // zurückgegeben werden.
+			// // Anschliessend 4 Bytes mit der Länge (Anzahl
+			// // Bytes)
+			// // der Hidden-Datei (=> Abbruchkriterium),
+			// // dann folgt noch ein Byte mit der Verunreinigung.
+			// bytes.add((byte) value);
+			// if (bytes.size() == countByte) {
+			// byte[] bOut = new byte[bytes.size()];
+			// for (int i = 0; i < bytes.size(); i++) {
+			// bOut[i] = bytes.get(i);
+			// }
+			// return bOut;
+			//
+			// }
+			// // Zählvariablen zurücksetzen
+			// value = 0;
+			// count = 7;
+			// }
+			// }
+			// }
+			// }
 		}
 		// return bytesToString(bytes.toArray(new Byte[0]));
 
