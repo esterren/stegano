@@ -35,16 +35,16 @@ public class InPictureStrategy implements SteganoStrategy {
 	private BufferedImage hideMessage(BufferedImage img, byte[] message) {
 
 		// Text in Bytes umwandeln
-		byte[] b = message;
+		// byte[] b = message;
 		// Farbkanal
 		Color channel = Color.RED;
 		// Alle Bytes durchlaufen
-		for (int i = 0, x = 0, y = 0; i < b.length; i++) {
+		for (int i = 0, x = 0, y = 0; i < message.length; i++) {
 			// Alle Bits durchlaufen
 			for (int j = 7; j > -1; j--) {
 
 				// Wert des Bits auslesen
-				int bit = ((b[i] & 0xFF) >> j) & 1;
+				int bit = ((message[i] & 0xFF) >> j) & 1;
 				// Farbe an der aktuellen Position auslesen
 				int rgb = img.getRGB(x, y);
 				// Den aktuellen Farbkanal auslesen
@@ -91,24 +91,35 @@ public class InPictureStrategy implements SteganoStrategy {
 	public File runSeek(File inModBaseFile) throws IOException {
 		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
 
-		byte[] header = seekMessage(modBaseFileImg, 0, 8);
-		// byte[] bExtension = seekMessage(modBaseFileImg);
+		byte[] header = seekMessage(modBaseFileImg, 0, 8, (byte) 1);
 
 		int hiddenFileByteLength = BaseFileProtocolFactory.getLengthFromHeader(header);
 		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(header);
 		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(header);
 
-		byte[] hiddenFile = seekMessage(modBaseFileImg, 8, hiddenFileByteLength);
-		// ByteBuffer buffHeader =
-		// ByteBuffer.allocate(BaseFileProtocolFactory.HEADER_BYTE_LENGTH);
-		// return bytesToString(bytes.toArray(new Byte[0]));
+		byte[] hiddenFile = seekMessage(modBaseFileImg, 8, hiddenFileByteLength, baseFilePollution);
 
 		String filename = "HiddenFile_" + System.currentTimeMillis() + "." + hiddenFileExtension;
 		writeFileFromByteArray(filename, hiddenFile);
 		return null;
 	}
 
-	private byte[] seekMessage(BufferedImage inModBaseFileImg, int startByte, int countByte)
+	/**
+	 * The seekMessage Methode seeks for the hidden Bytes in a BaseFile.
+	 * 
+	 * @param inModBaseFileImg
+	 *            the underlying Basefile-Image with the hidden Message (bytes)
+	 * @param startByte
+	 *            is the Start at which the algorithm starts. It starts with 0.
+	 * @param countByte
+	 *            is the nummber of bytes the algorithm is looking for. For
+	 *            e.g.: the length of Bytes (placed in the header) can be placed
+	 *            here.
+	 * @return a byte array with the found bytes in the BufferedImage starting
+	 *         at startByte and has the length of countByte.
+	 * @throws IllegalArgumentException
+	 */
+	private byte[] seekMessage(BufferedImage inModBaseFileImg, int startByte, int countByte, byte inPollution)
 			throws IllegalArgumentException {
 		if (startByte < 0 || countByte < 1) {
 			throw new IllegalArgumentException();
@@ -125,7 +136,6 @@ public class InPictureStrategy implements SteganoStrategy {
 			hasPixLineOffset = true;
 		}
 
-		// System.out.println(pixelCounter + " " + colorOffest);
 		for (int y = (pixelCounter / inModBaseFileImg.getWidth()), count = 7, value = 0; y < inModBaseFileImg
 				.getHeight(); y++) {
 			// Alle vertikalen Pixel durchlaufen
@@ -145,8 +155,6 @@ public class InPictureStrategy implements SteganoStrategy {
 					switch (colorOffest) {
 					case 2:
 						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
-						// value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) &
-						// 1) << count;
 						colorOffest = 0;
 						break;
 					case 1:
@@ -192,88 +200,10 @@ public class InPictureStrategy implements SteganoStrategy {
 				x++;
 			}
 
-			// for (int x = (pixelCounter % inModBaseFileImg.getWidth()); x <
-			// inModBaseFileImg.getWidth(); x++) {
-			// // Aktuelle Farbe auslesen
-			// int rgb = inModBaseFileImg.getRGB(x, y);
-			// if (colorOffest != 0) {
-			// switch (colorOffest) {
-			// case 2:
-			// value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) <<
-			// count--;
-			// // value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) &
-			// // 1) << count;
-			// colorOffest = 0;
-			// break;
-			// case 1:
-			// value |= (((rgb >> Color.GREEN.getShift()) & 0xFF) & 1) <<
-			// count--;
-			// value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) <<
-			// count--;
-			// colorOffest = 0;
-			// default:
-			// break;
-			// }
-			// } else {
-			// // Alle Farbkanäle durchlaufen
-			// for (Color c : Color.values()) {
-			// // Aktuelles Byte befüllen
-			// value |= (((rgb >> c.getShift()) & 0xFF) & 1) << count--;
-			// // Aktuelles Byte ist voll
-			// if (count == -1) {
-			//
-			// // TODO Hier werden die Bytes (der Versteckten
-			// // Datei)
-			// // aus der modifizierten Trägerdatei ausgelesen.
-			// // Die ersten drei Bytes müssen als
-			// // HiddenFile-Extension
-			// // zurückgegeben werden.
-			// // Anschliessend 4 Bytes mit der Länge (Anzahl
-			// // Bytes)
-			// // der Hidden-Datei (=> Abbruchkriterium),
-			// // dann folgt noch ein Byte mit der Verunreinigung.
-			// bytes.add((byte) value);
-			// if (bytes.size() == countByte) {
-			// byte[] bOut = new byte[bytes.size()];
-			// for (int i = 0; i < bytes.size(); i++) {
-			// bOut[i] = bytes.get(i);
-			// }
-			// return bOut;
-			//
-			// }
-			// // Zählvariablen zurücksetzen
-			// value = 0;
-			// count = 7;
-			// }
-			// }
-			// }
-			// }
 		}
-		// return bytesToString(bytes.toArray(new Byte[0]));
 
 		return null;
 	}
-
-	// ByteArray aus dem Basisfile auslesen
-	// private byte[] getByteArrayFromImage(BufferedImage inBaseFileImg) throws
-	// IOException {
-	//
-	// byte[] imageInByte;
-	//
-	// // convert BufferedImage to byte array
-	// ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	// ImageIO.write(inBaseFileImg, "bmp", baos);
-	// baos.flush();
-	// imageInByte = baos.toByteArray();
-	// baos.close();
-	//
-	// return imageInByte;
-	//
-	// // WritableRaster raster = inBaseFileImg.getRaster();
-	// // DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
-	// //
-	// // return buffer.getData();
-	// }
 
 	private byte[] getByteArrayFromHiddenFile(File inHiddenFile) throws IOException {
 		FileInputStream fis = new FileInputStream(inHiddenFile);
@@ -291,22 +221,6 @@ public class InPictureStrategy implements SteganoStrategy {
 
 	}
 
-	// Verstecken BaseFile
-	// private byte[] getModBaseFileImg() throws IOException {
-	// FileInputStream fis = new FileInputStream(_hiddenFile);
-	//
-	// _byteHiddenFile = new byte[getLengthHF(_hiddenFile)];
-	// fis.read(_byteHiddenFile);
-	// fis.close();
-	//
-	// byte[] byteMBI = encode_text(getByteArrayFromImage(_baseFileImg),
-	// concatHeaderAndMsg(_header, _byteHiddenFile),
-	// 0);
-	// // InputStream in = new ByteArrayInputStream(byteMBI);
-	// // return ImageIO.read(in);
-	// return byteMBI;
-	// }
-
 	private byte[] concatHeaderAndHF(byte[] inHeader, byte[] inHiddenFile) {
 		int lenH = inHeader.length;
 		int lenM = inHiddenFile.length;
@@ -317,34 +231,6 @@ public class InPictureStrategy implements SteganoStrategy {
 		return buffer.array();
 
 	}
-
-	// private byte[] encode_text(byte[] image, byte[] addition, int offset) {
-	// // check that the data + offset will fit in the image
-	// if (addition.length + offset > image.length) {
-	// throw new IllegalArgumentException("File not long enough!");
-	// }
-	// // loop through each addition byte
-	// for (int i = 0; i < addition.length; ++i) {
-	// // loop through the 8 bits of each byte
-	// int add = addition[i];
-	// for (int bit = 7; bit >= 0; --bit, ++offset) // ensure the new
-	// // offset value
-	// // carries on
-	// // through both
-	// // loops
-	// {
-	// // assign an integer to b, shifted by bit spaces AND 1
-	// // a single bit of the current byte
-	// int b = (add >>> bit) & 1;
-	// // assign the bit by taking: [(previous byte value) AND 0xfe] OR
-	// // bit to add
-	// // changes the last bit of the byte in the image to be the bit
-	// // of addition
-	// image[offset] = (byte) ((image[offset] & 0xFE) | b);
-	// }
-	// }
-	// return image;
-	// }
 
 	// Länge des HiddenFile auslesen
 	private int getLengthHF(File inHiddenFile) throws IllegalArgumentException {
