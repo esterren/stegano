@@ -8,8 +8,10 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import ch.zhaw.swp2.stegano.gui.SteganoGUI;
+import ch.zhaw.swp2.stegano.model.FileNameFactory;
 import ch.zhaw.swp2.stegano.model.InPictureStrategy;
 import ch.zhaw.swp2.stegano.model.SteganoStrategy;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Controller {
 
@@ -55,7 +57,9 @@ public class Controller {
 		try {
 			modBaseFile = _steganoStrategy.runHide(_userInterface.getBaseFile(), _userInterface.getHiddenFile(),
 					(byte) 1);
-			ImageIO.write(modBaseFile, "bmp", new File("test.bmp"));
+			//ImageIO.write(modBaseFile, "bmp", new File("test.bmp"));
+                        ImageIO.write(modBaseFile, FileNameFactory.getExtension(_userInterface.getModifiedBaseFile()), _userInterface.getModifiedBaseFile());
+                        _userInterface.displayModBaseFile();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,6 +71,7 @@ public class Controller {
 		_steganoStrategy = new InPictureStrategy();
 
 		try {
+                        //TODO The Save-Path from the GUI has to be passed to the model to save the hidden File and the abolute Filepath should be the return for the GUI.
 			File hiddenFile = _steganoStrategy.runSeek(_userInterface.getModifiedBaseFile());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
