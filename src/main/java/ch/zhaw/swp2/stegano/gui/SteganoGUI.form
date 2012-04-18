@@ -105,7 +105,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTabbedPane1" alignment="0" pref="1105" max="32767" attributes="0"/>
+                  <Component id="jTabbedPane1" alignment="0" pref="1130" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jPanel3" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -125,7 +125,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="617" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="470" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -151,24 +151,22 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1100" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="_jScrollPaneHexCompLeft" pref="531" max="32767" attributes="0"/>
+                      <Component id="_jScrollPaneHexCompLeft" pref="541" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="_jScrollPaneHexCompRight" pref="531" max="32767" attributes="0"/>
+                      <Component id="_jScrollPaneHexCompRight" pref="542" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="592" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="_jScrollPaneHexCompLeft" alignment="1" pref="570" max="32767" attributes="0"/>
-                          <Component id="_jScrollPaneHexCompRight" alignment="1" pref="570" max="32767" attributes="0"/>
+                          <Component id="_jScrollPaneHexCompLeft" alignment="1" pref="414" max="32767" attributes="0"/>
+                          <Component id="_jScrollPaneHexCompRight" alignment="1" pref="414" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -185,10 +183,12 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="jTextAreaHexCompLeft">
+                <Component class="javax.swing.JTextArea" name="_jTextAreaHexCompLeft">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
+                    <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
+                    <Property name="tabSize" type="int" value="2"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -202,10 +202,12 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="jTextAreaHexCompRight">
+                <Component class="javax.swing.JTextArea" name="_jTextAreaHexCompRight">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
+                    <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
+                    <Property name="tabSize" type="int" value="2"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -226,9 +228,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="_jScrollPanePicCompLeft" pref="531" max="32767" attributes="0"/>
+                      <Component id="_jScrollPanePicCompLeft" pref="541" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="_jScrollPanePicCompRight" pref="531" max="32767" attributes="0"/>
+                      <Component id="_jScrollPanePicCompRight" pref="542" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -238,8 +240,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="_jScrollPanePicCompLeft" alignment="1" pref="570" max="32767" attributes="0"/>
-                          <Component id="_jScrollPanePicCompRight" alignment="1" pref="570" max="32767" attributes="0"/>
+                          <Component id="_jScrollPanePicCompLeft" alignment="1" pref="414" max="32767" attributes="0"/>
+                          <Component id="_jScrollPanePicCompRight" alignment="1" pref="414" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -279,12 +281,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1100" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1125" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="592" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="440" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -322,7 +324,7 @@
                       <Component id="jPanel6" alignment="0" min="-2" max="-2" attributes="1"/>
                       <Component id="_jButtonHide" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="898" max="32767" attributes="0"/>
+                  <EmptySpace pref="915" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
