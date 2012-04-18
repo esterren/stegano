@@ -33,6 +33,11 @@
 			<artifactId>logback-core</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+	 <dependency>
+	  <groupId>org.jdesktop</groupId>
+	  <artifactId>beansbinding</artifactId>
+	  <version>1.2.1</version>
+	 </dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -97,7 +102,15 @@
 			</plugin>
 		</plugins>
 	</build>
-	<reporting>
+ <repositories>
+  <repository>
+   <url>http://download.java.net/maven/2/</url>
+   <id>beans-binding</id>
+   <layout>default</layout>
+   <name>Repository for library Library[beans-binding]</name>
+  </repository>
+ </repositories>
+ <reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

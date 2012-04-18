@@ -23,10 +23,10 @@ public class InPictureStrategy implements SteganoStrategy {
 		}
 
 		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
-				getLengthHF(inHiddenFile), inPollution);
+				FileByteFactory.getFileLength(inHiddenFile), inPollution);
 
 		BufferedImage baseFileImg = ImageIO.read(inBaseFile);
-		byte[] bHiddenFile = getByteArrayFromHiddenFile(inHiddenFile);
+		byte[] bHiddenFile = FileByteFactory.getByteArrayFromFile(inHiddenFile);
 		byte[] msg = concatHeaderAndHF(bHeader, bHiddenFile);
 
 		return hideMessage(baseFileImg, msg);
@@ -205,10 +205,11 @@ public class InPictureStrategy implements SteganoStrategy {
 		return null;
 	}
 
+        //TODO is obsolet, moved to ByteArrayFactory
 	private byte[] getByteArrayFromHiddenFile(File inHiddenFile) throws IOException {
 		FileInputStream fis = new FileInputStream(inHiddenFile);
 
-		byte[] byteArrayHiddenFile = new byte[getLengthHF(inHiddenFile)];
+		byte[] byteArrayHiddenFile = new byte[FileByteFactory.getFileLength(inHiddenFile)];
 		fis.read(byteArrayHiddenFile);
 		fis.close();
 		return byteArrayHiddenFile;
@@ -232,6 +233,7 @@ public class InPictureStrategy implements SteganoStrategy {
 
 	}
 
+        //TODO is obsolet, moved to ByteArrayFactory
 	// Länge des HiddenFile auslesen
 	private int getLengthHF(File inHiddenFile) throws IllegalArgumentException {
 		long length = inHiddenFile.length();

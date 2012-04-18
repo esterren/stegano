@@ -43,6 +43,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
 		init();
 		initComponents();
+                setScrollPaneSync();
 		setVisible(true);
 	}
 
@@ -57,9 +58,14 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel5 = new javax.swing.JPanel();
+        _jScrollPaneHexCompLeft = new javax.swing.JScrollPane();
+        jTextAreaHexCompLeft = new javax.swing.JTextArea();
+        _jScrollPaneHexCompRight = new javax.swing.JScrollPane();
+        jTextAreaHexCompRight = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
-        _jScrollPaneBaseFile = new javax.swing.JScrollPane();
-        _jScrollPaneModBaseFile = new javax.swing.JScrollPane();
+        _jScrollPanePicCompLeft = new javax.swing.JScrollPane();
+        _jScrollPanePicCompRight = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         _jLabelHBaseFile = new javax.swing.JLabel();
@@ -69,6 +75,8 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
         _jLabelHModBaseFile = new javax.swing.JLabel();
         _jLabelHModBaseFilePath = new javax.swing.JLabel();
         _jButtonHide = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jSlider1 = new javax.swing.JSlider();
         jPanel4 = new javax.swing.JPanel();
         _jButtonSeek = new javax.swing.JButton();
         _jLabelSModBaseFile = new javax.swing.JLabel();
@@ -87,9 +95,46 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Stegano");
 
-        _jScrollPaneBaseFile.setPreferredSize(new java.awt.Dimension(529, 561));
+        _jScrollPaneHexCompLeft.setPreferredSize(new java.awt.Dimension(529, 561));
 
-        _jScrollPaneModBaseFile.setPreferredSize(new java.awt.Dimension(529, 561));
+        jTextAreaHexCompLeft.setColumns(20);
+        jTextAreaHexCompLeft.setRows(5);
+        _jScrollPaneHexCompLeft.setViewportView(jTextAreaHexCompLeft);
+
+        _jScrollPaneHexCompRight.setPreferredSize(new java.awt.Dimension(529, 561));
+
+        jTextAreaHexCompRight.setColumns(20);
+        jTextAreaHexCompRight.setRows(5);
+        _jScrollPaneHexCompRight.setViewportView(jTextAreaHexCompRight);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 592, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+                    .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Hex Compare", jPanel5);
+
+        _jScrollPanePicCompLeft.setPreferredSize(new java.awt.Dimension(529, 561));
+
+        _jScrollPanePicCompRight.setPreferredSize(new java.awt.Dimension(529, 561));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -97,9 +142,9 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(_jScrollPaneBaseFile, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(_jScrollPaneModBaseFile, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -107,12 +152,12 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(_jScrollPaneBaseFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
-                    .addComponent(_jScrollPaneModBaseFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE))
+                    .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+                    .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Hidden in Picture", jPanel1);
+        jTabbedPane1.addTab("Picture Compare", jPanel1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -122,10 +167,10 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 583, Short.MAX_VALUE)
+            .addGap(0, 592, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Hidden in Audio", jPanel2);
+        jTabbedPane1.addTab("Audio Compare", jPanel2);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Hide"));
 
@@ -142,6 +187,33 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
         _jLabelHModBaseFilePath.setText("none");
 
         _jButtonHide.setText("Run Hide");
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Pollution"));
+
+        jSlider1.setMajorTickSpacing(1);
+        jSlider1.setMaximum(7);
+        jSlider1.setMinimum(1);
+        jSlider1.setMinorTickSpacing(1);
+        jSlider1.setPaintLabels(true);
+        jSlider1.setPaintTicks(true);
+        jSlider1.setSnapToTicks(true);
+        jSlider1.setValue(1);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -160,8 +232,9 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                             .addComponent(_jLabelHBaseFilePath)
                             .addComponent(_jLabelHHiddenFilePath)
                             .addComponent(_jLabelHModBaseFilePath)))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(_jButtonHide))
-                .addContainerGap(928, Short.MAX_VALUE))
+                .addContainerGap(898, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,6 +250,8 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(_jLabelHModBaseFilePath)
                     .addComponent(_jLabelHModBaseFile))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(_jButtonHide))
         );
@@ -200,6 +275,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(_jButtonSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(_jLabelSHiddenFile)
@@ -207,9 +283,8 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                         .addGap(12, 12, 12)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(_jLabelSModBaseFilePath)
-                            .addComponent(_jLabelSHiddenFilePath)))
-                    .addComponent(_jButtonSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(928, Short.MAX_VALUE))
+                            .addComponent(_jLabelSHiddenFilePath))))
+                .addContainerGap(953, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,7 +298,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                         .addComponent(_jLabelSModBaseFilePath)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(_jLabelSHiddenFilePath)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(_jButtonSeek))
         );
 
@@ -296,22 +371,24 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1105, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jTabbedPane1.getAccessibleContext().setAccessibleName("Compare");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -430,13 +507,20 @@ private void saveHiddenFileActionListener(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JMenuItem _jMenuItemMBF;
     private javax.swing.JMenuItem _jMenuItemMBFSavePath;
     private javax.swing.JMenu _jMenuSeekInfo;
-    private javax.swing.JScrollPane _jScrollPaneBaseFile;
-    private javax.swing.JScrollPane _jScrollPaneModBaseFile;
+    private javax.swing.JScrollPane _jScrollPaneHexCompLeft;
+    private javax.swing.JScrollPane _jScrollPaneHexCompRight;
+    private javax.swing.JScrollPane _jScrollPanePicCompLeft;
+    private javax.swing.JScrollPane _jScrollPanePicCompRight;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JSlider jSlider1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextAreaHexCompLeft;
+    private javax.swing.JTextArea jTextAreaHexCompRight;
     // End of variables declaration//GEN-END:variables
 
 	@Override
@@ -446,7 +530,7 @@ private void saveHiddenFileActionListener(java.awt.event.ActionEvent evt) {//GEN
 			_baseFileImg = ImageIO.read(_HbaseFile);
                         ImageIcon img = new ImageIcon(_baseFileImg);
                         JLabel imglbl = new JLabel(img);
-                        _jScrollPaneBaseFile.getViewport().add(imglbl);
+                        _jScrollPanePicCompLeft.getViewport().add(imglbl);
                         
                         
 		} catch (IOException ex) {
@@ -462,7 +546,7 @@ private void saveHiddenFileActionListener(java.awt.event.ActionEvent evt) {//GEN
 			_modBaseFileImg = ImageIO.read(_HmodBaseFile);
                         ImageIcon img = new ImageIcon(_modBaseFileImg);
                         JLabel imglbl = new JLabel(img);
-                        _jScrollPaneModBaseFile.getViewport().add(imglbl);
+                        _jScrollPanePicCompRight.getViewport().add(imglbl);
                         
                         
 		} catch (IOException ex) {
@@ -521,5 +605,11 @@ private void saveHiddenFileActionListener(java.awt.event.ActionEvent evt) {//GEN
 		}
 		return null;
 	}
-
+        private void setScrollPaneSync(){
+            _jScrollPanePicCompRight.getVerticalScrollBar().setModel(_jScrollPanePicCompLeft.getVerticalScrollBar().getModel());
+            _jScrollPanePicCompRight.getHorizontalScrollBar().setModel(_jScrollPanePicCompLeft.getHorizontalScrollBar().getModel());
+            //TODO Bug mit Anzeige von Scrollbar bei Test mit Enter.
+            //_jScrollPaneHexCompRight.getVerticalScrollBar().setModel(_jScrollPaneHexCompLeft.getVerticalScrollBar().getModel());
+            //_jScrollPaneHexCompRight.getHorizontalScrollBar().setModel(_jScrollPaneHexCompLeft.getHorizontalScrollBar().getModel());
+        }
 }
