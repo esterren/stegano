@@ -7,6 +7,7 @@ package ch.zhaw.swp2.stegano.model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Formatter;
 
 /**
@@ -34,14 +35,18 @@ public class FileByteFactory {
 		return (int) length;
 	}
         public static String bytesToHexString(byte[] bytes) {  
-            StringBuilder sb = new StringBuilder(bytes.length * 2);  
+            BigInteger bi = new BigInteger(bytes);
+            return bi.toString(16);
+            
+            
+            //StringBuilder sb = new StringBuilder(bytes.length * 2);  
 
-            Formatter formatter = new Formatter(sb);  
-            for (byte b : bytes) {  
-                formatter.format("%02x\t", b);  
-            }  
+            //Formatter formatter = new Formatter(sb);  
+            //for (byte b : bytes) {  
+            //    formatter.format("%02x\t", b);  
+            //}  
 
-            return sb.toString().toUpperCase();  
+            //return sb.toString().toUpperCase();  
     }  
         
 }

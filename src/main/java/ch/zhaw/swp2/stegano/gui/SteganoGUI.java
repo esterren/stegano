@@ -24,6 +24,7 @@ import ch.zhaw.swp2.stegano.controller.IfcUserInterface;
 import ch.zhaw.swp2.stegano.model.FileByteFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 
 /**
  * 
@@ -528,7 +529,7 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
 
 	@Override
 	public void displayBaseFile() {
-            displayHexBaseFile();
+            //displayHexFileString(_HbaseFile,_jTextAreaHexCompLeft);
 		// TODO Check for PNG and BMP Images => Validator
 		try {
 			_baseFileImg = ImageIO.read(_HbaseFile);
@@ -545,6 +546,7 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
 
 	@Override
 	public void displayModBaseFile() {
+            //displayHexFileString(_HmodBaseFile,_jTextAreaHexCompRight);
 				// TODO Check for PNG and BMP Images => Validator
             
             try {
@@ -560,12 +562,12 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
             }
 	}
         
-        private void displayHexBaseFile(){
+        private void displayHexFileString(File inFile, JTextArea inTextArea){
             byte[] bBaseFile ={};
             String bHex = "";
             try {
-                bBaseFile =FileByteFactory.getByteArrayFromFile(_HbaseFile);
-                _jTextAreaHexCompLeft.setText(FileByteFactory.bytesToHexString(bBaseFile));
+                bBaseFile =FileByteFactory.getByteArrayFromFile(inFile);
+                inTextArea.setText(FileByteFactory.bytesToHexString(bBaseFile));
                 //bHex = FileByteFactory.bytesToHexString(bBaseFile);
             } catch (IOException ex) {
                 Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
