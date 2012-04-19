@@ -531,17 +531,19 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
 	public void displayBaseFile() {
             //displayHexFileString(_HbaseFile,_jTextAreaHexCompLeft);
 		// TODO Check for PNG and BMP Images => Validator
+            
 		try {
 			_baseFileImg = ImageIO.read(_HbaseFile);
                         ImageIcon img = new ImageIcon(_baseFileImg);
                         JLabel imglbl = new JLabel(img);
                         _jScrollPanePicCompLeft.getViewport().add(imglbl);
-                        
+                        _jTextAreaHexCompLeft.setText(FileByteFactory.convertToHex(_HbaseFile));  
                         
 		} catch (IOException ex) {
                     //TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt werden kann.
 			Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
 		}
+              
 	}
 
 	@Override
@@ -564,7 +566,7 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
         
         private void displayHexFileString(File inFile, JTextArea inTextArea){
             byte[] bBaseFile ={};
-            String bHex = "";
+            //String bHex = "";
             try {
                 bBaseFile =FileByteFactory.getByteArrayFromFile(inFile);
                 inTextArea.setText(FileByteFactory.bytesToHexString(bBaseFile));
