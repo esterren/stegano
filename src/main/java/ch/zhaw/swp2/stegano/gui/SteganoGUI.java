@@ -403,6 +403,8 @@ private void importModBaseFileActionListener(java.awt.event.ActionEvent evt) {//
                 if (file != null) {
                         _SmodBaseFile = file;
                         _jLabelSModBaseFilePath.setText(_SmodBaseFile.getAbsolutePath());
+                        _HmodBaseFile = _SmodBaseFile;
+                        _jLabelHModBaseFilePath.setText(_HmodBaseFile.getAbsolutePath());
 
                 }
                 displayModBaseFile();
@@ -556,7 +558,7 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
                     ImageIcon img = new ImageIcon(_modBaseFileImg);
                     JLabel imglbl = new JLabel(img);
                     _jScrollPanePicCompRight.getViewport().add(imglbl);
-
+                    _jTextAreaHexCompRight.setText(FileByteFactory.convertToHex(_HmodBaseFile));  
 
             } catch (IOException ex) {
                 //TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt werden kann.

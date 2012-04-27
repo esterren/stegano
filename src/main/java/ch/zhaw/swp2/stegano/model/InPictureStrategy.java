@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -27,9 +28,11 @@ public class InPictureStrategy implements SteganoStrategy {
 
 		BufferedImage baseFileImg = ImageIO.read(inBaseFile);
 		byte[] bHiddenFile = FileByteFactory.getByteArrayFromFile(inHiddenFile);
-		byte[] msg = concatHeaderAndHF(bHeader, bHiddenFile);
+		byte[] bMsg = concat2ByteArrays(bHeader, bHiddenFile);
+		byte[] crc = CRCFactory.getCRC(bMsg);
+		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
-		return hideMessage(baseFileImg, msg);
+		return hideMessage(baseFileImg, bMsgCRC);
 	}
 
 	private BufferedImage hideMessage(BufferedImage img, byte[] message) {
@@ -88,19 +91,29 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	@Override
-	public File runSeek(File inModBaseFile) throws IOException {
+	public File runSeek(File inModBaseFile) throws IOException, IllegalArgumentException {
 		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
 
-		byte[] header = seekMessage(modBaseFileImg, 0, 8, (byte) 1);
+		byte[] bHeader = seekMessage(modBaseFileImg, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 1);
 
-		int hiddenFileByteLength = BaseFileProtocolFactory.getLengthFromHeader(header);
-		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(header);
-		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(header);
+		int hiddenFileByteLength = BaseFileProtocolFactory.getLengthFromHeader(bHeader);
+		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(bHeader);
+		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(bHeader);
 
-		byte[] hiddenFile = seekMessage(modBaseFileImg, 8, hiddenFileByteLength, baseFilePollution);
+		byte[] bHiddenFile = seekMessage(modBaseFileImg, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
+				baseFilePollution);
+
+		byte[] bCRCMsg = seekMessage(modBaseFileImg, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
+				baseFilePollution);
+
+		byte[] bMsg = concat2ByteArrays(bHeader, bHiddenFile);
+		byte[] bCRCCalc = CRCFactory.getCRC(bMsg);
+		if (!Arrays.equals(bCRCCalc, bCRCMsg)) {
+			new IllegalArgumentException("The hidden CRC doesn't match the Content. The modified Basefile is corrupt!");
+		}
 
 		String filename = "HiddenFile_" + System.currentTimeMillis() + "." + hiddenFileExtension;
-		writeFileFromByteArray(filename, hiddenFile);
+		writeFileFromByteArray(filename, bHiddenFile);
 		return null;
 	}
 
@@ -111,17 +124,16 @@ public class InPictureStrategy implements SteganoStrategy {
 	 *            the underlying Basefile-Image with the hidden Message (bytes)
 	 * @param startByte
 	 *            is the Start at which the algorithm starts. It starts with 0.
-	 * @param countByte
-	 *            is the nummber of bytes the algorithm is looking for. For
-	 *            e.g.: the length of Bytes (placed in the header) can be placed
-	 *            here.
+	 * @param countBytes
+	 *            is the number of bytes the algorithm is looking for. For e.g.:
+	 *            the length of Bytes (placed in the header) can be placed here.
 	 * @return a byte array with the found bytes in the BufferedImage starting
 	 *         at startByte and has the length of countByte.
 	 * @throws IllegalArgumentException
 	 */
-	private byte[] seekMessage(BufferedImage inModBaseFileImg, int startByte, int countByte, byte inPollution)
+	private byte[] seekMessage(BufferedImage inModBaseFileImg, int startByte, int countBytes, byte inPollution)
 			throws IllegalArgumentException {
-		if (startByte < 0 || countByte < 1) {
+		if (startByte < 0 || countBytes < 1) {
 			throw new IllegalArgumentException();
 		}
 
@@ -183,7 +195,7 @@ public class InPictureStrategy implements SteganoStrategy {
 							// der Hidden-Datei (=> Abbruchkriterium),
 							// dann folgt noch ein Byte mit der Verunreinigung.
 							bytes.add((byte) value);
-							if (bytes.size() == countByte) {
+							if (bytes.size() == countBytes) {
 								byte[] bOut = new byte[bytes.size()];
 								for (int i = 0; i < bytes.size(); i++) {
 									bOut[i] = bytes.get(i);
@@ -205,7 +217,7 @@ public class InPictureStrategy implements SteganoStrategy {
 		return null;
 	}
 
-        //TODO is obsolet, moved to ByteArrayFactory
+	// TODO is obsolet, moved to ByteArrayFactory
 	private byte[] getByteArrayFromHiddenFile(File inHiddenFile) throws IOException {
 		FileInputStream fis = new FileInputStream(inHiddenFile);
 
@@ -222,18 +234,18 @@ public class InPictureStrategy implements SteganoStrategy {
 
 	}
 
-	private byte[] concatHeaderAndHF(byte[] inHeader, byte[] inHiddenFile) {
-		int lenH = inHeader.length;
-		int lenM = inHiddenFile.length;
+	private byte[] concat2ByteArrays(byte[] inFirstBA, byte[] inSecondBA) {
+		int lenH = inFirstBA.length;
+		int lenM = inSecondBA.length;
 
 		ByteBuffer buffer = ByteBuffer.allocate(lenH + lenM);
-		buffer.put(inHeader);
-		buffer.put(inHiddenFile);
+		buffer.put(inFirstBA);
+		buffer.put(inSecondBA);
 		return buffer.array();
 
 	}
 
-        //TODO is obsolet, moved to ByteArrayFactory
+	// TODO is obsolet, moved to ByteArrayFactory
 	// Länge des HiddenFile auslesen
 	private int getLengthHF(File inHiddenFile) throws IllegalArgumentException {
 		long length = inHiddenFile.length();

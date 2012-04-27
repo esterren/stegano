@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 public class BaseFileProtocolFactory {
 
 	private static final int MAX_POLLUTION = 8;
-	public static final int HEADER_BYTE_LENGTH = 8;
+	public static final int HEADER_LENGTH = 8;
 	private static final int EXTENSION_STARTBYTE_POS = 0;
 	private static final int LENGTH_STARTBYTE_POS = 3;
 	private static final int POLLUTION_STARTBYTE_POS = 7;
@@ -48,7 +48,7 @@ public class BaseFileProtocolFactory {
 
 		int headerByteLength = byteHFExtension.length + byteHFLength.length + 1;
 
-		if (headerByteLength != HEADER_BYTE_LENGTH) {
+		if (headerByteLength != HEADER_LENGTH) {
 			throw new IllegalArgumentException();
 		}
 		ByteBuffer bheader = ByteBuffer.allocate(headerByteLength);
