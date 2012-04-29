@@ -110,6 +110,7 @@ public class InPictureStrategy implements SteganoStrategy {
 		byte[] bCRCCalc = CRCFactory.getCRC(bMsg);
 		if (!Arrays.equals(bCRCCalc, bCRCMsg)) {
 			new IllegalArgumentException("The hidden CRC doesn't match the Content. The modified Basefile is corrupt!");
+
 		}
 
 		String filename = "HiddenFile_" + System.currentTimeMillis() + "." + hiddenFileExtension;
