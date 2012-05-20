@@ -18,9 +18,9 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	@Override
-	public BufferedImage runHide(File inBaseFile, File inHiddenFile, byte inPollution) throws IOException {
-		if (inBaseFile == null || inHiddenFile == null) {
-			throw new IllegalArgumentException();
+	public void runHide(File inModBaseFile, File inBaseFile, File inHiddenFile, byte inPollution) throws Exception {
+		if (inModBaseFile == null || inBaseFile == null || inHiddenFile == null) {
+			throw new Exception("Please import a Basefile and a Hiddenfile!");
 		}
 
 		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
@@ -32,10 +32,11 @@ public class InPictureStrategy implements SteganoStrategy {
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
-		return hideMessage(baseFileImg, bMsgCRC);
+		BufferedImage modBaseFile = hideMessage(baseFileImg, bMsgCRC);
+		ImageIO.write(modBaseFile, FileNameFactory.getExtension(inModBaseFile), inModBaseFile);
 	}
 
-	private BufferedImage hideMessage(BufferedImage img, byte[] message) {
+	private BufferedImage hideMessage(BufferedImage img, byte[] message) throws Exception {
 
 		// Text in Bytes umwandeln
 		// byte[] b = message;
@@ -81,7 +82,8 @@ public class InPictureStrategy implements SteganoStrategy {
 						y++;
 						// Falls y größer als Höhe des Bildes => Fehler
 						if (y >= img.getHeight()) {
-							return null;
+							throw new Exception(
+									"The Basefile is too small for the Hiddenfile!\nPlease import a bigger Basefile or increase Pollution.");
 						}
 					}
 				}
@@ -91,11 +93,18 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	@Override
-	public File runSeek(File inModBaseFile) throws IOException, IllegalArgumentException {
+	public String runSeek(File inModBaseFile, String inHiddenFileSaveDir) throws Exception {
+		if (inModBaseFile == null || inHiddenFileSaveDir == null) {
+			throw new Exception("Please import a modified Basefile and set the directory for the Hiddenfile!");
+		}
 		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
 
 		byte[] bHeader = seekMessage(modBaseFileImg, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 1);
 
+		if (bHeader == null) {
+			throw new Exception(
+					"A problem was encountered during the Seek-Algorithm!\nThe modified Basefile might be corrupted!");
+		}
 		int hiddenFileByteLength = BaseFileProtocolFactory.getLengthFromHeader(bHeader);
 		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(bHeader);
 		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(bHeader);
@@ -105,17 +114,21 @@ public class InPictureStrategy implements SteganoStrategy {
 
 		byte[] bCRCMsg = seekMessage(modBaseFileImg, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
 				baseFilePollution);
-
+		if (bHiddenFile == null || bCRCMsg == null) {
+			throw new Exception(
+					"A problem was encountered during the Seek-Algorithm!\nThe modified Basefile might be corrupted!");
+		}
 		byte[] bMsg = concat2ByteArrays(bHeader, bHiddenFile);
 		byte[] bCRCCalc = CRCFactory.getCRC(bMsg);
 		if (!Arrays.equals(bCRCCalc, bCRCMsg)) {
-			new IllegalArgumentException("The hidden CRC doesn't match the Content. The modified Basefile is corrupt!");
+			throw new Exception("The hidden CRC doesn't match the Content. The modified Basefile was manipulated!");
 
 		}
 
-		String filename = "HiddenFile_" + System.currentTimeMillis() + "." + hiddenFileExtension;
-		writeFileFromByteArray(filename, bHiddenFile);
-		return null;
+		String filepath = inHiddenFileSaveDir + File.separatorChar + "HiddenFile_" + System.currentTimeMillis() + "."
+				+ hiddenFileExtension;
+		writeFileFromByteArray(filepath, bHiddenFile);
+		return filepath;
 	}
 
 	/**
@@ -133,9 +146,10 @@ public class InPictureStrategy implements SteganoStrategy {
 	 * @throws IllegalArgumentException
 	 */
 	private byte[] seekMessage(BufferedImage inModBaseFileImg, int startByte, int countBytes, byte inPollution)
-			throws IllegalArgumentException {
+			throws Exception {
 		if (startByte < 0 || countBytes < 1) {
-			throw new IllegalArgumentException();
+			throw new Exception(
+					"Unable to seek for the Hiddenfile, due to corrupt data.\nThe modified Basefile was manipulated!");
 		}
 
 		boolean hasPixLineOffset = false;
@@ -162,8 +176,10 @@ public class InPictureStrategy implements SteganoStrategy {
 				hasPixLineOffset = false;
 			}
 			while (x < inModBaseFileImg.getWidth()) {
-				// Aktuelle Farbe auslesen
+
 				int rgb = inModBaseFileImg.getRGB(x, y);
+
+				// Aktuelle Farbe auslesen
 				if (colorOffest != 0) {
 					switch (colorOffest) {
 					case 2:

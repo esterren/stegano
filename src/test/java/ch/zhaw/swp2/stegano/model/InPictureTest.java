@@ -49,8 +49,8 @@ public class InPictureTest {
 
 	@Test
 	public void testRunHideWithNull() throws Exception {
-		_exception.expect(IllegalArgumentException.class);
-		_inPictureStrategy.runHide(_testFileNull, _testFileNull, (byte) 0);
+		_exception.expect(Exception.class);
+		_inPictureStrategy.runHide(_testFileNull, _testFileNull, _testFileNull, (byte) 0);
 	}
 
 }

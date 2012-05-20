@@ -1,6 +1,5 @@
 package ch.zhaw.swp2.stegano.model;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 public interface SteganoStrategy {
@@ -10,6 +9,8 @@ public interface SteganoStrategy {
 	 * Algorithm of the specific Strategy and hide the inHiddenFile in the
 	 * inBaseFile
 	 * 
+	 * @param inModBaseFile
+	 *            the File, where the results are saved to.
 	 * @param inBaseFile
 	 *            The BaseFile on which the Algorithm will process the hiding.
 	 * @param inHiddenFile
@@ -18,7 +19,7 @@ public interface SteganoStrategy {
 	 * 
 	 * @return is the modified BaseFile with the hidden Information
 	 */
-	public BufferedImage runHide(File inBaseFile, File inHiddenFile, byte pollution) throws Exception;
+	public void runHide(File inModBaseFile, File inBaseFile, File inHiddenFile, byte pollution) throws Exception;
 
 	/**
 	 * This Method is called by the Controller to run the Staganographie
@@ -28,9 +29,11 @@ public interface SteganoStrategy {
 	 * @param inBaseFile
 	 *            The BaseFile on which the Algorithm will process and seek for
 	 *            hidden Information/File.
-	 * @return is the a File, the Steganographie-Algorithm found in the modified
-	 *         BaseFile.
+	 * @param inHiddenFileSaveDir
+	 *            The directory where the Hiddenfile will be saved.
+	 * @return is the absolute Filepath to the Hiddenfile, the
+	 *         Steganographie-Algorithm found in the modified BaseFile.
 	 */
-	public File runSeek(File inModBaseFile) throws Exception;
+	public String runSeek(File inModBaseFile, String inHiddenFileSaveDir) throws Exception;
 
 }
