@@ -14,6 +14,29 @@ import java.io.File;
  * 
  */
 public interface IfcUserInterface {
+	/**
+	 * This Method provides displaying an Error message.
+	 * 
+	 * @param inErrorMsg
+	 *            String with the Error message itself.
+	 */
+	public void displayErrorMsg(String inErrorMsg);
+
+	/**
+	 * This Method provides displaying an Warning message.
+	 * 
+	 * @param inWarnMsg
+	 *            String with the Warn message itself.
+	 */
+	public void displayWarnMsg(String inWarnMsg);
+
+	/**
+	 * This Method provides displaying an Info message.
+	 * 
+	 * @param inInfoMsg
+	 *            String with the Info message itself.
+	 */
+	public void displayInfoMsg(String inInfoMsg);
 
 	/**
 	 * This Method provides displaying the BaseFile
@@ -24,6 +47,11 @@ public interface IfcUserInterface {
 	 * This Method provides displaying the modified Basefile
 	 */
 	public void displayModBaseFile();
+
+	/**
+	 * This Method provides displaying the seeked Hiddenfile
+	 */
+	public void displaySeekedHiddenFile(String inHiddenFilePath) throws Exception;
 
 	/**
 	 * This Method is called by the Controller class and sets the
@@ -54,5 +82,14 @@ public interface IfcUserInterface {
 	 * @return is the File BaseFile for the Stegano-Algorithm.
 	 */
 	public File getModifiedBaseFile();
+
+	/**
+	 * This Method is called by the Controller to get the HiddenFile
+	 * Save-directory.
+	 * 
+	 * @return is the save-directory for the Stegano-Algorithm. (Where the
+	 *         extracted HiddenFile will be saved)
+	 */
+	public String getHiddenFileSaveDir();
 
 }

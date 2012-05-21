@@ -2,16 +2,10 @@ package ch.zhaw.swp2.stegano.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
 
 import ch.zhaw.swp2.stegano.gui.SteganoGUI;
-import ch.zhaw.swp2.stegano.model.FileNameFactory;
 import ch.zhaw.swp2.stegano.model.InPictureStrategy;
 import ch.zhaw.swp2.stegano.model.SteganoStrategy;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Controller {
 
@@ -52,17 +46,14 @@ public class Controller {
 
 		_steganoStrategy = new InPictureStrategy();
 
-		BufferedImage modBaseFile;
-
 		try {
-			modBaseFile = _steganoStrategy.runHide(_userInterface.getBaseFile(), _userInterface.getHiddenFile(),
-					(byte) 1);
-			//ImageIO.write(modBaseFile, "bmp", new File("test.bmp"));
-                        ImageIO.write(modBaseFile, FileNameFactory.getExtension(_userInterface.getModifiedBaseFile()), _userInterface.getModifiedBaseFile());
-                        _userInterface.displayModBaseFile();
+			_steganoStrategy.runHide(_userInterface.getModifiedBaseFile(), _userInterface.getBaseFile(),
+					_userInterface.getHiddenFile(), (byte) 1);
+
+			_userInterface.displayModBaseFile();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			_userInterface.displayErrorMsg(e.getMessage());
 		}
 
 	}
@@ -71,11 +62,15 @@ public class Controller {
 		_steganoStrategy = new InPictureStrategy();
 
 		try {
-                        //TODO The Save-Path from the GUI has to be passed to the model to save the hidden File and the abolute Filepath should be the return for the GUI.
-			File hiddenFile = _steganoStrategy.runSeek(_userInterface.getModifiedBaseFile());
+			// TODO The Save-Path from the GUI has to be passed to the model to
+			// save the hidden File and the abolute Filepath should be the
+			// return for the GUI.
+			String hiddenFilePath = _steganoStrategy.runSeek(_userInterface.getModifiedBaseFile(),
+					_userInterface.getHiddenFileSaveDir());
+			_userInterface.displaySeekedHiddenFile(hiddenFilePath);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			_userInterface.displayErrorMsg(e.getMessage());
 		}
 	}
 }
