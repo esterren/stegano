@@ -24,22 +24,24 @@ public class InAudioStrategy implements SteganoStrategy {
 			throw new Exception("Please import a Basefile and a Hiddenfile!");
 		}
 
+		WavFile wBaseFile = WavFile.openWavFile(inBaseFile);
+
 		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
 				FileByteFactory.getFileLength(inHiddenFile), inPollution);
 
-		byte[] baseFileAudio = getBytesFromFile(inBaseFile);
+		//byte[] baseFileAudio = getBytesFromFile(inBaseFile);
 
 		byte[] bHiddenFile = getBytesFromFile(inHiddenFile);
 		byte[] bMsg = concat2ByteArrays(bHeader, bHiddenFile);
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
-		byte[] modBaseFile = hideMessage(baseFileAudio, bMsgCRC);
+		WavFile modBaseFile = hideMessage(wBaseFile, bMsgCRC);
 		// ImageIO.write(modBaseFile,
 		// FileNameFactory.getExtension(inModBaseFile), inModBaseFile);
 	}
 
-	private byte[] hideMessage(byte[] audio, byte[] message) throws Exception {
+	private WavFile hideMessage(WavFile audio, byte[] message) throws Exception {
 
 		for (int i = 0; i < message.length; i++) {
 			// audio[100+i]
