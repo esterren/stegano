@@ -36,73 +36,95 @@ public class InAudioStrategy implements SteganoStrategy {
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
-		WavFile modBaseFile = hideMessage(wBaseFile, bMsgCRC);
+		long[] audioLongArr = hideMessage(wBaseFile, bMsgCRC);
+		wBaseFile.writeFrames(audioLongArr, wBaseFile.getNumChannels()*(int)wBaseFile.getNumFrames());
 		// ImageIO.write(modBaseFile,
 		// FileNameFactory.getExtension(inModBaseFile), inModBaseFile);
 	}
 
-	private WavFile hideMessage(WavFile audio, byte[] message) throws Exception {
+	private long[] hideMessage(WavFile audio, byte[] message) throws Exception {
 
 		int sampleTotal = (int)audio.getNumFrames();
 		int channelTotal = (int)audio.getNumChannels();
 		long[] buffer = new long[sampleTotal*channelTotal];
 		audio.readFrames(buffer, sampleTotal);
 		
-		
-		
 		for (int i = 0; i < message.length; i++) {
-			// audio[100+i]
-		}
-		// Text in Bytes umwandeln
-		// byte[] b = message;
-		// Alle Bytes durchlaufen
-		for (int i = 0, x = 0, y = 0; i < message.length; i++) {
-			// Alle Bits durchlaufen
-			for (int j = 0; j > -1; j--) {
-
-				// Wert des Bits auslesen
-				int bit = ((message[i] & 0xFF) >> j) & 1;
-				// Farbe an der aktuellen Position auslesen
-				// int rgb = audio.getRGB(x, y);
-				// Den aktuellen Farbkanal auslesen
-				// int color = (rgb >> channel.getShift()) & 0xFF;
-
-				// Farbkanal manipulieren
-				// if ((color & 1) != bit) {
-				// Den ausgelesenen Farbkanal der Farbe auf 0 setzen
-				// rgb &= channel.getRGBManipulator();
-				// switch (bit) {
-				// case 1:
-				// color = color + 1;
-				// break;
-				// default:
-				// color = color - 1;
-				// }
-				// Farbkanal zurückschreiben
-				// rgb |= color << channel.getShift();
-				// audio.setRGB(x, y, rgb);
+			byte m = message[i];
+			//boolean[] mBit = new boolean[8];
+			
+			for (int j = 0; j < 8; j++) {
+				if ((m % 2) == 1 && buffer[i*8+j] % 2 == 0) {
+					buffer[i*8+j] = buffer[i*8+j] - 1;
+					m = (byte)((m-1)/2);
+				}
+				else if((m % 2) == 1 && buffer[i*8+j] % 2 == 1){
+					m = (byte)((m-1)/2);
+				}
+				else if((m % 2) == 0 && buffer[i*8+j] % 2 == 0){
+					m = (byte)((m)/2);
+				}
+				else{
+					buffer[i*8+j] = buffer[i*8+j] - 1;
+				}
 			}
-
-			// nächsten Farbkanal setzen
-			// channel = channel.getNext();
-			// Falls Farbkanal = RED => X-Position verändern
-			// if (channel.equals(Color.RED)) {
-			// x++;
-			// Falls x größer als Breite des Bildes => Y-Positon
-			// verändern
-			// if (x >= audio.getWidth()) {
-			// x = 0;
-			// y++;
-			// Falls y größer als Höhe des Bildes => Fehler
-			// if (y >= audio.getHeight()) {
-			// throw new Exception(
-			// "The Basefile is too small for the Hiddenfile!\nPlease import a bigger Basefile or increase Pollution.");
-			// }
-			// }
-			// }
-			// }
+			
 		}
-		return audio;
+		
+		return buffer;
+//		for (int i = 0; i < message.length; i++) {
+//			// audio[100+i]
+//		}
+//		// Text in Bytes umwandeln
+//		// byte[] b = message;
+//		// Alle Bytes durchlaufen
+//		for (int i = 0, x = 0, y = 0; i < message.length; i++) {
+//			// Alle Bits durchlaufen
+//			for (int j = 0; j > -1; j--) {
+//
+//				// Wert des Bits auslesen
+//				int bit = ((message[i] & 0xFF) >> j) & 1;
+//				// Farbe an der aktuellen Position auslesen
+//				// int rgb = audio.getRGB(x, y);
+//				// Den aktuellen Farbkanal auslesen
+//				// int color = (rgb >> channel.getShift()) & 0xFF;
+//
+//				// Farbkanal manipulieren
+//				// if ((color & 1) != bit) {
+//				// Den ausgelesenen Farbkanal der Farbe auf 0 setzen
+//				// rgb &= channel.getRGBManipulator();
+//				// switch (bit) {
+//				// case 1:
+//				// color = color + 1;
+//				// break;
+//				// default:
+//				// color = color - 1;
+//				// }
+//				// Farbkanal zurückschreiben
+//				// rgb |= color << channel.getShift();
+//				// audio.setRGB(x, y, rgb);
+//			}
+//
+//			// nächsten Farbkanal setzen
+//			// channel = channel.getNext();
+//			// Falls Farbkanal = RED => X-Position verändern
+//			// if (channel.equals(Color.RED)) {
+//			// x++;
+//			// Falls x größer als Breite des Bildes => Y-Positon
+//			// verändern
+//			// if (x >= audio.getWidth()) {
+//			// x = 0;
+//			// y++;
+//			// Falls y größer als Höhe des Bildes => Fehler
+//			// if (y >= audio.getHeight()) {
+//			// throw new Exception(
+//			// "The Basefile is too small for the Hiddenfile!\nPlease import a bigger Basefile or increase Pollution.");
+//			// }
+//			// }
+//			// }
+//			// }
+//		}
+		
 	}
 
 	@Override
