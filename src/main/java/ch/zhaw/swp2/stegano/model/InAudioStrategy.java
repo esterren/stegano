@@ -28,30 +28,33 @@ public class InAudioStrategy implements SteganoStrategy {
 		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
 				FileByteFactory.getFileLength(inHiddenFile), inPollution);
 
-		BufferedImage baseFileImg = ImageIO.read(inBaseFile);
+		byte[] baseFileAudio = getBytesFromFile(inBaseFile);
 		
 		byte[] bHiddenFile = getBytesFromFile(inHiddenFile);
 		byte[] bMsg = concat2ByteArrays(bHeader, bHiddenFile);
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
-		BufferedImage modBaseFile = hideMessage(baseFileImg, bMsgCRC);
+		byte[] modBaseFile = hideMessage(baseFileAudio, bMsgCRC);
 		ImageIO.write(modBaseFile, FileNameFactory.getExtension(inModBaseFile), inModBaseFile);
 	}
 
-	private BufferedImage hideMessage(BufferedImage img, byte[] message) throws Exception {
+	private byte[] hideMessage(byte[] audio, byte[] message) throws Exception {
 
+		for (int i = 0; i < message.length; i++) {
+			audio[100+i]
+		}
 		// Text in Bytes umwandeln
 		// byte[] b = message;
 		// Alle Bytes durchlaufen
 		for (int i = 0, x = 0, y = 0; i < message.length; i++) {
 			// Alle Bits durchlaufen
-			for (int j = 7; j > -1; j--) {
+			for (int j = 0; j > -1; j--) {
 
 				// Wert des Bits auslesen
 				int bit = ((message[i] & 0xFF) >> j) & 1;
 				// Farbe an der aktuellen Position auslesen
-				int rgb = img.getRGB(x, y);
+				int rgb = audio.getRGB(x, y);
 				// Den aktuellen Farbkanal auslesen
 				int color = (rgb >> channel.getShift()) & 0xFF;
 
@@ -68,7 +71,7 @@ public class InAudioStrategy implements SteganoStrategy {
 					}
 					// Farbkanal zurückschreiben
 					rgb |= color << channel.getShift();
-					img.setRGB(x, y, rgb);
+					audio.setRGB(x, y, rgb);
 				}
 
 				// nächsten Farbkanal setzen
@@ -78,11 +81,11 @@ public class InAudioStrategy implements SteganoStrategy {
 					x++;
 					// Falls x größer als Breite des Bildes => Y-Positon
 					// verändern
-					if (x >= img.getWidth()) {
+					if (x >= audio.getWidth()) {
 						x = 0;
 						y++;
 						// Falls y größer als Höhe des Bildes => Fehler
-						if (y >= img.getHeight()) {
+						if (y >= audio.getHeight()) {
 							throw new Exception(
 									"The Basefile is too small for the Hiddenfile!\nPlease import a bigger Basefile or increase Pollution.");
 						}
@@ -90,7 +93,7 @@ public class InAudioStrategy implements SteganoStrategy {
 				}
 			}
 		}
-		return img;
+		return audio;
 	}
 
 	@Override
