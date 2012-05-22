@@ -43,6 +43,13 @@ public class InAudioStrategy implements SteganoStrategy {
 
 	private WavFile hideMessage(WavFile audio, byte[] message) throws Exception {
 
+		int sampleTotal = (int)audio.getNumFrames();
+		int channelTotal = (int)audio.getNumChannels();
+		long[] buffer = new long[sampleTotal*channelTotal];
+		audio.readFrames(buffer, sampleTotal);
+		
+		
+		
 		for (int i = 0; i < message.length; i++) {
 			// audio[100+i]
 		}
@@ -240,6 +247,36 @@ public class InAudioStrategy implements SteganoStrategy {
 		return null;
 	}
 
+	
+	private byte[] longToByteArray(long longArr){
+		return new byte[] {
+		        (byte)((longArr >> 56) & 0xff),
+		        (byte)((longArr >> 48) & 0xff),
+		        (byte)((longArr >> 40) & 0xff),
+		        (byte)((longArr >> 32) & 0xff),
+		        (byte)((longArr >> 24) & 0xff),
+		        (byte)((longArr >> 16) & 0xff),
+		        (byte)((longArr >> 8) & 0xff),
+		        (byte)((longArr >> 0) & 0xff),
+		};
+	}
+	
+	private long byteArrayToLong(byte[] byteArr) {
+	    if (byteArr == null || byteArr.length != 8) return 0x0;
+	   
+	    return (long)(
+	            (long)(0xff & byteArr[0]) << 56  |
+	            (long)(0xff & byteArr[1]) << 48  |
+	            (long)(0xff & byteArr[2]) << 40  |
+	            (long)(0xff & byteArr[3]) << 32  |
+	            (long)(0xff & byteArr[4]) << 24  |
+	            (long)(0xff & byteArr[5]) << 16  |
+	            (long)(0xff & byteArr[6]) << 8   |
+	            (long)(0xff & byteArr[7]) << 0
+	            );
+	}
+	
+	
 	// TODO is obsolet, moved to ByteArrayFactory
 	private byte[] getByteArrayFromHiddenFile(File inHiddenFile) throws IOException {
 		FileInputStream fis = new FileInputStream(inHiddenFile);
