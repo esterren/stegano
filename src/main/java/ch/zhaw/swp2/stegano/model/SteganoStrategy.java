@@ -1,6 +1,7 @@
 package ch.zhaw.swp2.stegano.model;
 
 import java.io.File;
+import java.util.List;
 
 public interface SteganoStrategy {
 
@@ -35,5 +36,9 @@ public interface SteganoStrategy {
 	 *         Steganographie-Algorithm found in the modified BaseFile.
 	 */
 	public String runSeek(File inModBaseFile, String inHiddenFileSaveDir) throws Exception;
+
+	public List<String> getFormatedBaseFileHexString();
+
+	public List<String> getFormatedModBaseFileHexString();
 
 }

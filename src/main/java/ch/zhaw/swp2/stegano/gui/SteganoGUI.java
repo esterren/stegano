@@ -10,6 +10,7 @@
  */
 package ch.zhaw.swp2.stegano.gui;
 
+import java.awt.Desktop;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,15 +19,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import ch.zhaw.swp2.stegano.controller.IfcUserInterface;
 import ch.zhaw.swp2.stegano.model.FileByteFactory;
-import java.awt.Desktop;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
+import java.awt.Color;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 /**
  * 
@@ -36,19 +43,22 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
 	private File _HbaseFile;
 	private File _HhiddenFile;
-        private File _HmodBaseFile;
+	private File _HmodBaseFile;
 	private BufferedImage _baseFileImg;
-        private BufferedImage _modBaseFileImg;
-        private File _SmodBaseFile;
-        private File _ShiddenFile;
-        private String _lastFileChoserPath = ".";
+	private BufferedImage _modBaseFileImg;
+	private File _SmodBaseFile;
+	private File _ShiddenFile;
+        private static final int HEX_COMPARE_ROW_LENGTH = 24;
+	private String _lastFileChoserPath = ".";
+        private List<String> _baseFileHexString = new LinkedList<String>();
+        private List<String> _modBaseFileHexString = new LinkedList<String>();
 
 	/** Creates new form SteganoGUI */
 	public SteganoGUI() {
 
 		init();
 		initComponents();
-                setScrollPaneSync();
+		setScrollPaneSync();
 		setVisible(true);
 	}
 
@@ -59,15 +69,16 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
+	// <editor-fold defaultstate="collapsed"
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         _jScrollPaneHexCompLeft = new javax.swing.JScrollPane();
-        _jTextAreaHexCompLeft = new javax.swing.JTextArea();
+        _jTextPaneHexCompLeft = new javax.swing.JTextPane();
         _jScrollPaneHexCompRight = new javax.swing.JScrollPane();
-        _jTextAreaHexCompRight = new javax.swing.JTextArea();
+        _jTextPaneHexCompRight = new javax.swing.JTextPane();
         jPanel1 = new javax.swing.JPanel();
         _jScrollPanePicCompLeft = new javax.swing.JScrollPane();
         _jScrollPanePicCompRight = new javax.swing.JScrollPane();
@@ -102,39 +113,33 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
         _jScrollPaneHexCompLeft.setPreferredSize(new java.awt.Dimension(529, 561));
 
-        _jTextAreaHexCompLeft.setColumns(20);
-        _jTextAreaHexCompLeft.setEditable(false);
-        _jTextAreaHexCompLeft.setRows(5);
-        _jTextAreaHexCompLeft.setTabSize(2);
-        _jScrollPaneHexCompLeft.setViewportView(_jTextAreaHexCompLeft);
+        _jTextPaneHexCompLeft.setPreferredSize(new java.awt.Dimension(0, 0));
+        _jScrollPaneHexCompLeft.setViewportView(_jTextPaneHexCompLeft);
 
         _jScrollPaneHexCompRight.setPreferredSize(new java.awt.Dimension(529, 561));
 
-        _jTextAreaHexCompRight.setColumns(20);
-        _jTextAreaHexCompRight.setEditable(false);
-        _jTextAreaHexCompRight.setRows(5);
-        _jTextAreaHexCompRight.setTabSize(2);
-        _jScrollPaneHexCompRight.setViewportView(_jTextAreaHexCompRight);
+        _jTextPaneHexCompRight.setPreferredSize(new java.awt.Dimension(0, 0));
+        _jScrollPaneHexCompRight.setViewportView(_jTextPaneHexCompRight);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+                .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-                    .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                    .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Hex Compare", jPanel5);
@@ -149,9 +154,9 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
+                .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+                .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -159,8 +164,8 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-                    .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE))
+                    .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                    .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -170,11 +175,11 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1237, Short.MAX_VALUE)
+            .addGap(0, 996, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 444, Short.MAX_VALUE)
+            .addGap(0, 436, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Audio Compare", jPanel2);
@@ -241,7 +246,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                             .addComponent(_jLabelHModBaseFilePath)))
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(_jButtonHide))
-                .addContainerGap(1027, Short.MAX_VALUE))
+                .addContainerGap(786, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,7 +296,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(_jLabelSModBaseFilePath)
                             .addComponent(_jLabelSHiddenFilePath))))
-                .addContainerGap(1047, Short.MAX_VALUE))
+                .addContainerGap(806, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -376,7 +381,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1242, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
@@ -391,8 +396,8 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Compare");
@@ -400,56 +405,58 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void importModBaseFileActionListener(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importModBaseFileActionListener
-                File file = openFileChooser("Import modified Basefile", JFileChooser.OPEN_DIALOG,JFileChooser.FILES_ONLY);
-                if (file != null) {
-                        _SmodBaseFile = file;
-                        _jLabelSModBaseFilePath.setText(_SmodBaseFile.getAbsolutePath());
-                        _HmodBaseFile = _SmodBaseFile;
-                        _jLabelHModBaseFilePath.setText(_HmodBaseFile.getAbsolutePath());
+	private void importModBaseFileActionListener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importModBaseFileActionListener
+		File file = openFileChooser("Import modified Basefile", JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY);
+		if (file != null) {
+			_SmodBaseFile = file;
+			_jLabelSModBaseFilePath.setText(_SmodBaseFile.getAbsolutePath());
+			_HmodBaseFile = _SmodBaseFile;
+			_jLabelHModBaseFilePath.setText(_HmodBaseFile.getAbsolutePath());
 
-                }
-                displayModBaseFile();
-}//GEN-LAST:event_importModBaseFileActionListener
+		}
+		displayModBaseFile();
+	}// GEN-LAST:event_importModBaseFileActionListener
 
-private void saveModBaseFileActionListener(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveModBaseFileActionListener
-                File file = openFileChooser("Save the modified Basefile", JFileChooser.SAVE_DIALOG,JFileChooser.FILES_ONLY);
-                if(file != null){
-                    _HmodBaseFile = file;
-                    _jLabelHModBaseFilePath.setText(_HmodBaseFile.getAbsolutePath());
-                    _SmodBaseFile = _HmodBaseFile;
-                    _jLabelSModBaseFilePath.setText(_SmodBaseFile.getAbsolutePath());
-                }
-                
-}//GEN-LAST:event_saveModBaseFileActionListener
+	private void saveModBaseFileActionListener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveModBaseFileActionListener
+		File file = openFileChooser("Save the modified Basefile", JFileChooser.SAVE_DIALOG, JFileChooser.FILES_ONLY);
+		if (file != null) {
+			_HmodBaseFile = file;
+			_jLabelHModBaseFilePath.setText(_HmodBaseFile.getAbsolutePath());
+			_SmodBaseFile = _HmodBaseFile;
+			_jLabelSModBaseFilePath.setText(_SmodBaseFile.getAbsolutePath());
+		}
 
-private void saveHiddenFileActionListener(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveHiddenFileActionListener
-                File file = openFileChooser("Save-Directory for the Hiddenfile", JFileChooser.SAVE_DIALOG,JFileChooser.DIRECTORIES_ONLY);
-                if(file != null){
-                    _ShiddenFile = file;
-                    _jLabelSHiddenFilePath.setText(_ShiddenFile.getAbsolutePath());
-                }
-}//GEN-LAST:event_saveHiddenFileActionListener
-private void importBaseFileActionlistener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importBaseFileActionlistener
+	}// GEN-LAST:event_saveModBaseFileActionListener
 
-        File file = openFileChooser("Import Basefile", JFileChooser.OPEN_DIALOG,JFileChooser.FILES_ONLY);
-        if (file != null) {
-                _HbaseFile = file;
-                _jLabelHBaseFilePath.setText(_HbaseFile.getAbsolutePath());
+	private void saveHiddenFileActionListener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveHiddenFileActionListener
+		File file = openFileChooser("Save-Directory for the Hiddenfile", JFileChooser.SAVE_DIALOG,
+				JFileChooser.DIRECTORIES_ONLY);
+		if (file != null) {
+			_ShiddenFile = file;
+			_jLabelSHiddenFilePath.setText(_ShiddenFile.getAbsolutePath());
+		}
+	}// GEN-LAST:event_saveHiddenFileActionListener
 
-                displayBaseFile();
+	private void importBaseFileActionlistener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importBaseFileActionlistener
 
-        }
-}// GEN-LAST:event_importBaseFileActionlistener
+		File file = openFileChooser("Import Basefile", JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY);
+		if (file != null) {
+			_HbaseFile = file;
+			_jLabelHBaseFilePath.setText(_HbaseFile.getAbsolutePath());
 
-private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importHiddenFileActionListener
-        File file = openFileChooser("Import Hiddenfile", JFileChooser.OPEN_DIALOG,JFileChooser.FILES_ONLY);
-        if (file != null) {
-                _HhiddenFile = file;
-                _jLabelHHiddenFilePath.setText(_HhiddenFile.getAbsolutePath());
+			displayBaseFile();
 
-        }
-}// GEN-LAST:event_importHiddenFileActionListener
+		}
+	}// GEN-LAST:event_importBaseFileActionlistener
+
+	private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importHiddenFileActionListener
+		File file = openFileChooser("Import Hiddenfile", JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY);
+		if (file != null) {
+			_HhiddenFile = file;
+			_jLabelHHiddenFilePath.setText(_HhiddenFile.getAbsolutePath());
+
+		}
+	}// GEN-LAST:event_importHiddenFileActionListener
 
 	/**
 	 * @param args
@@ -519,8 +526,8 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
     private javax.swing.JScrollPane _jScrollPaneHexCompRight;
     private javax.swing.JScrollPane _jScrollPanePicCompLeft;
     private javax.swing.JScrollPane _jScrollPanePicCompRight;
-    private javax.swing.JTextArea _jTextAreaHexCompLeft;
-    private javax.swing.JTextArea _jTextAreaHexCompRight;
+    private javax.swing.JTextPane _jTextPaneHexCompLeft;
+    private javax.swing.JTextPane _jTextPaneHexCompRight;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -533,66 +540,87 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
 
 	@Override
 	public void displayBaseFile() {
-            //displayHexFileString(_HbaseFile,_jTextAreaHexCompLeft);
+		// displayHexFileString(_HbaseFile,_jTextAreaHexCompLeft);
 		// TODO Check for PNG and BMP Images => Validator
-            
+
 		try {
 			_baseFileImg = ImageIO.read(_HbaseFile);
-                        ImageIcon img = new ImageIcon(_baseFileImg);
-                        JLabel imglbl = new JLabel(img);
-                        _jScrollPanePicCompLeft.getViewport().add(imglbl);
-                        _jTextAreaHexCompLeft.setText(FileByteFactory.convertToHex(_HbaseFile));  
-                        
+			ImageIcon img = new ImageIcon(_baseFileImg);
+			JLabel imglbl = new JLabel(img);
+			_jScrollPanePicCompLeft.getViewport().add(imglbl);
+			//_jTextAreaHexCompLeft.setText(FileByteFactory.convertToHex(_HbaseFile));
+
 		} catch (IOException ex) {
-                    //TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt werden kann.
+			// TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt
+			// werden kann.
 			Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
 		}
-              
+
 	}
 
 	@Override
 	public void displayModBaseFile() {
-            //displayHexFileString(_HmodBaseFile,_jTextAreaHexCompRight);
-				// TODO Check for PNG and BMP Images => Validator
-            
-            try {
-                    _modBaseFileImg = ImageIO.read(_HmodBaseFile);
-                    ImageIcon img = new ImageIcon(_modBaseFileImg);
-                    JLabel imglbl = new JLabel(img);
-                    _jScrollPanePicCompRight.getViewport().add(imglbl);
-                    _jTextAreaHexCompRight.setText(FileByteFactory.convertToHex(_HmodBaseFile));  
+                
+		try {
+			_modBaseFileImg = ImageIO.read(_HmodBaseFile);
+			ImageIcon img = new ImageIcon(_modBaseFileImg);
+			JLabel imglbl = new JLabel(img);
+			_jScrollPanePicCompRight.getViewport().add(imglbl);
+		} catch (IOException ex) {
+			// TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt
+			// werden kann.
+			Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+		}
 
-            } catch (IOException ex) {
-                //TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt werden kann.
-                    Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                int counter = 0;
+                _jTextPaneHexCompLeft.setEditable(true);
+                _jTextPaneHexCompRight.setEditable(true);
+                
+                for (int i = 0; i < _modBaseFileHexString.size(); i++) {
+                    if(_baseFileHexString!= null && !_modBaseFileHexString.get(i).equals(_baseFileHexString.get(i))){
+                        //append(Color.RED, _modBaseFileHexString.get(i)+ " ");
+                        append(_jTextPaneHexCompRight,Color.RED, _modBaseFileHexString.get(i)+ " ");
+                        counter++;
+                    }
+                    else{
+                        //append(Color.BLACK, _modBaseFileHexString.get(i) + " ");
+                        append(_jTextPaneHexCompRight,Color.BLACK, _modBaseFileHexString.get(i) + " ");
+                        counter++;
+                    }
+                    append(_jTextPaneHexCompLeft,Color.BLACK, _baseFileHexString.get(i) + " ");
+                    if(counter== HEX_COMPARE_ROW_LENGTH){
+                        //append(Color.BLACK, "\n");
+                        append(_jTextPaneHexCompLeft,Color.BLACK, "\n");
+                        append(_jTextPaneHexCompRight,Color.BLACK, "\n");
+                        counter =0;
+                    }
+                }
+                _jTextPaneHexCompLeft.setEditable(false);
+                _jTextPaneHexCompRight.setEditable(false);
+			//_jTextAreaHexCompRight.setText(FileByteFactory.convertToHex(_HmodBaseFile));
+                
 	}
         
-        private void displayHexFileString(File inFile, JTextArea inTextArea){
-            byte[] bBaseFile ={};
-            //String bHex = "";
-            try {
-                bBaseFile =FileByteFactory.getByteArrayFromFile(inFile);
-                inTextArea.setText(FileByteFactory.bytesToHexString(bBaseFile));
-                //bHex = FileByteFactory.bytesToHexString(bBaseFile);
-            } catch (IOException ex) {
-                Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+        public void setBaseFileHexString (List<String> inHexList) throws IllegalArgumentException{
+            if(inHexList == null){
+                throw new IllegalArgumentException("Hex String is null!");
+            }else{
+                _baseFileHexString = inHexList;
             }
-            //TODO Ugly Fix. Doesn't 
-            //_jTextAreaHexCompLeft.setText("");
-            //int len = 24;
-            //int k = 0;
-           // for (int i = 0; i < bHex.length(); i++) {
-            //    if(i != 0 && (i%(len*3))==0){
-             //       _jTextAreaHexCompLeft.append(bHex.substring(k, i) + "\n");
-             //       k = i;
-             //   }
-           // }
+        }
+        public void setModBaseFileHexString (List<String> inHexList) throws IllegalArgumentException{
+            if(inHexList == null){
+                throw new IllegalArgumentException("Hex String is null!");
+            }else{
+                _modBaseFileHexString = inHexList;
+            }
         }
 
+
+	@Override
 	public void setListeners(ActionListener buttonRunHide, ActionListener buttonRunSeek) {
 		_jButtonHide.addActionListener(buttonRunHide);
-                _jButtonSeek.addActionListener(buttonRunSeek);
+		_jButtonSeek.addActionListener(buttonRunSeek);
 	}
 
 	@Override
@@ -611,91 +639,111 @@ private void importHiddenFileActionListener(java.awt.event.ActionEvent evt) {// 
 		return _HmodBaseFile;
 	}
 
-	private File openFileChooser(String  inTitle, int inDialogType, int inSelectionMode) {
-                
-		JFileChooser fileChooser = new JFileChooser(new File(_lastFileChoserPath));
-                //if(_lastFileChoserPath ==null|| _lastFileChoserPath.isEmpty()){
-                //    try {
-                        // Create a File object containing the canonical path of the
-                        // desired directory
-                //        File f = new File(new File(".").getCanonicalPath());
+	private File openFileChooser(String inTitle, int inDialogType, int inSelectionMode) {
 
-                        // Set the current directory
-                        //_lastFileChoserPath = f.getAbsolutePath();
-                        //fileChooser.setCurrentDirectory(f); 
-                //    } catch (IOException e) {
-                //    }
-                //}
-                //fileChooser.setCurrentDirectory(new File(_lastFileChoserPath));
-                fileChooser.setMultiSelectionEnabled(false);
-                fileChooser.setDialogType(inDialogType);
-                fileChooser.setDialogTitle(inTitle);
-                fileChooser.setFileSelectionMode(inSelectionMode);
-                int returnValue = JFileChooser.CANCEL_OPTION;
-                if(fileChooser.getDialogType()== JFileChooser.OPEN_DIALOG){
-                    returnValue = fileChooser.showOpenDialog(this);
-		
-                }else if(fileChooser.getDialogType() == JFileChooser.SAVE_DIALOG){
-                    returnValue = fileChooser.showSaveDialog(this);
-                }
-                
+		JFileChooser fileChooser = new JFileChooser(new File(_lastFileChoserPath));
+		// if(_lastFileChoserPath ==null|| _lastFileChoserPath.isEmpty()){
+		// try {
+		// Create a File object containing the canonical path of the
+		// desired directory
+		// File f = new File(new File(".").getCanonicalPath());
+
+		// Set the current directory
+		// _lastFileChoserPath = f.getAbsolutePath();
+		// fileChooser.setCurrentDirectory(f);
+		// } catch (IOException e) {
+		// }
+		// }
+		// fileChooser.setCurrentDirectory(new File(_lastFileChoserPath));
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setDialogType(inDialogType);
+		fileChooser.setDialogTitle(inTitle);
+		fileChooser.setFileSelectionMode(inSelectionMode);
+		int returnValue = JFileChooser.CANCEL_OPTION;
+		if (fileChooser.getDialogType() == JFileChooser.OPEN_DIALOG) {
+			returnValue = fileChooser.showOpenDialog(this);
+
+		} else if (fileChooser.getDialogType() == JFileChooser.SAVE_DIALOG) {
+			returnValue = fileChooser.showSaveDialog(this);
+		}
+
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
-                        //fileChooser.getSelectedFile().getAbsolutePath()
-                        _lastFileChoserPath = fileChooser.getSelectedFile().getPath();
+			// fileChooser.getSelectedFile().getAbsolutePath()
+			_lastFileChoserPath = fileChooser.getSelectedFile().getPath();
 			return fileChooser.getSelectedFile();
 		}
 		return null;
 	}
-        private void setScrollPaneSync(){
-            _jScrollPanePicCompRight.getVerticalScrollBar().setModel(_jScrollPanePicCompLeft.getVerticalScrollBar().getModel());
-            _jScrollPanePicCompRight.getHorizontalScrollBar().setModel(_jScrollPanePicCompLeft.getHorizontalScrollBar().getModel());
-            //TODO Bug mit Anzeige von Scrollbar bei Test mit Enter.
-            _jScrollPaneHexCompRight.getVerticalScrollBar().setModel(_jScrollPaneHexCompLeft.getVerticalScrollBar().getModel());
-            _jScrollPaneHexCompRight.getHorizontalScrollBar().setModel(_jScrollPaneHexCompLeft.getHorizontalScrollBar().getModel());
-        }
 
-    @Override
-    public void displayErrorMsg(String inErrorMsg) {
-        JOptionPane.showMessageDialog(this, inErrorMsg, "Error", JOptionPane.ERROR_MESSAGE);
-    }
+	private void setScrollPaneSync() {
+		_jScrollPanePicCompRight.getVerticalScrollBar().setModel(
+				_jScrollPanePicCompLeft.getVerticalScrollBar().getModel());
+		_jScrollPanePicCompRight.getHorizontalScrollBar().setModel(
+				_jScrollPanePicCompLeft.getHorizontalScrollBar().getModel());
+		// TODO Bug mit Anzeige von Scrollbar bei Test mit Enter.
+		_jScrollPaneHexCompRight.getVerticalScrollBar().setModel(
+				_jScrollPaneHexCompLeft.getVerticalScrollBar().getModel());
+		_jScrollPaneHexCompRight.getHorizontalScrollBar().setModel(
+				_jScrollPaneHexCompLeft.getHorizontalScrollBar().getModel());
+	}
 
-    @Override
-    public void displayWarnMsg(String inWarnMsg) {
-        JOptionPane.showMessageDialog(this, inWarnMsg, "Warning", JOptionPane.WARNING_MESSAGE);
-    }
+	@Override
+	public void displayErrorMsg(String inErrorMsg) {
+		JOptionPane.showMessageDialog(this, inErrorMsg, "Error", JOptionPane.ERROR_MESSAGE);
+	}
 
-    @Override
-    public void displayInfoMsg(String inInfoMsg) {
-        JOptionPane.showMessageDialog(this, inInfoMsg, "Info", JOptionPane.INFORMATION_MESSAGE);
-    }
+	@Override
+	public void displayWarnMsg(String inWarnMsg) {
+		JOptionPane.showMessageDialog(this, inWarnMsg, "Warning", JOptionPane.WARNING_MESSAGE);
+	}
 
-    @Override
-    public String getHiddenFileSaveDir() {
-        if(_ShiddenFile != null){
-            return _ShiddenFile.getPath();
-        }
-        else{
-            return null;
-        }
-    }
+	@Override
+	public void displayInfoMsg(String inInfoMsg) {
+		JOptionPane.showMessageDialog(this, inInfoMsg, "Info", JOptionPane.INFORMATION_MESSAGE);
+	}
 
-    @Override
-    public void displaySeekedHiddenFile(String inHiddenFilePath) throws Exception {
-       if(inHiddenFilePath == null){
-           throw new Exception("A problem was encountered while opening the Hiddenfile!");
-       } 
-       _ShiddenFile = new File(inHiddenFilePath);
-       _jLabelSHiddenFilePath.setText(_ShiddenFile.getAbsolutePath());
-       if(Desktop.isDesktopSupported()){
-           Desktop desktop = Desktop.getDesktop();
-           
-           if(desktop.isSupported(Desktop.Action.OPEN)){
-                try {
-                    desktop.open(_ShiddenFile);
-                } catch (IOException ex) {
-                    displayErrorMsg("Could not open Hiddenfile with a system-associated Editor!");
-                }
-           }
-       }
-    }
+	@Override
+	public String getHiddenFileSaveDir() {
+		if (_ShiddenFile != null) {
+			return _ShiddenFile.getPath();
+		} else {
+			return null;
+		}
+	}
+        
+        
+
+	@Override
+	public void displaySeekedHiddenFile(String inHiddenFilePath) throws Exception {
+		if (inHiddenFilePath == null) {
+			throw new Exception("A problem was encountered while opening the Hiddenfile!");
+		}
+		_ShiddenFile = new File(inHiddenFilePath);
+		_jLabelSHiddenFilePath.setText(_ShiddenFile.getAbsolutePath());
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+
+			if (desktop.isSupported(Desktop.Action.OPEN)) {
+				try {
+					desktop.open(_ShiddenFile);
+				} catch (IOException ex) {
+					displayErrorMsg("Could not open Hiddenfile with a system-associated Editor!");
+				}
+			}
+		}
+	}
+        
+        private void append(JTextPane inPane, Color c, String s) { // better implementation--uses
+											// StyleContext
+		StyleContext sc = StyleContext.getDefaultStyleContext();
+		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+
+		int len = inPane.getDocument().getLength(); // same value as
+												// getText().length();
+		inPane.setCaretPosition(len); // place caret at the end (with no selection)
+		inPane.setCharacterAttributes(aset, false);
+		inPane.replaceSelection(s); // there is no selection, so inserts at caret
+	}
+        
+       
 }

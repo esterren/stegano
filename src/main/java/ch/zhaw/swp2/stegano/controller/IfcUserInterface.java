@@ -2,6 +2,7 @@ package ch.zhaw.swp2.stegano.controller;
 
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 
 /**
  * The IfcUserInterface is the Interface, which has to be implemented in any UI.
@@ -91,5 +92,8 @@ public interface IfcUserInterface {
 	 *         extracted HiddenFile will be saved)
 	 */
 	public String getHiddenFileSaveDir();
+        
+        public void setBaseFileHexString (List<String> inHexString) throws IllegalArgumentException;
+        public void setModBaseFileHexString (List<String> inHexString) throws IllegalArgumentException;
 
 }

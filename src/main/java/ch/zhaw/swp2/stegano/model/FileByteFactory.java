@@ -16,7 +16,7 @@ import java.math.BigInteger;
  */
 public class FileByteFactory {
 
-	private static final int MAX_BYTE_CONVERT = 100000;
+	private static final int MAX_BYTE_CONVERT = 10000;
 
 	public static byte[] getByteArrayFromFile(File inFile) throws IOException {
 		FileInputStream fis = new FileInputStream(inFile);

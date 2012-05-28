@@ -49,7 +49,8 @@ public class Controller {
 		try {
 			_steganoStrategy.runHide(_userInterface.getModifiedBaseFile(), _userInterface.getBaseFile(),
 					_userInterface.getHiddenFile(), (byte) 1);
-
+			_userInterface.setBaseFileHexString(_steganoStrategy.getFormatedBaseFileHexString());
+			_userInterface.setModBaseFileHexString(_steganoStrategy.getFormatedModBaseFileHexString());
 			_userInterface.displayModBaseFile();
 		} catch (Exception e) {
 			e.printStackTrace();

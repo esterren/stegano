@@ -8,21 +8,34 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 public class InPictureStrategy implements SteganoStrategy {
+	// TODO write Hex Values to List and Return List!
+	private String baseFileHexString = "";
+	private String modBaseFileHexString = "";
+	private static final String HEX_STRING_FORMAT = "%02X";
+	private List<String> baseFileHexList = new LinkedList<String>();
+	private List<String> modBaseFileHexList = new LinkedList<String>();
 
 	public InPictureStrategy() {
 		// super(inBaseFile, inHiddenFile);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void runHide(File inModBaseFile, File inBaseFile, File inHiddenFile, byte inPollution) throws Exception {
 		if (inModBaseFile == null || inBaseFile == null || inHiddenFile == null) {
 			throw new Exception("Please import a Basefile and a Hiddenfile!");
 		}
 
+		baseFileHexString = "";
+		modBaseFileHexString = "";
 		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
 				FileByteFactory.getFileLength(inHiddenFile), inPollution);
 
@@ -36,6 +49,13 @@ public class InPictureStrategy implements SteganoStrategy {
 		ImageIO.write(modBaseFile, FileNameFactory.getExtension(inModBaseFile), inModBaseFile);
 	}
 
+	/**
+	 * 
+	 * @param img
+	 * @param message
+	 * @return
+	 * @throws Exception
+	 */
 	private BufferedImage hideMessage(BufferedImage img, byte[] message) throws Exception {
 
 		// Text in Bytes umwandeln
@@ -53,7 +73,8 @@ public class InPictureStrategy implements SteganoStrategy {
 				int rgb = img.getRGB(x, y);
 				// Den aktuellen Farbkanal auslesen
 				int color = (rgb >> channel.getShift()) & 0xFF;
-
+				baseFileHexList.add(getFormatedHexString(color));
+				// baseFileHexString += getFormatedHexString(color);
 				// Farbkanal manipulieren
 				if ((color & 1) != bit) {
 					// Den ausgelesenen Farbkanal der Farbe auf 0 setzen
@@ -68,7 +89,10 @@ public class InPictureStrategy implements SteganoStrategy {
 					// Farbkanal zurückschreiben
 					rgb |= color << channel.getShift();
 					img.setRGB(x, y, rgb);
+
 				}
+				modBaseFileHexList.add(getFormatedHexString(color));
+				// modBaseFileHexString += getFormatedHexString(color);
 
 				// nächsten Farbkanal setzen
 				channel = channel.getNext();
@@ -98,6 +122,8 @@ public class InPictureStrategy implements SteganoStrategy {
 			throw new Exception("Please import a modified Basefile and set the directory for the Hiddenfile!");
 		}
 		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
+		baseFileHexString = "";
+		modBaseFileHexString = "";
 
 		byte[] bHeader = seekMessage(modBaseFileImg, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 1);
 
@@ -185,11 +211,15 @@ public class InPictureStrategy implements SteganoStrategy {
 					case 2:
 						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
 						colorOffest = 0;
+						modBaseFileHexList.add(getFormatedHexString(value));
+						// modBaseFileHexString += getFormatedHexString(value);
 						break;
 					case 1:
 						value |= (((rgb >> Color.GREEN.getShift()) & 0xFF) & 1) << count--;
 						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
 						colorOffest = 0;
+						modBaseFileHexList.add(getFormatedHexString(value));
+						// modBaseFileHexString += getFormatedHexString(value);
 					default:
 						break;
 					}
@@ -198,6 +228,8 @@ public class InPictureStrategy implements SteganoStrategy {
 					for (Color c : Color.values()) {
 						// Aktuelles Byte befüllen
 						value |= (((rgb >> c.getShift()) & 0xFF) & 1) << count--;
+						modBaseFileHexList.add(getFormatedHexString(value));
+						// modBaseFileHexString += getFormatedHexString(value);
 						// Aktuelles Byte ist voll
 						if (count == -1) {
 
@@ -270,5 +302,17 @@ public class InPictureStrategy implements SteganoStrategy {
 			throw new IllegalArgumentException("Hidden File ist to big");
 		}
 		return (int) length;
+	}
+
+	private String getFormatedHexString(int inValue) {
+		return String.format(HEX_STRING_FORMAT, inValue);
+	}
+
+	public List<String> getFormatedBaseFileHexString() {
+		return baseFileHexList;
+	}
+
+	public List<String> getFormatedModBaseFileHexString() {
+		return modBaseFileHexList;
 	}
 }
