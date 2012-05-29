@@ -4,9 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import ch.zhaw.swp2.stegano.gui.SteganoGUI;
+import ch.zhaw.swp2.stegano.model.FileNameFactory;
+import ch.zhaw.swp2.stegano.model.InAudioStrategy;
 import ch.zhaw.swp2.stegano.model.InPictureStrategy;
 import ch.zhaw.swp2.stegano.model.SteganoStrategy;
 
+/**
+ * The Controller Class instantiates the GUI and selects the appropriate
+ * Stegano-Strategy (Algorithm) for Hiding and Seeking.
+ * 
+ * @author Renato Estermann
+ * 
+ */
 public class Controller {
 
 	private SteganoStrategy _steganoStrategy;
@@ -27,24 +36,53 @@ public class Controller {
 	};
 	private IfcUserInterface _userInterface;
 
+	/**
+	 * Strarts the Stegano Application.
+	 * 
+	 * @param args
+	 *            no Arguments are needed or processed.
+	 */
 	public static void main(String[] args) {
 		new Controller();
 
 	}
 
+	/**
+	 * The default constructor instantiates a new User Interface and sets the
+	 * two Listeners in it.
+	 */
 	public Controller() {
 		_userInterface = getNewSteganoGUI();
 		_userInterface.setListeners(_listenerHideStegano, _listenerSeekStegano);
 
 	}
 
+	/**
+	 * Instantiates a new SteganoGUI.
+	 * 
+	 * @return the SteganoGUI
+	 */
 	protected IfcUserInterface getNewSteganoGUI() {
 		return new SteganoGUI();
 	}
 
+	/**
+	 * This method is called by the ActionListener and runs the Hide Part of the
+	 * Stegano-Algorithm.
+	 */
 	private void onRunHideStegano() {
 
-		_steganoStrategy = new InPictureStrategy();
+		if (FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("bmp")
+				|| FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("png")) {
+			_steganoStrategy = new InPictureStrategy();
+
+		} else if (FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("wav")) {
+			_steganoStrategy = new InAudioStrategy();
+		} else {
+			_steganoStrategy = null;
+			_userInterface.displayInfoMsg("Supported Basefile Types are: BMP, PNG and WAV!");
+			return;
+		}
 
 		try {
 			_steganoStrategy.runHide(_userInterface.getModifiedBaseFile(), _userInterface.getBaseFile(),
@@ -59,9 +97,22 @@ public class Controller {
 
 	}
 
+	/**
+	 * This method is called by the ActionListener and runs the Seek Part of the
+	 * Stegano-Algorithm.
+	 */
 	private void onRunSeekStegano() {
-		_steganoStrategy = new InPictureStrategy();
+		if (FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("bmp")
+				|| FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("png")) {
+			_steganoStrategy = new InPictureStrategy();
 
+		} else if (FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("wav")) {
+			_steganoStrategy = new InAudioStrategy();
+		} else {
+			_steganoStrategy = null;
+			_userInterface.displayInfoMsg("Supported modified Basefile Types are: BMP, PNG and WAV!");
+			return;
+		}
 		try {
 			// TODO The Save-Path from the GUI has to be passed to the model to
 			// save the hidden File and the abolute Filepath should be the
