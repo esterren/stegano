@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * 
  * 
- * @author rest
+ * @author Renato Estermann
  * 
  */
 public interface IfcUserInterface {
@@ -92,8 +92,29 @@ public interface IfcUserInterface {
 	 *         extracted HiddenFile will be saved)
 	 */
 	public String getHiddenFileSaveDir();
-        
-        public void setBaseFileHexString (List<String> inHexString) throws IllegalArgumentException;
-        public void setModBaseFileHexString (List<String> inHexString) throws IllegalArgumentException;
+
+	/**
+	 * This Method sets the List with the hexadecimal representation of the
+	 * values from the Basefile, read by the Stegano-Algorithm, in the user
+	 * interface.
+	 * 
+	 * @param inHexString
+	 *            a List with the hexadecimal representation of the read values
+	 * @throws IllegalArgumentException
+	 *             if the List is null, an IllegalArgumentException is thrown.
+	 */
+	public void setBaseFileHexString(List<String> inHexString) throws IllegalArgumentException;
+
+	/**
+	 * This Method sets the List with the hexadecimal representation of the
+	 * values, which are written to the modified Basefile, in the user
+	 * interface.
+	 * 
+	 * @param inHexString
+	 *            a List with the hexadecimal representation of the read values
+	 * @throws IllegalArgumentException
+	 *             if the List is null, an IllegalArgumentException is thrown.
+	 */
+	public void setModBaseFileHexString(List<String> inHexString) throws IllegalArgumentException;
 
 }
