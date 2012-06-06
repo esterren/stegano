@@ -37,10 +37,11 @@ public class InAudioStrategy implements SteganoStrategy {
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
-		long[] audioLongArr = hideMessage(wBaseFile, bMsgCRC);
-		wBaseFile.writeFrames(audioLongArr, wBaseFile.getNumChannels() * (int) wBaseFile.getNumFrames());
-		// ImageIO.write(modBaseFile,
-		// FileNameFactory.getExtension(inModBaseFile), inModBaseFile);
+		long[] audioLongArr = hideMessage(wBaseFile, bMsgCRC);	
+		
+		WavFile wInModBaseFile = WavFile.newWavFile(inModBaseFile, wBaseFile.getNumChannels(), wBaseFile.getNumFrames(), wBaseFile.getValidBits(), wBaseFile.getSampleRate());
+		wInModBaseFile.writeFrames(audioLongArr, wBaseFile.getNumChannels() * (int) wBaseFile.getNumFrames());
+		wInModBaseFile.close();
 	}
 
 	private long[] hideMessage(WavFile audio, byte[] message) throws Exception {
@@ -98,22 +99,22 @@ public class InAudioStrategy implements SteganoStrategy {
 		// // default:
 		// // color = color - 1;
 		// // }
-		// // Farbkanal zurÃ¼ckschreiben
+		// // Farbkanal zurückschreiben
 		// // rgb |= color << channel.getShift();
 		// // audio.setRGB(x, y, rgb);
 		// }
 		//
-		// // nÃ¤chsten Farbkanal setzen
+		// // nächsten Farbkanal setzen
 		// // channel = channel.getNext();
-		// // Falls Farbkanal = RED => X-Position verÃ¤ndern
+		// // Falls Farbkanal = RED => X-Position verändern
 		// // if (channel.equals(Color.RED)) {
 		// // x++;
-		// // Falls x grÃ¶ÃŸer als Breite des Bildes => Y-Positon
-		// // verÃ¤ndern
+		// // Falls x größer als Breite des Bildes => Y-Positon
+		// // verändern
 		// // if (x >= audio.getWidth()) {
 		// // x = 0;
 		// // y++;
-		// // Falls y grÃ¶ÃŸer als HÃ¶he des Bildes => Fehler
+		// // Falls y größer als Höhe des Bildes => Fehler
 		// // if (y >= audio.getHeight()) {
 		// // throw new Exception(
 		// //
@@ -187,7 +188,7 @@ public class InAudioStrategy implements SteganoStrategy {
 		}
 
 		boolean hasPixLineOffset = false;
-		// ArrayList fÃ¼r gelesene Bytes
+		// ArrayList für gelesene Bytes
 		ArrayList<Byte> bytes = new ArrayList<Byte>(0);
 		// Alle horizontalen Pixel durchlaufen
 		int pixelCounter = ((startByte * 8) / 3);
@@ -228,20 +229,20 @@ public class InAudioStrategy implements SteganoStrategy {
 						break;
 					}
 				} else {
-					// Alle FarbkanÃ¤le durchlaufen
+					// Alle Farbkanäle durchlaufen
 					for (Color c : Color.values()) {
-						// Aktuelles Byte befÃ¼llen
+						// Aktuelles Byte befüllen
 						value |= (((rgb >> c.getShift()) & 0xFF) & 1) << count--;
 						// Aktuelles Byte ist voll
 						if (count == -1) {
 
 							// TODO Hier werden die Bytes (der Versteckten
 							// Datei)
-							// aus der modifizierten TrÃ¤gerdatei ausgelesen.
-							// Die ersten drei Bytes mÃ¼ssen als
+							// aus der modifizierten Trägerdatei ausgelesen.
+							// Die ersten drei Bytes müssen als
 							// HiddenFile-Extension
-							// zurÃ¼ckgegeben werden.
-							// Anschliessend 4 Bytes mit der LÃ¤nge (Anzahl
+							// zurückgegeben werden.
+							// Anschliessend 4 Bytes mit der Länge (Anzahl
 							// Bytes)
 							// der Hidden-Datei (=> Abbruchkriterium),
 							// dann folgt noch ein Byte mit der Verunreinigung.
@@ -254,7 +255,7 @@ public class InAudioStrategy implements SteganoStrategy {
 								return bOut;
 
 							}
-							// ZÃ¤hlvariablen zurÃ¼cksetzen
+							// Zählvariablen zurücksetzen
 							value = 0;
 							count = 7;
 						}
@@ -312,7 +313,7 @@ public class InAudioStrategy implements SteganoStrategy {
 	}
 
 	// TODO is obsolet, moved to ByteArrayFactory
-	// LÃ¤nge des HiddenFile auslesen
+	// Länge des HiddenFile auslesen
 	private int getLengthHF(File inHiddenFile) throws IllegalArgumentException {
 		long length = inHiddenFile.length();
 		if (length < Integer.MIN_VALUE || length > Integer.MAX_VALUE) {
@@ -332,7 +333,7 @@ public class InAudioStrategy implements SteganoStrategy {
 			// File is too large
 		}
 
-		// Bytearray fï¿½r Rueckgabe
+		// Bytearray fuer Rueckgabe
 		byte[] bytes = new byte[(int) length];
 
 		// Bytearray fuellen
