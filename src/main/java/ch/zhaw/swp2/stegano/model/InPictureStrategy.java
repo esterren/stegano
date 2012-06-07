@@ -13,6 +13,14 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+/**
+ * The InPictureStrategy implements the Algorithem to hide Information in a
+ * Picture of the Impage Format BMP or PNG, or seek/filter information out of a
+ * modified Picture of the same format.
+ * 
+ * @author Renato Estermann
+ * 
+ */
 public class InPictureStrategy implements SteganoStrategy {
 	// TODO write Hex Values to List and Return List!
 	private String baseFileHexString = "";
@@ -25,9 +33,6 @@ public class InPictureStrategy implements SteganoStrategy {
 		// super(inBaseFile, inHiddenFile);
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public void runHide(File inModBaseFile, File inBaseFile, File inHiddenFile, byte inPollution) throws Exception {
 		if (inModBaseFile == null || inBaseFile == null || inHiddenFile == null) {
@@ -276,6 +281,11 @@ public class InPictureStrategy implements SteganoStrategy {
 		return byteArrayHiddenFile;
 	}
 
+	/**
+	 * @param inFilePath
+	 * @param inFileContent
+	 * @throws IOException
+	 */
 	private void writeFileFromByteArray(String inFilePath, byte[] inFileContent) throws IOException {
 		FileOutputStream fos = new FileOutputStream(new File(inFilePath));
 		fos.write(inFileContent);
@@ -283,6 +293,11 @@ public class InPictureStrategy implements SteganoStrategy {
 
 	}
 
+	/**
+	 * @param inFirstBA
+	 * @param inSecondBA
+	 * @return
+	 */
 	private byte[] concat2ByteArrays(byte[] inFirstBA, byte[] inSecondBA) {
 		int lenH = inFirstBA.length;
 		int lenM = inSecondBA.length;
