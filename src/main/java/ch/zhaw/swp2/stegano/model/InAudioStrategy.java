@@ -232,7 +232,7 @@ public class InAudioStrategy implements SteganoStrategy {
 	}
 
 	// TODO is obsolet, moved to ByteArrayFactory
-	// Länge des HiddenFile auslesen
+	// Laenge des HiddenFile auslesen
 	private int getLengthHF(File inHiddenFile) throws IllegalArgumentException {
 		long length = inHiddenFile.length();
 		if (length < Integer.MIN_VALUE || length > Integer.MAX_VALUE) {
