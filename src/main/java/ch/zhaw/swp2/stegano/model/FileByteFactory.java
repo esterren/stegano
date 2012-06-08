@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.math.BigInteger;
 
 /**
+ * The FileByteFactory provides different byte operations with the Files, which
+ * are used in the Stegano Algorithms
  * 
  * @author rest
  */
@@ -18,6 +20,16 @@ public class FileByteFactory {
 
 	private static final int MAX_BYTE_CONVERT = 10000;
 
+	/**
+	 * This method returns a Byte array from the given file.
+	 * 
+	 * @param inFile
+	 *            the File which should be read and represented in the returned
+	 *            array.
+	 * @return a Byte array representation of the file.
+	 * @throws IOException
+	 *             when unable to read the file.
+	 */
 	public static byte[] getByteArrayFromFile(File inFile) throws IOException {
 		FileInputStream fis = new FileInputStream(inFile);
 
@@ -27,7 +39,17 @@ public class FileByteFactory {
 		return byteArrayHiddenFile;
 	}
 
-	// Länge des HiddenFile auslesen
+	/**
+	 * This method can be used to get the length of a file, in bytes. Usefull
+	 * for the Stegano algorithms to finde out the length of the HiddenFile.
+	 * 
+	 * @param inFile
+	 *            the file
+	 * @return The length, in bytes, of the file.
+	 * @throws IllegalArgumentException
+	 *             when the file length is greater than Integer.MIN_VALUE or
+	 *             less than Integer.MIN_VALUE
+	 */
 	public static int getFileLength(File inFile) throws IllegalArgumentException {
 		long length = inFile.length();
 		if (length < Integer.MIN_VALUE || length > Integer.MAX_VALUE) {
