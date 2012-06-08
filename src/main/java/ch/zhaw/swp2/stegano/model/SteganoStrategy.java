@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface SteganoStrategy {
 	
-	
+	public static final String HEX_STRING_FORMAT = "%02X";
 
 	/**
 	 * This Method is called by the Controller to run the Staganographie
@@ -64,5 +64,7 @@ public interface SteganoStrategy {
 	 *         Element.
 	 */
 	public List<String> getFormatedModBaseFileHexString();
+	
+	public String getFormatedHexString(int inValue);
 
 }

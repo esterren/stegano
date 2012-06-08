@@ -84,28 +84,7 @@ public class InAudioStrategy implements SteganoStrategy {
 		}
 		WavFile modBaseFileAudio = WavFile.openWavFile(inModBaseFile);
 
-		long[] audioLongArray = null;
-		byte[] bModBaseFileAudio = null;
-		
-		modBaseFileAudio.readFrames(audioLongArray, (int)63);
-		
-		//modBaseFileAudio.readFrames(audioLongArray, (int)modBaseFileAudio.getNumFrames());
-		
-		for (int i = 0; i < audioLongArray.length; i++) {
-			byte m = 0;
-			
-			for (int j = 0; j < 8; j++) {
-				if ((audioLongArray[i * 8 + j] % 2) == 1) {
-					m= (byte) ((m *2) + 1);
-				} else if ((m % 2) == 0) {
-					m= (byte) ((m *2));
-				}
-			}
-			bModBaseFileAudio[i] = m;
-		}
-	
-				
-		byte[] bHeader = seekMessage(bModBaseFileAudio, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 0);
+		byte[] bHeader = seekMessage(modBaseFileAudio, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 0);
 
 		if (bHeader == null) {
 			throw new Exception(
@@ -116,29 +95,11 @@ public class InAudioStrategy implements SteganoStrategy {
 		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(bHeader);
 		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(bHeader);
 		
-		//
-		modBaseFileAudio.readFrames(audioLongArray, (int)hiddenFileByteLength*8);
 		
-		for (int i = 0; i < audioLongArray.length; i++) {
-			byte m = 0;
-			
-			for (int j = 0; j < 8; j++) {
-				if ((audioLongArray[i * 8 + j] % 2) == 1) {
-					m= (byte) ((m *2) + 1);
-				} else if ((m % 2) == 0) {
-					m= (byte) ((m *2));
-				}
-			}
-			bModBaseFileAudio[i] = m;
-		}
-		
-		
-		
-
-		byte[] bHiddenFile = seekMessage(bModBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
+		byte[] bHiddenFile = seekMessage(modBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
 				baseFilePollution);
 
-		byte[] bCRCMsg = seekMessage(bModBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
+		byte[] bCRCMsg = seekMessage(modBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
 				baseFilePollution);
 		if (bHiddenFile == null || bCRCMsg == null) {
 			throw new Exception(
@@ -171,20 +132,32 @@ public class InAudioStrategy implements SteganoStrategy {
 	 *         at startByte and has the length of countByte.
 	 * @throws IllegalArgumentException
 	 */
-	private byte[] seekMessage(byte[] bModBaseFileAudio, int startByte, int countBytes, byte inPollution)
+	private byte[] seekMessage(WavFile inModBaseFileAudio, int startByte, int countBytes, byte inPollution)
 			throws Exception {
 		if (startByte < 0 || countBytes < 1) {
 			throw new Exception(
 					"Unable to seek for the Hiddenfile, due to corrupt data.\nThe modified Basefile was manipulated!");
 		}
 
-		byte[] seekData = null;
+		byte[] seekData = new byte[countBytes];
+		int longArrayLength = countBytes*8;
+		int chanCount = inModBaseFileAudio.getNumChannels();
+		long[] audioLongArray = new long[(int)Math.floor(longArrayLength/(chanCount))*chanCount];
+		inModBaseFileAudio.readFrames(audioLongArray,startByte*8, (int)Math.floor(longArrayLength/(chanCount)));
 		
 		for (int i = 0; i < countBytes; i++) {
-			seekData[i] = bModBaseFileAudio[startByte];
-			startByte++;
-		}
-		
+			byte m = 0;
+			
+			for (int j = 0; j < 8; j++) {
+				if ((Math.abs(audioLongArray[i * 8 + j]) % 2) == 1) {
+					m= (byte)((m *2)+1);
+				} else {
+					m= (byte)(m *2);
+				}
+			}
+			seekData[i] = m;
+		}		
+
 		return seekData;
 	}
 
@@ -272,6 +245,11 @@ public class InAudioStrategy implements SteganoStrategy {
 		return bytes;
 	}
 
+	@Override
+	public String getFormatedHexString(int inValue) {
+		return String.format(HEX_STRING_FORMAT, inValue);
+	}
+	
 	@Override
 	public List<String> getFormatedBaseFileHexString() {
 		return baseFileHexList;

@@ -25,7 +25,6 @@ public class InPictureStrategy implements SteganoStrategy {
 
 	private String baseFileHexString = "";
 	private String modBaseFileHexString = "";
-	private static final String HEX_STRING_FORMAT = "%02X";
 	private List<String> baseFileHexList = new LinkedList<String>();
 	private List<String> modBaseFileHexList = new LinkedList<String>();
 
@@ -341,7 +340,8 @@ public class InPictureStrategy implements SteganoStrategy {
 		return (int) length;
 	}
 
-	private String getFormatedHexString(int inValue) {
+	@Override
+	public String getFormatedHexString(int inValue) {
 		return String.format(HEX_STRING_FORMAT, inValue);
 	}
 
