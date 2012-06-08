@@ -57,7 +57,6 @@ public class InAudioStrategy implements SteganoStrategy {
 
 			for (int j = 0; j < 8; j++) {
 				baseFileHexList.add( getFormatedHexString(buffer[i*8+j]));
-				System.out.println(buffer[i*8+j]);
 				if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 0) {
 					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
 					m = (byte) ((m - 1) / 2);
@@ -69,7 +68,6 @@ public class InAudioStrategy implements SteganoStrategy {
 					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
 				}
 				modBaseFileHexList.add(getFormatedHexString(buffer[i*8+j]));
-				System.out.println(buffer[i*8+j]);
 			}
 
 		}
