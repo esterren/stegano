@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 
 public interface SteganoStrategy {
+	
+	
 
 	/**
 	 * This Method is called by the Controller to run the Staganographie

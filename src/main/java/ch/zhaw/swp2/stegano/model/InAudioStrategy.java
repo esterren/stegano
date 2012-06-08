@@ -1,20 +1,20 @@
 package ch.zhaw.swp2.stegano.model;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 public class InAudioStrategy implements SteganoStrategy {
 
+	private List<String> baseFileHexList = new LinkedList<String>();
+	private List<String> modBaseFileHexList = new LinkedList<String>();
+	
 	public InAudioStrategy() {
 		// super(inBaseFile, inHiddenFile);
 	}
@@ -56,6 +56,8 @@ public class InAudioStrategy implements SteganoStrategy {
 			// boolean[] mBit = new boolean[8];
 
 			for (int j = 0; j < 8; j++) {
+				baseFileHexList.add(Long.toHexString(buffer[i*8+j]));
+				System.out.println(buffer[i*8+j]);
 				if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 0) {
 					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
 					m = (byte) ((m - 1) / 2);
@@ -66,65 +68,13 @@ public class InAudioStrategy implements SteganoStrategy {
 				} else {
 					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
 				}
+				modBaseFileHexList.add(Long.toHexString(buffer[i*8+j]));
+				System.out.println(buffer[i*8+j]);
 			}
 
 		}
 
 		return buffer;
-		// for (int i = 0; i < message.length; i++) {
-		// // audio[100+i]
-		// }
-		// // Text in Bytes umwandeln
-		// // byte[] b = message;
-		// // Alle Bytes durchlaufen
-		// for (int i = 0, x = 0, y = 0; i < message.length; i++) {
-		// // Alle Bits durchlaufen
-		// for (int j = 0; j > -1; j--) {
-		//
-		// // Wert des Bits auslesen
-		// int bit = ((message[i] & 0xFF) >> j) & 1;
-		// // Farbe an der aktuellen Position auslesen
-		// // int rgb = audio.getRGB(x, y);
-		// // Den aktuellen Farbkanal auslesen
-		// // int color = (rgb >> channel.getShift()) & 0xFF;
-		//
-		// // Farbkanal manipulieren
-		// // if ((color & 1) != bit) {
-		// // Den ausgelesenen Farbkanal der Farbe auf 0 setzen
-		// // rgb &= channel.getRGBManipulator();
-		// // switch (bit) {
-		// // case 1:
-		// // color = color + 1;
-		// // break;
-		// // default:
-		// // color = color - 1;
-		// // }
-		// // Farbkanal zurückschreiben
-		// // rgb |= color << channel.getShift();
-		// // audio.setRGB(x, y, rgb);
-		// }
-		//
-		// // nächsten Farbkanal setzen
-		// // channel = channel.getNext();
-		// // Falls Farbkanal = RED => X-Position verändern
-		// // if (channel.equals(Color.RED)) {
-		// // x++;
-		// // Falls x größer als Breite des Bildes => Y-Positon
-		// // verändern
-		// // if (x >= audio.getWidth()) {
-		// // x = 0;
-		// // y++;
-		// // Falls y größer als Höhe des Bildes => Fehler
-		// // if (y >= audio.getHeight()) {
-		// // throw new Exception(
-		// //
-		// "The Basefile is too small for the Hiddenfile!\nPlease import a bigger Basefile or increase Pollution.");
-		// // }
-		// // }
-		// // }
-		// // }
-		// }
-
 	}
 
 	@Override
@@ -132,22 +82,63 @@ public class InAudioStrategy implements SteganoStrategy {
 		if (inModBaseFile == null || inHiddenFileSaveDir == null) {
 			throw new Exception("Please import a modified Basefile and set the directory for the Hiddenfile!");
 		}
-		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
+		WavFile modBaseFileAudio = WavFile.openWavFile(inModBaseFile);
 
-		byte[] bHeader = seekMessage(modBaseFileImg, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 1);
+		long[] audioLongArray = null;
+		byte[] bModBaseFileAudio = null;
+		
+		modBaseFileAudio.readFrames(audioLongArray, (int)64);
+		
+		//modBaseFileAudio.readFrames(audioLongArray, (int)modBaseFileAudio.getNumFrames());
+		
+		for (int i = 0; i < audioLongArray.length; i++) {
+			byte m = 0;
+			
+			for (int j = 0; j < 8; j++) {
+				if ((audioLongArray[i * 8 + j] % 2) == 1) {
+					m= (byte) ((m *2) + 1);
+				} else if ((m % 2) == 0) {
+					m= (byte) ((m *2));
+				}
+			}
+			bModBaseFileAudio[i] = m;
+		}
+	
+				
+		byte[] bHeader = seekMessage(bModBaseFileAudio, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 0);
 
 		if (bHeader == null) {
 			throw new Exception(
 					"A problem was encountered during the Seek-Algorithm!\nThe modified Basefile might be corrupted!");
 		}
+		
 		int hiddenFileByteLength = BaseFileProtocolFactory.getLengthFromHeader(bHeader);
 		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(bHeader);
 		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(bHeader);
+		
+		//
+		modBaseFileAudio.readFrames(audioLongArray, (int)hiddenFileByteLength*8);
+		
+		for (int i = 0; i < audioLongArray.length; i++) {
+			byte m = 0;
+			
+			for (int j = 0; j < 8; j++) {
+				if ((audioLongArray[i * 8 + j] % 2) == 1) {
+					m= (byte) ((m *2) + 1);
+				} else if ((m % 2) == 0) {
+					m= (byte) ((m *2));
+				}
+			}
+			bModBaseFileAudio[i] = m;
+		}
+		
+		
+		
 
-		byte[] bHiddenFile = seekMessage(modBaseFileImg, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
+		byte[] bHiddenFile = seekMessage(bModBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
 				baseFilePollution);
 
-		byte[] bCRCMsg = seekMessage(modBaseFileImg, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
+		byte[] bCRCMsg = seekMessage(bModBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
 				baseFilePollution);
 		if (bHiddenFile == null || bCRCMsg == null) {
 			throw new Exception(
@@ -180,93 +171,21 @@ public class InAudioStrategy implements SteganoStrategy {
 	 *         at startByte and has the length of countByte.
 	 * @throws IllegalArgumentException
 	 */
-	private byte[] seekMessage(BufferedImage inModBaseFileImg, int startByte, int countBytes, byte inPollution)
+	private byte[] seekMessage(byte[] bModBaseFileAudio, int startByte, int countBytes, byte inPollution)
 			throws Exception {
 		if (startByte < 0 || countBytes < 1) {
 			throw new Exception(
 					"Unable to seek for the Hiddenfile, due to corrupt data.\nThe modified Basefile was manipulated!");
 		}
 
-		boolean hasPixLineOffset = false;
-		// ArrayList für gelesene Bytes
-		ArrayList<Byte> bytes = new ArrayList<Byte>(0);
-		// Alle horizontalen Pixel durchlaufen
-		int pixelCounter = ((startByte * 8) / 3);
-
-		int colorOffest = (startByte * 8) % 3;
-		if (pixelCounter % inModBaseFileImg.getWidth() != 0) {
-			hasPixLineOffset = true;
+		byte[] seekData = null;
+		
+		for (int i = 0; i < countBytes; i++) {
+			seekData[i] = bModBaseFileAudio[startByte];
+			startByte++;
 		}
-
-		for (int y = (pixelCounter / inModBaseFileImg.getWidth()), count = 7, value = 0; y < inModBaseFileImg
-				.getHeight(); y++) {
-			// Alle vertikalen Pixel durchlaufen
-			// TODO Problem liegt hier bei der modulo Operation, da 21 % 10 = 1
-			// und es sollte 0 sein
-			// (pixelCounter % ..getWith() darf nur in der ersten Pixelreihe mit
-			// versetztem Anfang berechntet werden, ansonsten muss x = 0 sein!!
-			int x = 0;
-			if (hasPixLineOffset) {
-				x = (pixelCounter % inModBaseFileImg.getWidth());
-				hasPixLineOffset = false;
-			}
-			while (x < inModBaseFileImg.getWidth()) {
-
-				int rgb = inModBaseFileImg.getRGB(x, y);
-
-				// Aktuelle Farbe auslesen
-				if (colorOffest != 0) {
-					switch (colorOffest) {
-					case 2:
-						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
-						colorOffest = 0;
-						break;
-					case 1:
-						value |= (((rgb >> Color.GREEN.getShift()) & 0xFF) & 1) << count--;
-						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
-						colorOffest = 0;
-					default:
-						break;
-					}
-				} else {
-					// Alle Farbkanäle durchlaufen
-					for (Color c : Color.values()) {
-						// Aktuelles Byte befüllen
-						value |= (((rgb >> c.getShift()) & 0xFF) & 1) << count--;
-						// Aktuelles Byte ist voll
-						if (count == -1) {
-
-							// TODO Hier werden die Bytes (der Versteckten
-							// Datei)
-							// aus der modifizierten Trägerdatei ausgelesen.
-							// Die ersten drei Bytes müssen als
-							// HiddenFile-Extension
-							// zurückgegeben werden.
-							// Anschliessend 4 Bytes mit der Länge (Anzahl
-							// Bytes)
-							// der Hidden-Datei (=> Abbruchkriterium),
-							// dann folgt noch ein Byte mit der Verunreinigung.
-							bytes.add((byte) value);
-							if (bytes.size() == countBytes) {
-								byte[] bOut = new byte[bytes.size()];
-								for (int i = 0; i < bytes.size(); i++) {
-									bOut[i] = bytes.get(i);
-								}
-								return bOut;
-
-							}
-							// Zählvariablen zurücksetzen
-							value = 0;
-							count = 7;
-						}
-					}
-				}
-				x++;
-			}
-
-		}
-
-		return null;
+		
+		return seekData;
 	}
 
 	private byte[] longToByteArray(long longArr) {
@@ -355,13 +274,11 @@ public class InAudioStrategy implements SteganoStrategy {
 
 	@Override
 	public List<String> getFormatedBaseFileHexString() {
-		// TODO Auto-generated method stub
-		return null;
+		return baseFileHexList;
 	}
 
 	@Override
 	public List<String> getFormatedModBaseFileHexString() {
-		// TODO Auto-generated method stub
-		return null;
+		return modBaseFileHexList;
 	}
 }

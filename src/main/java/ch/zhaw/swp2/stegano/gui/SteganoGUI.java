@@ -26,6 +26,8 @@ import javax.swing.JOptionPane;
 
 import ch.zhaw.swp2.stegano.controller.IfcUserInterface;
 import ch.zhaw.swp2.stegano.model.FileByteFactory;
+import ch.zhaw.swp2.stegano.model.FileNameFactory;
+
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
@@ -542,34 +544,37 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 	public void displayBaseFile() {
 		// displayHexFileString(_HbaseFile,_jTextAreaHexCompLeft);
 		// TODO Check for PNG and BMP Images => Validator
-
-		try {
-			_baseFileImg = ImageIO.read(_HbaseFile);
-			ImageIcon img = new ImageIcon(_baseFileImg);
-			JLabel imglbl = new JLabel(img);
-			_jScrollPanePicCompLeft.getViewport().add(imglbl);
-			//_jTextAreaHexCompLeft.setText(FileByteFactory.convertToHex(_HbaseFile));
-
-		} catch (IOException ex) {
-			// TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt
-			// werden kann.
-			Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+		if(FileNameFactory.getExtension(_HbaseFile).equals("bmp")||FileNameFactory.getExtension(_HbaseFile).equals("png")){
+			try {
+				_baseFileImg = ImageIO.read(_HbaseFile);
+				ImageIcon img = new ImageIcon(_baseFileImg);
+				JLabel imglbl = new JLabel(img);
+				_jScrollPanePicCompLeft.getViewport().add(imglbl);
+				//_jTextAreaHexCompLeft.setText(FileByteFactory.convertToHex(_HbaseFile));
+	
+			} catch (IOException ex) {
+				// TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt
+				// werden kann.
+				Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 
 	}
 
 	@Override
 	public void displayModBaseFile() {
-                
-		try {
-			_modBaseFileImg = ImageIO.read(_HmodBaseFile);
-			ImageIcon img = new ImageIcon(_modBaseFileImg);
-			JLabel imglbl = new JLabel(img);
-			_jScrollPanePicCompRight.getViewport().add(imglbl);
-		} catch (IOException ex) {
-			// TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt
-			// werden kann.
-			Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+        
+		if(FileNameFactory.getExtension(_HmodBaseFile).equals("bmp")||FileNameFactory.getExtension(_HmodBaseFile).equals("png")){
+			try {
+				_modBaseFileImg = ImageIO.read(_HmodBaseFile);
+				ImageIcon img = new ImageIcon(_modBaseFileImg);
+				JLabel imglbl = new JLabel(img);
+				_jScrollPanePicCompRight.getViewport().add(imglbl);
+			} catch (IOException ex) {
+				// TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt
+				// werden kann.
+				Logger.getLogger(SteganoGUI.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 
                 int counter = 0;
