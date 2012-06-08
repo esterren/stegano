@@ -22,7 +22,7 @@ import javax.imageio.ImageIO;
  * 
  */
 public class InPictureStrategy implements SteganoStrategy {
-	// TODO write Hex Values to List and Return List!
+
 	private String baseFileHexString = "";
 	private String modBaseFileHexString = "";
 	private static final String HEX_STRING_FORMAT = "%02X";
@@ -33,6 +33,25 @@ public class InPictureStrategy implements SteganoStrategy {
 		// super(inBaseFile, inHiddenFile);
 	}
 
+	/**
+	 * This Method is called by the Controller, generates the Header
+	 * Information, transforms the hidden Information in an appropriate format,
+	 * concats all together and runs the private methode hideMessage with the
+	 * Algorithm implementation, which hides everything in a Copy of the
+	 * BaseFile.
+	 * 
+	 * @param inModBaseFile
+	 *            the File, where the results are saved to.
+	 * @param inBaseFile
+	 *            The BaseFile on which the Algorithm will process the hiding.
+	 * @param inHiddenFile
+	 *            The File to hide.
+	 * @param pollution
+	 *            The nummber [1-7] of Bits in a Byte which are manipulated by
+	 *            the Algorithm to hide the information. Increasing pollution
+	 *            increases the amount of size for the HiddenFile
+	 * 
+	 */
 	@Override
 	public void runHide(File inModBaseFile, File inBaseFile, File inHiddenFile, byte inPollution) throws Exception {
 		if (inModBaseFile == null || inBaseFile == null || inHiddenFile == null) {
@@ -41,11 +60,14 @@ public class InPictureStrategy implements SteganoStrategy {
 
 		baseFileHexString = "";
 		modBaseFileHexString = "";
+		// Generate Header Information
 		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
 				FileByteFactory.getFileLength(inHiddenFile), inPollution);
 
 		BufferedImage baseFileImg = ImageIO.read(inBaseFile);
+		// Byte-wise read of the Hiddenfile
 		byte[] bHiddenFile = FileByteFactory.getByteArrayFromFile(inHiddenFile);
+		// Concats Header and Message
 		byte[] bMsg = concat2ByteArrays(bHeader, bHiddenFile);
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
