@@ -340,7 +340,7 @@ public class InPictureStrategy implements SteganoStrategy {
 		return (int) length;
 	}
 
-	@Override
+
 	public String getFormatedHexString(int inValue) {
 		return String.format(HEX_STRING_FORMAT, inValue);
 	}
