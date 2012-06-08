@@ -56,8 +56,7 @@ public class InAudioStrategy implements SteganoStrategy {
 			// boolean[] mBit = new boolean[8];
 
 			for (int j = 0; j < 8; j++) {
-				baseFileHexList.add(Long.toHexString(buffer[i*8+j]));
-				System.out.println(buffer[i*8+j]);
+				baseFileHexList.add( getFormatedHexString(buffer[i*8+j]));
 				if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 0) {
 					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
 					m = (byte) ((m - 1) / 2);
@@ -68,8 +67,7 @@ public class InAudioStrategy implements SteganoStrategy {
 				} else {
 					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
 				}
-				modBaseFileHexList.add(Long.toHexString(buffer[i*8+j]));
-				System.out.println(buffer[i*8+j]);
+				modBaseFileHexList.add(getFormatedHexString(buffer[i*8+j]));
 			}
 
 		}
@@ -139,17 +137,29 @@ public class InAudioStrategy implements SteganoStrategy {
 					"Unable to seek for the Hiddenfile, due to corrupt data.\nThe modified Basefile was manipulated!");
 		}
 
+//		byte[] seekData = new byte[countBytes];
+//		int longArrayLength = countBytes*8;
+//		int chanCount = inModBaseFileAudio.getNumChannels();
+//		long[] audioLongArray = new long[(int)Math.floor(longArrayLength/(chanCount))*chanCount];
+//		inModBaseFileAudio.readFrames(audioLongArray,startByte*8/chanCount, (int)Math.floor(longArrayLength/(chanCount)));
+		
 		byte[] seekData = new byte[countBytes];
-		int longArrayLength = countBytes*8;
 		int chanCount = inModBaseFileAudio.getNumChannels();
-		long[] audioLongArray = new long[(int)Math.floor(longArrayLength/(chanCount))*chanCount];
-		inModBaseFileAudio.readFrames(audioLongArray,startByte*8, (int)Math.floor(longArrayLength/(chanCount)));
+		int longArrayMinLength = countBytes *8; //minimale Laenge des longArray
+		int byteOffset = startByte;
+		int frameOffset = (int)Math.ceil(byteOffset/chanCount); //Offset fuers Einlesen von Audiofile
+		int frameReadOffset = byteOffset%chanCount; //Offset fuer Verarbeitung longArray -> ByteArray		
+		int longArrayLength = (frameReadOffset + longArrayMinLength) + chanCount-((frameReadOffset + longArrayMinLength)%chanCount); //benoetigte laenge longArray
+		long[] audioLongArray = new long[longArrayLength];
+		int frameReadMaxCount = frameOffset + longArrayLength / chanCount;//Hoechster Frameindex	
+		int frameReadCount = longArrayLength / chanCount;//Anzahl zu lesende Frames
+		inModBaseFileAudio.readFrames(audioLongArray, frameOffset, frameReadCount);
 		
 		for (int i = 0; i < countBytes; i++) {
 			byte m = 0;
 			
 			for (int j = 0; j < 8; j++) {
-				if ((Math.abs(audioLongArray[i * 8 + j]) % 2) == 1) {
+				if ((Math.abs(audioLongArray[byteOffset + i * 8 + j]) % 2) == 1) {
 					m= (byte)((m *2)+1);
 				} else {
 					m= (byte)(m *2);
@@ -245,8 +255,7 @@ public class InAudioStrategy implements SteganoStrategy {
 		return bytes;
 	}
 
-	@Override
-	public String getFormatedHexString(int inValue) {
+	public String getFormatedHexString(long inValue) {
 		return String.format(HEX_STRING_FORMAT, inValue);
 	}
 	

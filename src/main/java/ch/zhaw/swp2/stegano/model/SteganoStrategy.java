@@ -65,6 +65,5 @@ public interface SteganoStrategy {
 	 */
 	public List<String> getFormatedModBaseFileHexString();
 	
-	public String getFormatedHexString(int inValue);
 
 }
