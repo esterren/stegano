@@ -87,7 +87,7 @@ public class InAudioStrategy implements SteganoStrategy {
 		long[] audioLongArray = null;
 		byte[] bModBaseFileAudio = null;
 		
-		modBaseFileAudio.readFrames(audioLongArray, (int)64);
+		modBaseFileAudio.readFrames(audioLongArray, (int)63);
 		
 		//modBaseFileAudio.readFrames(audioLongArray, (int)modBaseFileAudio.getNumFrames());
 		

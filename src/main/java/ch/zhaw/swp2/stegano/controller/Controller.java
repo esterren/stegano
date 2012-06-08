@@ -107,11 +107,11 @@ public class Controller {
 	private void onRunSeekStegano() {
 		// According to the filename-extension of the BaseFile the Strategy is
 		// selected.
-		if (FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("bmp")
-				|| FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("png")) {
+		if (FileNameFactory.getExtension(_userInterface.getModifiedBaseFile()).toLowerCase().equals("bmp")
+				|| FileNameFactory.getExtension(_userInterface.getModifiedBaseFile()).toLowerCase().equals("png")) {
 			_steganoStrategy = new InPictureStrategy();
 
-		} else if (FileNameFactory.getExtension(_userInterface.getBaseFile()).toLowerCase().equals("wav")) {
+		} else if (FileNameFactory.getExtension(_userInterface.getModifiedBaseFile()).toLowerCase().equals("wav")) {
 			_steganoStrategy = new InAudioStrategy();
 		} else {
 			_steganoStrategy = null;
