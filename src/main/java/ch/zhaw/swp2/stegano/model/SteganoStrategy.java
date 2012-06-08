@@ -17,8 +17,10 @@ public interface SteganoStrategy {
 	 * @param inHiddenFile
 	 *            The File to hide.
 	 * @param pollution
+	 *            The nummber [1-7] of Bits in a Byte which are manipulated by
+	 *            the Algorithm to hide the information. Increasing pollution
+	 *            increases the amount of size for the HiddenFile
 	 * 
-	 * @return is the modified BaseFile with the hidden Information
 	 */
 	public void runHide(File inModBaseFile, File inBaseFile, File inHiddenFile, byte pollution) throws Exception;
 
@@ -37,8 +39,28 @@ public interface SteganoStrategy {
 	 */
 	public String runSeek(File inModBaseFile, String inHiddenFileSaveDir) throws Exception;
 
+	/**
+	 * This method returns a List with the hexadecimal String representation of
+	 * the Elements (this could be: Integer, Long or Byte), which are read from
+	 * the Basefile in the specific Stegano Algorithm.
+	 * 
+	 * @return a List with a hexadecimal String representation of each processed
+	 *         Element.
+	 */
 	public List<String> getFormatedBaseFileHexString();
 
+	/**
+	 * This method returns a List with the hexadecimal String representation of
+	 * the Elements (this could be: Integer, Long or Byte), which are
+	 * modiefied/processed by the specific Stegano Algorithm. Each Element in
+	 * the returned List corresponds to the Element with the same Index in
+	 * getFormatedBaseFileHexString(). Moreover the difference between the two
+	 * corresponding elements, represents the modifications made by the Stegano
+	 * Algorithm.
+	 * 
+	 * @return a List with a hexadecimal String representation of each processed
+	 *         Element.
+	 */
 	public List<String> getFormatedModBaseFileHexString();
 
 }
