@@ -14,8 +14,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 /**
- * The InPictureStrategy implements the Algorithem to hide Information in a
- * Picture of the Impage Format BMP or PNG, or seek/filter information out of a
+ * The InPictureStrategy implements the Algorithm to hide Information in a
+ * Picture of the Image Format BMP or PNG, or seek/filter information out of a
  * modified Picture of the same format.
  * 
  * @author Renato Estermann
@@ -23,13 +23,10 @@ import javax.imageio.ImageIO;
  */
 public class InPictureStrategy implements SteganoStrategy {
 
-	private String baseFileHexString = "";
-	private String modBaseFileHexString = "";
 	private List<String> baseFileHexList = new LinkedList<String>();
 	private List<String> modBaseFileHexList = new LinkedList<String>();
 
 	public InPictureStrategy() {
-		// super(inBaseFile, inHiddenFile);
 	}
 
 	/**
@@ -57,8 +54,6 @@ public class InPictureStrategy implements SteganoStrategy {
 			throw new Exception("Please import a Basefile and a Hiddenfile!");
 		}
 
-		baseFileHexString = "";
-		modBaseFileHexString = "";
 		// Generate Header Information
 		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
 				FileByteFactory.getFileLength(inHiddenFile), inPollution);
@@ -99,8 +94,9 @@ public class InPictureStrategy implements SteganoStrategy {
 				int rgb = img.getRGB(x, y);
 				// Den aktuellen Farbkanal auslesen
 				int color = (rgb >> channel.getShift()) & 0xFF;
+				// aktuellen Wert aus dem BaseFile in die Liste mit den
+				// Hex-Strings schreiben
 				baseFileHexList.add(getFormatedHexString(color));
-				// baseFileHexString += getFormatedHexString(color);
 				// Farbkanal manipulieren
 				if ((color & 1) != bit) {
 					// Den ausgelesenen Farbkanal der Farbe auf 0 setzen
@@ -117,8 +113,9 @@ public class InPictureStrategy implements SteganoStrategy {
 					img.setRGB(x, y, rgb);
 
 				}
+				// modifizierten aktuellen Wert in die Liste mit den Hex-Strings
+				// schreiben
 				modBaseFileHexList.add(getFormatedHexString(color));
-				// modBaseFileHexString += getFormatedHexString(color);
 
 				// nächsten Farbkanal setzen
 				channel = channel.getNext();
@@ -148,8 +145,6 @@ public class InPictureStrategy implements SteganoStrategy {
 			throw new Exception("Please import a modified Basefile and set the directory for the Hiddenfile!");
 		}
 		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
-		baseFileHexString = "";
-		modBaseFileHexString = "";
 
 		byte[] bHeader = seekMessage(modBaseFileImg, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 1);
 
@@ -217,11 +212,6 @@ public class InPictureStrategy implements SteganoStrategy {
 
 		for (int y = (pixelCounter / inModBaseFileImg.getWidth()), count = 7, value = 0; y < inModBaseFileImg
 				.getHeight(); y++) {
-			// Alle vertikalen Pixel durchlaufen
-			// TODO Problem liegt hier bei der modulo Operation, da 21 % 10 = 1
-			// und es sollte 0 sein
-			// (pixelCounter % ..getWith() darf nur in der ersten Pixelreihe mit
-			// versetztem Anfang berechntet werden, ansonsten muss x = 0 sein!!
 			int x = 0;
 			if (hasPixLineOffset) {
 				x = (pixelCounter % inModBaseFileImg.getWidth());
@@ -238,14 +228,12 @@ public class InPictureStrategy implements SteganoStrategy {
 						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
 						colorOffest = 0;
 						modBaseFileHexList.add(getFormatedHexString(value));
-						// modBaseFileHexString += getFormatedHexString(value);
 						break;
 					case 1:
 						value |= (((rgb >> Color.GREEN.getShift()) & 0xFF) & 1) << count--;
 						value |= (((rgb >> Color.BLUE.getShift()) & 0xFF) & 1) << count--;
 						colorOffest = 0;
 						modBaseFileHexList.add(getFormatedHexString(value));
-						// modBaseFileHexString += getFormatedHexString(value);
 					default:
 						break;
 					}
@@ -315,6 +303,7 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	/**
+	 * 
 	 * @param inFirstBA
 	 * @param inSecondBA
 	 * @return
@@ -330,18 +319,14 @@ public class InPictureStrategy implements SteganoStrategy {
 
 	}
 
-	// TODO is obsolet, moved to ByteArrayFactory
-	// Länge des HiddenFile auslesen
-	private int getLengthHF(File inHiddenFile) throws IllegalArgumentException {
-		long length = inHiddenFile.length();
-		if (length < Integer.MIN_VALUE || length > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("Hidden File ist to big");
-		}
-		return (int) length;
-	}
-
-
-	public String getFormatedHexString(int inValue) {
+	/**
+	 * Returns a hexadecimal String representation of the int value
+	 * 
+	 * @param inValue
+	 *            the int value
+	 * @return a hexadecimal String representation of inValue
+	 */
+	private String getFormatedHexString(int inValue) {
 		return String.format(HEX_STRING_FORMAT, inValue);
 	}
 

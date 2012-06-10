@@ -3,8 +3,15 @@ package ch.zhaw.swp2.stegano.model;
 import java.io.File;
 import java.util.List;
 
+/**
+ * The SteganoStrategy Interface needs to be implemented by all different
+ * Stegano Algorithms.
+ * 
+ * @author Renato Estermann
+ * 
+ */
 public interface SteganoStrategy {
-	
+
 	public static final String HEX_STRING_FORMAT = "%02X";
 
 	/**
@@ -64,6 +71,5 @@ public interface SteganoStrategy {
 	 *         Element.
 	 */
 	public List<String> getFormatedModBaseFileHexString();
-	
 
 }

@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * The FileNameFactory is used for different Filename operations.
  * 
- * @author rest
+ * @author Renato Estermann
  * 
  */
 public class FileNameFactory {
