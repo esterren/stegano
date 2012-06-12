@@ -10,11 +10,14 @@
  */
 package ch.zhaw.swp2.stegano.gui;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,19 +26,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import ch.zhaw.swp2.stegano.controller.IfcUserInterface;
-import ch.zhaw.swp2.stegano.model.FileByteFactory;
-import ch.zhaw.swp2.stegano.model.FileNameFactory;
-
-import java.awt.Color;
-import java.util.LinkedList;
-import java.util.List;
 import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+
+import org.apache.commons.lang.StringUtils;
+
+import ch.zhaw.swp2.stegano.controller.IfcUserInterface;
+import ch.zhaw.swp2.stegano.model.FileNameFactory;
 
 /**
  * 
@@ -50,10 +50,10 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 	private BufferedImage _modBaseFileImg;
 	private File _SmodBaseFile;
 	private File _ShiddenFile;
-        private static final int HEX_COMPARE_ROW_LENGTH = 24;
+	private static final int HEX_COMPARE_ROW_LENGTH = 24;
 	private String _lastFileChoserPath = ".";
-        private List<String> _baseFileHexString = new LinkedList<String>();
-        private List<String> _modBaseFileHexString = new LinkedList<String>();
+	private List<String> _baseFileHexString = new LinkedList<String>();
+	private List<String> _modBaseFileHexString = new LinkedList<String>();
 
 	/** Creates new form SteganoGUI */
 	public SteganoGUI() {
@@ -72,340 +72,416 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
 	// <editor-fold defaultstate="collapsed"
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+	// <editor-fold defaultstate="collapsed"
+	// desc="Generated Code">//GEN-BEGIN:initComponents
+	private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel5 = new javax.swing.JPanel();
-        _jScrollPaneHexCompLeft = new javax.swing.JScrollPane();
-        _jTextPaneHexCompLeft = new javax.swing.JTextPane();
-        _jScrollPaneHexCompRight = new javax.swing.JScrollPane();
-        _jTextPaneHexCompRight = new javax.swing.JTextPane();
-        jPanel1 = new javax.swing.JPanel();
-        _jScrollPanePicCompLeft = new javax.swing.JScrollPane();
-        _jScrollPanePicCompRight = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        _jLabelHBaseFile = new javax.swing.JLabel();
-        _jLabelHBaseFilePath = new javax.swing.JLabel();
-        _jLabelHHiddenFile = new javax.swing.JLabel();
-        _jLabelHHiddenFilePath = new javax.swing.JLabel();
-        _jLabelHModBaseFile = new javax.swing.JLabel();
-        _jLabelHModBaseFilePath = new javax.swing.JLabel();
-        _jButtonHide = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
-        jSlider1 = new javax.swing.JSlider();
-        jPanel4 = new javax.swing.JPanel();
-        _jButtonSeek = new javax.swing.JButton();
-        _jLabelSModBaseFile = new javax.swing.JLabel();
-        _jLabelSModBaseFilePath = new javax.swing.JLabel();
-        _jLabelSHiddenFile = new javax.swing.JLabel();
-        _jLabelSHiddenFilePath = new javax.swing.JLabel();
-        _jMenuBar1 = new javax.swing.JMenuBar();
-        _jMenuHideInfo = new javax.swing.JMenu();
-        _jMenuItemBF = new javax.swing.JMenuItem();
-        _jMenuItemIH = new javax.swing.JMenuItem();
-        _jMenuItemMBFSavePath = new javax.swing.JMenuItem();
-        _jMenuSeekInfo = new javax.swing.JMenu();
-        _jMenuItemMBF = new javax.swing.JMenuItem();
-        _jMenuItemHFSavePath = new javax.swing.JMenuItem();
+		jTabbedPane1 = new javax.swing.JTabbedPane();
+		jPanel5 = new javax.swing.JPanel();
+		_jScrollPaneHexCompLeft = new javax.swing.JScrollPane();
+		_jTextPaneHexCompLeft = new javax.swing.JTextPane();
+		_jScrollPaneHexCompRight = new javax.swing.JScrollPane();
+		_jTextPaneHexCompRight = new javax.swing.JTextPane();
+		jPanel1 = new javax.swing.JPanel();
+		_jScrollPanePicCompLeft = new javax.swing.JScrollPane();
+		_jScrollPanePicCompRight = new javax.swing.JScrollPane();
+		jPanel2 = new javax.swing.JPanel();
+		jPanel3 = new javax.swing.JPanel();
+		_jLabelHBaseFile = new javax.swing.JLabel();
+		_jLabelHBaseFilePath = new javax.swing.JLabel();
+		_jLabelHHiddenFile = new javax.swing.JLabel();
+		_jLabelHHiddenFilePath = new javax.swing.JLabel();
+		_jLabelHModBaseFile = new javax.swing.JLabel();
+		_jLabelHModBaseFilePath = new javax.swing.JLabel();
+		_jButtonHide = new javax.swing.JButton();
+		jPanel6 = new javax.swing.JPanel();
+		jSlider1 = new javax.swing.JSlider();
+		jPanel4 = new javax.swing.JPanel();
+		_jButtonSeek = new javax.swing.JButton();
+		_jLabelSModBaseFile = new javax.swing.JLabel();
+		_jLabelSModBaseFilePath = new javax.swing.JLabel();
+		_jLabelSHiddenFile = new javax.swing.JLabel();
+		_jLabelSHiddenFilePath = new javax.swing.JLabel();
+		_jMenuBar1 = new javax.swing.JMenuBar();
+		_jMenuHideInfo = new javax.swing.JMenu();
+		_jMenuItemBF = new javax.swing.JMenuItem();
+		_jMenuItemIH = new javax.swing.JMenuItem();
+		_jMenuItemMBFSavePath = new javax.swing.JMenuItem();
+		_jMenuSeekInfo = new javax.swing.JMenu();
+		_jMenuItemMBF = new javax.swing.JMenuItem();
+		_jMenuItemHFSavePath = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Stegano");
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		setTitle("Stegano");
 
-        _jScrollPaneHexCompLeft.setPreferredSize(new java.awt.Dimension(529, 561));
+		_jScrollPaneHexCompLeft.setPreferredSize(new java.awt.Dimension(529, 561));
 
-        _jTextPaneHexCompLeft.setPreferredSize(new java.awt.Dimension(0, 0));
-        _jScrollPaneHexCompLeft.setViewportView(_jTextPaneHexCompLeft);
+		_jTextPaneHexCompLeft.setPreferredSize(new java.awt.Dimension(0, 0));
+		_jScrollPaneHexCompLeft.setViewportView(_jTextPaneHexCompLeft);
 
-        _jScrollPaneHexCompRight.setPreferredSize(new java.awt.Dimension(529, 561));
+		_jScrollPaneHexCompRight.setPreferredSize(new java.awt.Dimension(529, 561));
 
-        _jTextPaneHexCompRight.setPreferredSize(new java.awt.Dimension(0, 0));
-        _jScrollPaneHexCompRight.setViewportView(_jTextPaneHexCompRight);
+		_jTextPaneHexCompRight.setPreferredSize(new java.awt.Dimension(0, 0));
+		_jScrollPaneHexCompRight.setViewportView(_jTextPaneHexCompRight);
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-                    .addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+		javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+		jPanel5.setLayout(jPanel5Layout);
+		jPanel5Layout.setHorizontalGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel5Layout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(_jScrollPaneHexCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 478,
+										Short.MAX_VALUE)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(_jScrollPaneHexCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 487,
+										Short.MAX_VALUE).addContainerGap()));
+		jPanel5Layout.setVerticalGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel5Layout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(
+										jPanel5Layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+												.addComponent(_jScrollPaneHexCompLeft,
+														javax.swing.GroupLayout.Alignment.LEADING, 0, 0,
+														Short.MAX_VALUE)
+												.addComponent(_jScrollPaneHexCompRight,
+														javax.swing.GroupLayout.Alignment.LEADING,
+														javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
+								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
-        jTabbedPane1.addTab("Hex Compare", jPanel5);
+		jTabbedPane1.addTab("Hex Compare", jPanel5);
 
-        _jScrollPanePicCompLeft.setPreferredSize(new java.awt.Dimension(529, 561));
+		_jScrollPanePicCompLeft.setPreferredSize(new java.awt.Dimension(529, 561));
 
-        _jScrollPanePicCompRight.setPreferredSize(new java.awt.Dimension(529, 561));
+		_jScrollPanePicCompRight.setPreferredSize(new java.awt.Dimension(529, 561));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
-                    .addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+		javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+		jPanel1.setLayout(jPanel1Layout);
+		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						javax.swing.GroupLayout.Alignment.TRAILING,
+						jPanel1Layout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(_jScrollPanePicCompLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 477,
+										Short.MAX_VALUE)
+								.addGap(18, 18, 18)
+								.addComponent(_jScrollPanePicCompRight, javax.swing.GroupLayout.DEFAULT_SIZE, 477,
+										Short.MAX_VALUE).addContainerGap()));
+		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel1Layout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(
+										jPanel1Layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(_jScrollPanePicCompLeft,
+														javax.swing.GroupLayout.Alignment.TRAILING,
+														javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+												.addComponent(_jScrollPanePicCompRight,
+														javax.swing.GroupLayout.Alignment.TRAILING,
+														javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
+								.addContainerGap()));
 
-        jTabbedPane1.addTab("Picture Compare", jPanel1);
+		jTabbedPane1.addTab("Picture Compare", jPanel1);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 996, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 436, Short.MAX_VALUE)
-        );
+		javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+		jPanel2.setLayout(jPanel2Layout);
+		jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGap(0, 996, Short.MAX_VALUE));
+		jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGap(0, 436, Short.MAX_VALUE));
 
-        jTabbedPane1.addTab("Audio Compare", jPanel2);
+		jTabbedPane1.addTab("Audio Compare", jPanel2);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Hide"));
+		jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Hide"));
 
-        _jLabelHBaseFile.setText("Basefile:");
+		_jLabelHBaseFile.setText("Basefile:");
 
-        _jLabelHBaseFilePath.setText("none");
+		_jLabelHBaseFilePath.setText("none");
 
-        _jLabelHHiddenFile.setText("Hiddenfile:");
+		_jLabelHHiddenFile.setText("Hiddenfile:");
 
-        _jLabelHHiddenFilePath.setText("none");
+		_jLabelHHiddenFilePath.setText("none");
 
-        _jLabelHModBaseFile.setText("Modified Basefile:");
+		_jLabelHModBaseFile.setText("Modified Basefile:");
 
-        _jLabelHModBaseFilePath.setText("none");
+		_jLabelHModBaseFilePath.setText("none");
 
-        _jButtonHide.setText("Run Hide");
+		_jButtonHide.setText("Run Hide");
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Pollution"));
+		jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Pollution"));
 
-        jSlider1.setMajorTickSpacing(1);
-        jSlider1.setMaximum(7);
-        jSlider1.setMinimum(1);
-        jSlider1.setMinorTickSpacing(1);
-        jSlider1.setPaintLabels(true);
-        jSlider1.setPaintTicks(true);
-        jSlider1.setSnapToTicks(true);
-        jSlider1.setValue(1);
+		jSlider1.setMajorTickSpacing(1);
+		jSlider1.setMaximum(7);
+		jSlider1.setMinimum(1);
+		jSlider1.setMinorTickSpacing(1);
+		jSlider1.setPaintLabels(true);
+		jSlider1.setPaintTicks(true);
+		jSlider1.setSnapToTicks(true);
+		jSlider1.setValue(1);
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+		javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+		jPanel6.setLayout(jPanel6Layout);
+		jPanel6Layout.setHorizontalGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel6Layout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 143,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		jPanel6Layout.setVerticalGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel6Layout
+								.createSequentialGroup()
+								.addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 46,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(_jLabelHBaseFile)
-                            .addComponent(_jLabelHModBaseFile)
-                            .addComponent(_jLabelHHiddenFile))
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(_jLabelHBaseFilePath)
-                            .addComponent(_jLabelHHiddenFilePath)
-                            .addComponent(_jLabelHModBaseFilePath)))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(_jButtonHide))
-                .addContainerGap(786, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(_jLabelHBaseFilePath)
-                    .addComponent(_jLabelHBaseFile))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(_jLabelHHiddenFilePath)
-                    .addComponent(_jLabelHHiddenFile))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(_jLabelHModBaseFilePath)
-                    .addComponent(_jLabelHModBaseFile))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(_jButtonHide))
-        );
+		javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+		jPanel3.setLayout(jPanel3Layout);
+		jPanel3Layout
+				.setHorizontalGroup(jPanel3Layout
+						.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+						.addGroup(
+								jPanel3Layout
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												jPanel3Layout
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addGroup(
+																jPanel3Layout
+																		.createSequentialGroup()
+																		.addGroup(
+																				jPanel3Layout
+																						.createParallelGroup(
+																								javax.swing.GroupLayout.Alignment.LEADING)
+																						.addComponent(_jLabelHBaseFile)
+																						.addComponent(
+																								_jLabelHModBaseFile)
+																						.addComponent(
+																								_jLabelHHiddenFile))
+																		.addGap(12, 12, 12)
+																		.addGroup(
+																				jPanel3Layout
+																						.createParallelGroup(
+																								javax.swing.GroupLayout.Alignment.LEADING)
+																						.addComponent(
+																								_jLabelHBaseFilePath)
+																						.addComponent(
+																								_jLabelHHiddenFilePath)
+																						.addComponent(
+																								_jLabelHModBaseFilePath)))
+														.addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addComponent(_jButtonHide))
+										.addContainerGap(786, Short.MAX_VALUE)));
+		jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel3Layout
+								.createSequentialGroup()
+								.addGroup(
+										jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(_jLabelHBaseFilePath).addComponent(_jLabelHBaseFile))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(
+										jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(_jLabelHHiddenFilePath).addComponent(_jLabelHHiddenFile))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(
+										jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(_jLabelHModBaseFilePath)
+												.addComponent(_jLabelHModBaseFile))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+										javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(_jButtonHide)));
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Seek"));
+		jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Seek"));
 
-        _jButtonSeek.setText("Run Seek");
+		_jButtonSeek.setText("Run Seek");
 
-        _jLabelSModBaseFile.setText("Modified Basefile:");
+		_jLabelSModBaseFile.setText("Modified Basefile:");
 
-        _jLabelSModBaseFilePath.setText("none");
+		_jLabelSModBaseFilePath.setText("none");
 
-        _jLabelSHiddenFile.setText("Hiddenfile-Savepath:");
+		_jLabelSHiddenFile.setText("Hiddenfile-Savepath:");
 
-        _jLabelSHiddenFilePath.setText("none");
+		_jLabelSHiddenFilePath.setText("none");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(_jButtonSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(_jLabelSHiddenFile)
-                            .addComponent(_jLabelSModBaseFile))
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(_jLabelSModBaseFilePath)
-                            .addComponent(_jLabelSHiddenFilePath))))
-                .addContainerGap(806, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(_jLabelSModBaseFile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(_jLabelSHiddenFile))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(_jLabelSModBaseFilePath)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(_jLabelSHiddenFilePath)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(_jButtonSeek))
-        );
+		javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+		jPanel4.setLayout(jPanel4Layout);
+		jPanel4Layout
+				.setHorizontalGroup(jPanel4Layout
+						.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+						.addGroup(
+								jPanel4Layout
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												jPanel4Layout
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(_jButtonSeek,
+																javax.swing.GroupLayout.PREFERRED_SIZE, 96,
+																javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addGroup(
+																jPanel4Layout
+																		.createSequentialGroup()
+																		.addGroup(
+																				jPanel4Layout
+																						.createParallelGroup(
+																								javax.swing.GroupLayout.Alignment.LEADING)
+																						.addComponent(
+																								_jLabelSHiddenFile)
+																						.addComponent(
+																								_jLabelSModBaseFile))
+																		.addGap(12, 12, 12)
+																		.addGroup(
+																				jPanel4Layout
+																						.createParallelGroup(
+																								javax.swing.GroupLayout.Alignment.LEADING)
+																						.addComponent(
+																								_jLabelSModBaseFilePath)
+																						.addComponent(
+																								_jLabelSHiddenFilePath))))
+										.addContainerGap(806, Short.MAX_VALUE)));
+		jPanel4Layout
+				.setVerticalGroup(jPanel4Layout
+						.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+						.addGroup(
+								jPanel4Layout
+										.createSequentialGroup()
+										.addGroup(
+												jPanel4Layout
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addGroup(
+																jPanel4Layout
+																		.createSequentialGroup()
+																		.addComponent(_jLabelSModBaseFile)
+																		.addPreferredGap(
+																				javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+																		.addComponent(_jLabelSHiddenFile))
+														.addGroup(
+																jPanel4Layout
+																		.createSequentialGroup()
+																		.addComponent(_jLabelSModBaseFilePath)
+																		.addPreferredGap(
+																				javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+																		.addComponent(_jLabelSHiddenFilePath)))
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(_jButtonSeek)));
 
-        _jMenuHideInfo.setText("Hide");
+		_jMenuHideInfo.setText("Hide");
 
-        _jMenuItemBF.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
-        _jMenuItemBF.setText("Import Basefile");
-        _jMenuItemBF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importBaseFileActionlistener(evt);
-            }
-        });
-        _jMenuHideInfo.add(_jMenuItemBF);
+		_jMenuItemBF.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B,
+				java.awt.event.InputEvent.CTRL_MASK));
+		_jMenuItemBF.setText("Import Basefile");
+		_jMenuItemBF.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				importBaseFileActionlistener(evt);
+			}
+		});
+		_jMenuHideInfo.add(_jMenuItemBF);
 
-        _jMenuItemIH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        _jMenuItemIH.setText("Import Hiddenfile");
-        _jMenuItemIH.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importHiddenFileActionListener(evt);
-            }
-        });
-        _jMenuHideInfo.add(_jMenuItemIH);
+		_jMenuItemIH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H,
+				java.awt.event.InputEvent.CTRL_MASK));
+		_jMenuItemIH.setText("Import Hiddenfile");
+		_jMenuItemIH.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				importHiddenFileActionListener(evt);
+			}
+		});
+		_jMenuHideInfo.add(_jMenuItemIH);
 
-        _jMenuItemMBFSavePath.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        _jMenuItemMBFSavePath.setText("Save-Path: Modified Basefile");
-        _jMenuItemMBFSavePath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveModBaseFileActionListener(evt);
-            }
-        });
-        _jMenuHideInfo.add(_jMenuItemMBFSavePath);
+		_jMenuItemMBFSavePath.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S,
+				java.awt.event.InputEvent.CTRL_MASK));
+		_jMenuItemMBFSavePath.setText("Save-Path: Modified Basefile");
+		_jMenuItemMBFSavePath.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				saveModBaseFileActionListener(evt);
+			}
+		});
+		_jMenuHideInfo.add(_jMenuItemMBFSavePath);
 
-        _jMenuBar1.add(_jMenuHideInfo);
+		_jMenuBar1.add(_jMenuHideInfo);
 
-        _jMenuSeekInfo.setText("Seek");
-        _jMenuSeekInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveHiddenFileActionListener(evt);
-            }
-        });
+		_jMenuSeekInfo.setText("Seek");
+		_jMenuSeekInfo.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				saveHiddenFileActionListener(evt);
+			}
+		});
 
-        _jMenuItemMBF.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
-        _jMenuItemMBF.setText("Import modified Basefile");
-        _jMenuItemMBF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importModBaseFileActionListener(evt);
-            }
-        });
-        _jMenuSeekInfo.add(_jMenuItemMBF);
+		_jMenuItemMBF.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M,
+				java.awt.event.InputEvent.CTRL_MASK));
+		_jMenuItemMBF.setText("Import modified Basefile");
+		_jMenuItemMBF.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				importModBaseFileActionListener(evt);
+			}
+		});
+		_jMenuSeekInfo.add(_jMenuItemMBF);
 
-        _jMenuItemHFSavePath.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
-        _jMenuItemHFSavePath.setText("Save-Path: Hiddenfile");
-        _jMenuItemHFSavePath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveHiddenFileActionListener(evt);
-            }
-        });
-        _jMenuSeekInfo.add(_jMenuItemHFSavePath);
+		_jMenuItemHFSavePath.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D,
+				java.awt.event.InputEvent.CTRL_MASK));
+		_jMenuItemHFSavePath.setText("Save-Path: Hiddenfile");
+		_jMenuItemHFSavePath.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				saveHiddenFileActionListener(evt);
+			}
+		});
+		_jMenuSeekInfo.add(_jMenuItemHFSavePath);
 
-        _jMenuBar1.add(_jMenuSeekInfo);
+		_jMenuBar1.add(_jMenuSeekInfo);
 
-        setJMenuBar(_jMenuBar1);
+		setJMenuBar(_jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+				layout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(
+								layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+										.addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1001,
+												Short.MAX_VALUE)
+										.addGroup(
+												layout.createSequentialGroup()
+														.addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addContainerGap())
+										.addGroup(
+												javax.swing.GroupLayout.Alignment.TRAILING,
+												layout.createSequentialGroup()
+														.addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addContainerGap()))));
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+				layout.createSequentialGroup()
+						.addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 466,
+								javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
-        jTabbedPane1.getAccessibleContext().setAccessibleName("Compare");
+		jTabbedPane1.getAccessibleContext().setAccessibleName("Compare");
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+		pack();
+	}// </editor-fold>//GEN-END:initComponents
 
 	private void importModBaseFileActionListener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importModBaseFileActionListener
 		File file = openFileChooser("Import modified Basefile", JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY);
@@ -503,55 +579,57 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 		});
 	}
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton _jButtonHide;
-    private javax.swing.JButton _jButtonSeek;
-    private javax.swing.JLabel _jLabelHBaseFile;
-    private javax.swing.JLabel _jLabelHBaseFilePath;
-    private javax.swing.JLabel _jLabelHHiddenFile;
-    private javax.swing.JLabel _jLabelHHiddenFilePath;
-    private javax.swing.JLabel _jLabelHModBaseFile;
-    private javax.swing.JLabel _jLabelHModBaseFilePath;
-    private javax.swing.JLabel _jLabelSHiddenFile;
-    private javax.swing.JLabel _jLabelSHiddenFilePath;
-    private javax.swing.JLabel _jLabelSModBaseFile;
-    private javax.swing.JLabel _jLabelSModBaseFilePath;
-    private javax.swing.JMenuBar _jMenuBar1;
-    private javax.swing.JMenu _jMenuHideInfo;
-    private javax.swing.JMenuItem _jMenuItemBF;
-    private javax.swing.JMenuItem _jMenuItemHFSavePath;
-    private javax.swing.JMenuItem _jMenuItemIH;
-    private javax.swing.JMenuItem _jMenuItemMBF;
-    private javax.swing.JMenuItem _jMenuItemMBFSavePath;
-    private javax.swing.JMenu _jMenuSeekInfo;
-    private javax.swing.JScrollPane _jScrollPaneHexCompLeft;
-    private javax.swing.JScrollPane _jScrollPaneHexCompRight;
-    private javax.swing.JScrollPane _jScrollPanePicCompLeft;
-    private javax.swing.JScrollPane _jScrollPanePicCompRight;
-    private javax.swing.JTextPane _jTextPaneHexCompLeft;
-    private javax.swing.JTextPane _jTextPaneHexCompRight;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JSlider jSlider1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    // End of variables declaration//GEN-END:variables
+	// Variables declaration - do not modify//GEN-BEGIN:variables
+	private javax.swing.JButton _jButtonHide;
+	private javax.swing.JButton _jButtonSeek;
+	private javax.swing.JLabel _jLabelHBaseFile;
+	private javax.swing.JLabel _jLabelHBaseFilePath;
+	private javax.swing.JLabel _jLabelHHiddenFile;
+	private javax.swing.JLabel _jLabelHHiddenFilePath;
+	private javax.swing.JLabel _jLabelHModBaseFile;
+	private javax.swing.JLabel _jLabelHModBaseFilePath;
+	private javax.swing.JLabel _jLabelSHiddenFile;
+	private javax.swing.JLabel _jLabelSHiddenFilePath;
+	private javax.swing.JLabel _jLabelSModBaseFile;
+	private javax.swing.JLabel _jLabelSModBaseFilePath;
+	private javax.swing.JMenuBar _jMenuBar1;
+	private javax.swing.JMenu _jMenuHideInfo;
+	private javax.swing.JMenuItem _jMenuItemBF;
+	private javax.swing.JMenuItem _jMenuItemHFSavePath;
+	private javax.swing.JMenuItem _jMenuItemIH;
+	private javax.swing.JMenuItem _jMenuItemMBF;
+	private javax.swing.JMenuItem _jMenuItemMBFSavePath;
+	private javax.swing.JMenu _jMenuSeekInfo;
+	private javax.swing.JScrollPane _jScrollPaneHexCompLeft;
+	private javax.swing.JScrollPane _jScrollPaneHexCompRight;
+	private javax.swing.JScrollPane _jScrollPanePicCompLeft;
+	private javax.swing.JScrollPane _jScrollPanePicCompRight;
+	private javax.swing.JTextPane _jTextPaneHexCompLeft;
+	private javax.swing.JTextPane _jTextPaneHexCompRight;
+	private javax.swing.JPanel jPanel1;
+	private javax.swing.JPanel jPanel2;
+	private javax.swing.JPanel jPanel3;
+	private javax.swing.JPanel jPanel4;
+	private javax.swing.JPanel jPanel5;
+	private javax.swing.JPanel jPanel6;
+	private javax.swing.JSlider jSlider1;
+	private javax.swing.JTabbedPane jTabbedPane1;
+
+	// End of variables declaration//GEN-END:variables
 
 	@Override
 	public void displayBaseFile() {
 		// displayHexFileString(_HbaseFile,_jTextAreaHexCompLeft);
 		// TODO Check for PNG and BMP Images => Validator
-		if(FileNameFactory.getExtension(_HbaseFile).equals("bmp")||FileNameFactory.getExtension(_HbaseFile).equals("png")){
+		if (FileNameFactory.getExtension(_HbaseFile).equals("bmp")
+				|| FileNameFactory.getExtension(_HbaseFile).equals("png")) {
 			try {
 				_baseFileImg = ImageIO.read(_HbaseFile);
 				ImageIcon img = new ImageIcon(_baseFileImg);
 				JLabel imglbl = new JLabel(img);
 				_jScrollPanePicCompLeft.getViewport().add(imglbl);
-				//_jTextAreaHexCompLeft.setText(FileByteFactory.convertToHex(_HbaseFile));
-	
+				// _jTextAreaHexCompLeft.setText(FileByteFactory.convertToHex(_HbaseFile));
+
 			} catch (IOException ex) {
 				// TODO evtl. eine Dialog Meldung, dass das Bild nicht angezeigt
 				// werden kann.
@@ -563,8 +641,9 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
 	@Override
 	public void displayModBaseFile() {
-        
-		if(FileNameFactory.getExtension(_HmodBaseFile).equals("bmp")||FileNameFactory.getExtension(_HmodBaseFile).equals("png")){
+
+		if (FileNameFactory.getExtension(_HmodBaseFile).equals("bmp")
+				|| FileNameFactory.getExtension(_HmodBaseFile).equals("png")) {
 			try {
 				_modBaseFileImg = ImageIO.read(_HmodBaseFile);
 				ImageIcon img = new ImageIcon(_modBaseFileImg);
@@ -577,50 +656,52 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 			}
 		}
 
-                int counter = 0;
-                _jTextPaneHexCompLeft.setEditable(true);
-                _jTextPaneHexCompRight.setEditable(true);
-                
-                for (int i = 0; i < _modBaseFileHexString.size(); i++) {
-                    if(_baseFileHexString!= null && !_modBaseFileHexString.get(i).equals(_baseFileHexString.get(i))){
-                        //append(Color.RED, _modBaseFileHexString.get(i)+ " ");
-                        append(_jTextPaneHexCompRight,Color.RED, _modBaseFileHexString.get(i)+ " ");
-                        counter++;
-                    }
-                    else{
-                        //append(Color.BLACK, _modBaseFileHexString.get(i) + " ");
-                        append(_jTextPaneHexCompRight,Color.BLACK, _modBaseFileHexString.get(i) + " ");
-                        counter++;
-                    }
-                    append(_jTextPaneHexCompLeft,Color.BLACK, _baseFileHexString.get(i) + " ");
-                    if(counter== HEX_COMPARE_ROW_LENGTH){
-                        //append(Color.BLACK, "\n");
-                        append(_jTextPaneHexCompLeft,Color.BLACK, "\n");
-                        append(_jTextPaneHexCompRight,Color.BLACK, "\n");
-                        counter =0;
-                    }
-                }
-                _jTextPaneHexCompLeft.setEditable(false);
-                _jTextPaneHexCompRight.setEditable(false);
-			//_jTextAreaHexCompRight.setText(FileByteFactory.convertToHex(_HmodBaseFile));
-                
-	}
-        
-        public void setBaseFileHexString (List<String> inHexList) throws IllegalArgumentException{
-            if(inHexList == null){
-                throw new IllegalArgumentException("Hex String is null!");
-            }else{
-                _baseFileHexString = inHexList;
-            }
-        }
-        public void setModBaseFileHexString (List<String> inHexList) throws IllegalArgumentException{
-            if(inHexList == null){
-                throw new IllegalArgumentException("Hex String is null!");
-            }else{
-                _modBaseFileHexString = inHexList;
-            }
-        }
+		int counter = 0;
+		_jTextPaneHexCompLeft.setEditable(true);
+		_jTextPaneHexCompRight.setEditable(true);
 
+		for (int i = 0; i < _modBaseFileHexString.size(); i++) {
+			if (_baseFileHexString != null && !_modBaseFileHexString.get(i).equals(_baseFileHexString.get(i))) {
+				int diffindex = StringUtils.indexOfDifference(_modBaseFileHexString.get(i), _baseFileHexString.get(i));
+				String tmp = _modBaseFileHexString.get(i).substring(0, diffindex);
+				append(_jTextPaneHexCompRight, Color.BLACK, tmp);
+				append(_jTextPaneHexCompRight, Color.RED, _modBaseFileHexString.get(i).substring(diffindex) + " ");
+
+				counter++;
+			} else {
+
+				append(_jTextPaneHexCompRight, Color.BLACK, _modBaseFileHexString.get(i) + " ");
+				counter++;
+			}
+			append(_jTextPaneHexCompLeft, Color.BLACK, _baseFileHexString.get(i) + " ");
+			if (counter == HEX_COMPARE_ROW_LENGTH) {
+
+				append(_jTextPaneHexCompLeft, Color.BLACK, "\n");
+				append(_jTextPaneHexCompRight, Color.BLACK, "\n");
+				counter = 0;
+			}
+		}
+		_jTextPaneHexCompLeft.setEditable(false);
+		_jTextPaneHexCompRight.setEditable(false);
+		// _jTextAreaHexCompRight.setText(FileByteFactory.convertToHex(_HmodBaseFile));
+
+	}
+
+	public void setBaseFileHexString(List<String> inHexList) throws IllegalArgumentException {
+		if (inHexList == null) {
+			throw new IllegalArgumentException("Hex String is null!");
+		} else {
+			_baseFileHexString = inHexList;
+		}
+	}
+
+	public void setModBaseFileHexString(List<String> inHexList) throws IllegalArgumentException {
+		if (inHexList == null) {
+			throw new IllegalArgumentException("Hex String is null!");
+		} else {
+			_modBaseFileHexString = inHexList;
+		}
+	}
 
 	@Override
 	public void setListeners(ActionListener buttonRunHide, ActionListener buttonRunSeek) {
@@ -715,8 +796,6 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 			return null;
 		}
 	}
-        
-        
 
 	@Override
 	public void displaySeekedHiddenFile(String inHiddenFilePath) throws Exception {
@@ -737,18 +816,20 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 			}
 		}
 	}
-        
-        private void append(JTextPane inPane, Color c, String s) { // better implementation--uses
-											// StyleContext
+
+	private void append(JTextPane inPane, Color c, String s) { // better
+																// implementation--uses
+		// StyleContext
 		StyleContext sc = StyleContext.getDefaultStyleContext();
 		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
 		int len = inPane.getDocument().getLength(); // same value as
-												// getText().length();
-		inPane.setCaretPosition(len); // place caret at the end (with no selection)
+		// getText().length();
+		inPane.setCaretPosition(len); // place caret at the end (with no
+										// selection)
 		inPane.setCharacterAttributes(aset, false);
-		inPane.replaceSelection(s); // there is no selection, so inserts at caret
+		inPane.replaceSelection(s); // there is no selection, so inserts at
+									// caret
 	}
-        
-       
+
 }
