@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
  * @author Renato Estermann
  * 
  */
-public class BaseFileProtocolFactory {
+public class ProtocolHeaderFactory {
 
 	private static final int MAX_POLLUTION = 8;
 	public static final int HEADER_LENGTH = 8;
@@ -20,7 +20,7 @@ public class BaseFileProtocolFactory {
 	private static final int POLLUTION_STARTBYTE_POS = 7;
 	private static final String EXTENSION_ENCODING = "US-ASCII";
 
-	public BaseFileProtocolFactory() {
+	public ProtocolHeaderFactory() {
 	}
 
 	/**
