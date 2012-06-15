@@ -86,6 +86,8 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
         _jScrollPanePicCompLeft = new javax.swing.JScrollPane();
         _jScrollPanePicCompRight = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
+        _jButtonPLBaseFile = new javax.swing.JButton();
+        _jButtonPLModBaseFile = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         _jLabelHBaseFile = new javax.swing.JLabel();
         _jLabelHBaseFilePath = new javax.swing.JLabel();
@@ -176,15 +178,39 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
         jTabbedPane1.addTab("Picture Compare", jPanel1);
 
+        _jButtonPLBaseFile.setText("Play Basefile");
+        _jButtonPLBaseFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                _jButtonPLBaseFileActionPerformed(evt);
+            }
+        });
+
+        _jButtonPLModBaseFile.setText("Play Modified Basefile");
+        _jButtonPLModBaseFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                _jButtonPLModBaseFileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 984, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(_jButtonPLBaseFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(_jButtonPLModBaseFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(801, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 449, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(_jButtonPLBaseFile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(_jButtonPLModBaseFile)
+                .addContainerGap(373, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Audio Compare", jPanel2);
@@ -386,14 +412,10 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 989, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 989, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -409,6 +431,38 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void _jButtonPLBaseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__jButtonPLBaseFileActionPerformed
+        if (_HbaseFile != null) {
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+
+			if (desktop.isSupported(Desktop.Action.OPEN)) {
+				try {
+					desktop.open(_HbaseFile);
+				} catch (IOException ex) {
+					displayErrorMsg("Could not open Hiddenfile with a system-associated Editor!");
+				}
+			}
+		}	
+        }	
+}//GEN-LAST:event__jButtonPLBaseFileActionPerformed
+
+private void _jButtonPLModBaseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__jButtonPLModBaseFileActionPerformed
+        if (_HmodBaseFile != null) {
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+
+			if (desktop.isSupported(Desktop.Action.OPEN)) {
+				try {
+					desktop.open(_HmodBaseFile);
+				} catch (IOException ex) {
+					displayErrorMsg("Could not open Hiddenfile with a system-associated Editor!");
+				}
+			}
+		}	
+        }
+}//GEN-LAST:event__jButtonPLModBaseFileActionPerformed
 
 	private void importModBaseFileActionListener(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importModBaseFileActionListener
 		File file = openFileChooser("Import modified Basefile", JFileChooser.OPEN_DIALOG, JFileChooser.FILES_ONLY);
@@ -508,6 +562,8 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton _jButtonHide;
+    private javax.swing.JButton _jButtonPLBaseFile;
+    private javax.swing.JButton _jButtonPLModBaseFile;
     private javax.swing.JButton _jButtonSeek;
     private javax.swing.JLabel _jLabelHBaseFile;
     private javax.swing.JLabel _jLabelHBaseFilePath;
@@ -653,20 +709,7 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 
 	private File openFileChooser(String inTitle, int inDialogType, int inSelectionMode) {
 
-		JFileChooser fileChooser = new JFileChooser(new File(_lastFileChoserPath));
-		// if(_lastFileChoserPath ==null|| _lastFileChoserPath.isEmpty()){
-		// try {
-		// Create a File object containing the canonical path of the
-		// desired directory
-		// File f = new File(new File(".").getCanonicalPath());
-
-		// Set the current directory
-		// _lastFileChoserPath = f.getAbsolutePath();
-		// fileChooser.setCurrentDirectory(f);
-		// } catch (IOException e) {
-		// }
-		// }
-		// fileChooser.setCurrentDirectory(new File(_lastFileChoserPath));
+		JFileChooser fileChooser = new JFileChooser(new File(_lastFileChoserPath));		
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setDialogType(inDialogType);
 		fileChooser.setDialogTitle(inTitle);
@@ -692,7 +735,6 @@ public class SteganoGUI extends javax.swing.JFrame implements IfcUserInterface {
 				_jScrollPanePicCompLeft.getVerticalScrollBar().getModel());
 		_jScrollPanePicCompRight.getHorizontalScrollBar().setModel(
 				_jScrollPanePicCompLeft.getHorizontalScrollBar().getModel());
-		// TODO Bug mit Anzeige von Scrollbar bei Test mit Enter.
 		_jScrollPaneHexCompRight.getVerticalScrollBar().setModel(
 				_jScrollPaneHexCompLeft.getVerticalScrollBar().getModel());
 		_jScrollPaneHexCompRight.getHorizontalScrollBar().setModel(
