@@ -1,0 +1,96 @@
+ADOBE INDESIGN - DRUCKANLEITUNGEN FÜR BELICHTUNGSBÜROBERICHT
+
+SATZDATEINAME: Dokumentation.indd
+
+PACKDATUM: 16.6.2012 2:24 Uhr
+Erstellungsdatum 16.6.2012
+Änderungsdatum: 16.6.2012
+
+AUFTRAGGEBER
+
+Firma: 
+Ansprechpartner: 
+Adresse: 
+
+
+
+
+
+Telefon: 
+Fax: 
+E-Mail: 
+
+BESONDERE ANWEISUNGEN UND ANDERE ANMERKUNGEN
+
+
+
+
+
+
+Externe Zusatzmodule 1
+
+InBooklet SE.4x.pln.framework
+
+
+Nicht deckende Objekte:Ohne
+
+SCHRIFTARTEN
+6 Schriftart(en) verwendet; 0 fehlend, 2 eingebettet, 0 unvollst., 0 geschützt
+
+Schriftarten verpackt
+- Name: Calibri; Typ: TrueType, Status: eingebettet
+- Name: HelveticaNeue-Roman; Typ: Type 1, Status: eingebettet
+- Name: Univers-Bold; Typ: Type 1, Status: OK
+- Name: Univers-Light; Typ: Type 1, Status: OK
+- Name: Univers-LightOblique; Typ: Type 1, Status: OK
+- Name: ZapfDingbatsITC; Typ: TrueType, Status: OK
+
+
+FARBEN UND DRUCKFARBEN
+4 Prozessfarbe(n); 0 Volltonfarbe(n)
+
+- Name und Typ: Prozessfarbe Cyan; Winkel: 0.000; Linien/Zoll: 0.000
+- Name und Typ: Prozessfarbe Magenta; Winkel: 0.000; Linien/Zoll: 0.000
+- Name und Typ: Prozessfarbe Gelb; Winkel: 0.000; Linien/Zoll: 0.000
+- Name und Typ: Prozessfarbe Schwarz; Winkel: 0.000; Linien/Zoll: 0.000
+
+
+VERKNÜPFUNGEN UND BILDER
+(Nur fehlende & eingebettete Verknüpfungen)
+Verknüpfungen und Bilder: 11 Verknüpfung(en) gefunden; 0 geändert, 0 fehlend 0 Zugriff nicht möglich
+Bilder: 0 eingebettet, 9 verwenden RGB-Farbraum
+
+
+DRUCKEINSTELLUNGEN
+PPD: n. zutr., (Samsung CLX-3170 Series (ESTP01))
+Druckausgabe: Drucker
+Anzahl der Exemplare: 1
+Druckbögen: Nein
+Gerade/Ungerade Seiten: Beides
+Seiten: Alle
+Probedruck: Nein
+Unterteilung: Ohne
+Skalieren: 100 %, 100 %
+Seitenposition: Zentrieren
+Ebenen drucken: Sichtbare und druckbare Ebenen
+Druckermarken: Ohne
+Anschnitt: 0 mm, 0 mm, 0 mm, 0 mm
+Farbe: Composite-RGB
+Überfüllungsmodus: Ohne
+Bilddaten senden: Alle
+OPI/DCS-Bildersetzung: Nein
+Seitenformat: A4
+Papierabmessungen: 209.903 mm x 297.039 mm
+Format: Hochformat
+Negativ: Nein
+Spiegelmodus: Aus
+
+
+DATEIPAKETLISTE
+
+1. Dokumentation.indd; Typ: Adobe InDesign-Satzdatei; Größe: 4236K
+2. UniveBol; Typ: Schriftartendatei; Größe: 27K
+3. Univers; Typ: Schriftartendatei; Größe: 216K
+4. UniveLig; Typ: Schriftartendatei; Größe: 26K
+5. UniveLigObl; Typ: Schriftartendatei; Größe: 34K
+6. ZapfDingbats.dfont; Typ: Schriftartendatei; Größe: 150K
