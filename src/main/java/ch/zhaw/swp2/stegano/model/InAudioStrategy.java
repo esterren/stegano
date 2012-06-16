@@ -1,5 +1,7 @@
 package ch.zhaw.swp2.stegano.model;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,42 +39,181 @@ public class InAudioStrategy implements SteganoStrategy {
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
-		long[] audioLongArr = hideMessage(wBaseFile, bMsgCRC);	
+		byte[] modBaseFileArr = hideMessage(inBaseFile, bMsgCRC);
+		long[][] plainArray = new long[wBaseFile.getNumChannels()][1];
+		for (int i = 0; i < plainArray.length; i++) {
+			plainArray[i][0]=0;
+		}
 		
 		WavFile wInModBaseFile = WavFile.newWavFile(inModBaseFile, wBaseFile.getNumChannels(), wBaseFile.getNumFrames(), wBaseFile.getValidBits(), wBaseFile.getSampleRate());
-		wInModBaseFile.writeFrames(audioLongArr, wBaseFile.getNumChannels() * (int) wBaseFile.getNumFrames());
+//		wInModBaseFile.writeFrames(plainArray, 1);
 		wInModBaseFile.close();
+		
+		FileOutputStream fos = new FileOutputStream(inModBaseFile);
+		DataOutputStream dos = new DataOutputStream(fos);
+		dos.write(modBaseFileArr);
+		dos.close();
+		fos.close();
 	}
 
-	private long[] hideMessage(WavFile audio, byte[] message) throws Exception {
+	private byte[] hideMessage(File audio, byte[] message) throws Exception {
 
-		int sampleTotal = (int) audio.getNumFrames();
-		int channelTotal = (int) audio.getNumChannels();
-		long[] buffer = new long[sampleTotal * channelTotal];
-		audio.readFrames(buffer, sampleTotal);
-
+		byte[] dataSource = new byte[(int) audio.length()];
+		
+		//FileRead
+		FileInputStream fin = new FileInputStream(audio);
+		
+		DataInputStream din = new DataInputStream(fin);
+		
+		din.read(dataSource);
+		
+		din.close();
+		
+		byte[] data = dataSource;
+		int dataIndex = 0;
+		
 		for (int i = 0; i < message.length; i++) {
 			byte m = message[i];
-			// boolean[] mBit = new boolean[8];
-
-			for (int j = 0; j < 8; j++) {
-				baseFileHexList.add( getFormatedHexString(buffer[i*8+j]));
-				if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 0) {
-					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
-					m = (byte) ((m - 1) / 2);
-				} else if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 1) {
-					m = (byte) ((m - 1) / 2);
-				} else if ((m % 2) == 0 && buffer[i * 8 + j] % 2 == 0) {
-					m = (byte) ((m) / 2);
-				} else {
-					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
-				}
-				modBaseFileHexList.add(getFormatedHexString(buffer[i*8+j]));
-			}
-
+					for (int j = 0; j < 8; j++) {
+						
+						baseFileHexList.add(getFormatedHexString(data[dataIndex]));
+						if (data[dataIndex]%2==1 && m%2==1) {
+							
+						}
+						else if (data[dataIndex]%2==0 && m%2==0) {
+							
+						}
+						else if (data[dataIndex]%2==1 && m%2==0) {
+							if (data[dataIndex] == Byte.MAX_VALUE) {
+								data[dataIndex]=(byte) (data[dataIndex]-1);
+							} else {
+								data[dataIndex]=(byte) (data[dataIndex]+1);
+							}
+						}
+						else if (data[dataIndex]%2==0 && m%2==1) {
+							if (data[dataIndex] == Byte.MIN_VALUE) {
+								data[dataIndex]=(byte) (data[dataIndex]+1);
+							} else {
+								data[dataIndex]=(byte) (data[dataIndex]-1);
+							}
+						}
+						modBaseFileHexList.add(getFormatedHexString(data[dataIndex]));
+						m = (byte) (m >> 1);
+						dataIndex++;
+					}
 		}
+		
+		return data;
+		
+//		int sampleTotal = (int) audio.getNumFrames();
+//		int channelTotal = (int) audio.getNumChannels();
+//		long[][] buffer = new long[channelTotal][sampleTotal];
+//		audio.readFrames(buffer, (int)Math.ceil(message.length/channelTotal));
+//
+//		//long-array-counter
+//		int chan = 0;
+//		int frame = 0;
+//		
+//		//Array modifizieren
+//		for (int i = 0; i < message.length; i++) {
+//			byte m = message[i];
+//			
+//			//ueber 1 byte iterieren
+//			for (int j = 0; j < 8; j++) {
+//				
+//				baseFileHexList.add(getFormatedHexString(buffer[chan][frame]));
+//				
+//				if (chan < (channelTotal-1)) {
+//					
+//					if ((buffer[chan][frame] % 2 == 1)&&(m % 2 == 1)) {
+//						m = (byte) (m >> 1);
+//					} 
+//					else if ((buffer[chan][frame] % 2 == 0)&&(m % 2 == 1)) {
+//						if (m == -128) {
+//							buffer[chan][frame] = buffer[chan][frame] +1;
+//						} else {buffer[chan][frame] = buffer[chan][frame] -1;}
+//						m = (byte) (m >> 1);
+//					} else if ((buffer[chan][frame] % 2 == 1)&&(m % 2 == 0)) {
+//						if (m == -128) {
+//							buffer[chan][frame] = buffer[chan][frame] +1;
+//						} else {buffer[chan][frame] = buffer[chan][frame] -1;}
+//						m = (byte) (m >> 1);
+//					} else if ((buffer[chan][frame] % 2 == 0)&&(m % 2 == 0)) {
+//						m = (byte) (m >> 1);
+//					} 
+//					
+//					modBaseFileHexList.add(getFormatedHexString(buffer[chan][frame]));
+//					chan++;
+//				}
+//				
+//				else if (chan == (channelTotal-1)){
+//					
+//					if ((buffer[chan][frame] % 2 == 1)&&(m % 2 == 1)) {
+//						m = (byte) (m >> 1);
+//					} 
+//					else if ((buffer[chan][frame] % 2 == 0)&&(m % 2 == 1)) {
+//						if (m == -128) {
+//							buffer[chan][frame] = buffer[chan][frame] +1;
+//						} else {buffer[chan][frame] = buffer[chan][frame] -1;}
+//						m = (byte) (m >> 1);
+//					} else if ((buffer[chan][frame] % 2 == 1)&&(m % 2 == 0)) {
+//						if (m == -128) {
+//							buffer[chan][frame] = buffer[chan][frame] +1;
+//						} else {buffer[chan][frame] = buffer[chan][frame] -1;}
+//						m = (byte) (m >> 1);
+//					} else if ((buffer[chan][frame] % 2 == 0)&&(m % 2 == 0)) {
+//						m = (byte) (m >> 1);
+//					} 
+//					
+//					baseFileHexList.add(getFormatedHexString(buffer[chan][frame]));
+//					chan=0;
+//					frame++;
+//				}
+//				
+//			}
+//		}
+//		
+		
+//		for (int i = 0; i < message.length; i++) {
+//			byte m = message[i];
+//			for (int j = 0; j < buffer.length; j++) {
+//				for (int j2 = 0; j2 < buffer[j].length; j2++) {
+//					if ((m % 2) == 1 && buffer[j][j2] % 2 == 0) {
+//						buffer[j][i] = buffer[j][j2] - 1;
+//						m = (byte) ((m - 1) / 2);
+//					} else if ((m % 2) == 1 && buffer[j][j2] % 2 == 1) {
+//						m = (byte) ((m - 1) / 2);
+//					} else if ((m % 2) == 0 && buffer[j][j2] % 2 == 0) {
+//						m = (byte) ((m) / 2);
+//					} else {
+//						buffer[j][j2] = buffer[j][j2] - 1;
+//					}
+//					modBaseFileHexList.add(getFormatedHexString(buffer[j][i]));
+//				}
+//			}
+//		}
+		
+		
+		
+//		for (int i = 0; i < message.length; i++) {
+//			byte m = message[i];
+//			// boolean[] mBit = new boolean[8];
+//
+//			for (int j = 0; j < 8; j++) {
+//				baseFileHexList.add( getFormatedHexString(buffer[i*8+j]));
+//				if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 0) {
+//					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
+//					m = (byte) ((m - 1) / 2);
+//				} else if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 1) {
+//					m = (byte) ((m - 1) / 2);
+//				} else if ((m % 2) == 0 && buffer[i * 8 + j] % 2 == 0) {
+//					m = (byte) ((m) / 2);
+//				} else {
+//					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
+//				}
+//				modBaseFileHexList.add(getFormatedHexString(buffer[i*8+j]));
+//			}
 
-		return buffer;
 	}
 
 	@Override
@@ -80,9 +221,9 @@ public class InAudioStrategy implements SteganoStrategy {
 		if (inModBaseFile == null || inHiddenFileSaveDir == null) {
 			throw new Exception("Please import a modified Basefile and set the directory for the Hiddenfile!");
 		}
-		WavFile modBaseFileAudio = WavFile.openWavFile(inModBaseFile);
+//		WavFile modBaseFileAudio = WavFile.openWavFile(inModBaseFile);
 
-		byte[] bHeader = seekMessage(modBaseFileAudio, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 0);
+		byte[] bHeader = seekMessage(inModBaseFile, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 0);
 
 		if (bHeader == null) {
 			throw new Exception(
@@ -94,10 +235,10 @@ public class InAudioStrategy implements SteganoStrategy {
 		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(bHeader);
 		
 		
-		byte[] bHiddenFile = seekMessage(modBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
+		byte[] bHiddenFile = seekMessage(inModBaseFile, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
 				baseFilePollution);
 
-		byte[] bCRCMsg = seekMessage(modBaseFileAudio, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
+		byte[] bCRCMsg = seekMessage(inModBaseFile, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
 				baseFilePollution);
 		if (bHiddenFile == null || bCRCMsg == null) {
 			throw new Exception(
@@ -130,20 +271,45 @@ public class InAudioStrategy implements SteganoStrategy {
 	 *         at startByte and has the length of countByte.
 	 * @throws IllegalArgumentException
 	 */
-	private byte[] seekMessage(WavFile inModBaseFileAudio, int startByte, int countBytes, byte inPollution)
+	private byte[] seekMessage(File inModBaseFile, int startByte, int countBytes, byte inPollution)
 			throws Exception {
 		if (startByte < 0 || countBytes < 1) {
 			throw new Exception(
 					"Unable to seek for the Hiddenfile, due to corrupt data.\nThe modified Basefile was manipulated!");
 		}
 
+		byte[] dataSource = new byte[(startByte + countBytes)*8];
+		byte[] data = new byte[countBytes];
+		
+		FileInputStream fin = new FileInputStream(inModBaseFile);
+		
+		DataInputStream din = new DataInputStream(fin);
+		
+		din.read(dataSource, startByte*8, (startByte+countBytes)*8);
+		
+		din.close();
+		
+		for (int i = (startByte*8); i < dataSource.length; i++) {
+			byte b = 0;
+			
+			for (int j = 0; j < 8; j++) {
+				if (Math.abs(dataSource[i]%2)==1) {
+					b = (byte) ((b << 1) +1);
+				} else if (Math.abs(dataSource[i]%2)==0) {
+					b = (byte) ((b << 1));
+				}
+			}
+			data[(int) Math.floor(i/8)]=b;
+		}
+		
+		return data;
 //		byte[] seekData = new byte[countBytes];
 //		int longArrayLength = countBytes*8;
 //		int chanCount = inModBaseFileAudio.getNumChannels();
 //		long[] audioLongArray = new long[(int)Math.floor(longArrayLength/(chanCount))*chanCount];
 //		inModBaseFileAudio.readFrames(audioLongArray,startByte*8/chanCount, (int)Math.floor(longArrayLength/(chanCount)));
 		
-		byte[] seekData = new byte[countBytes];
+/*		byte[] seekData = new byte[countBytes];
 		int chanCount = inModBaseFileAudio.getNumChannels();
 		int longArrayMinLength = countBytes *8; //minimale Laenge des longArray
 		int byteOffset = startByte;
@@ -166,9 +332,61 @@ public class InAudioStrategy implements SteganoStrategy {
 				}
 			}
 			seekData[i] = m;
-		}		
-
-		return seekData;
+		}	*/	
+//		
+//		int chanCount = inModBaseFileAudio.getNumChannels();
+//		int startCol = (int) Math.floor(startByte*8/chanCount);
+//		int startRow = (startByte*8)%chanCount;
+//		byte[] seekData = new byte[countBytes];
+//		
+//		int rowCount = startRow;
+//		int colCount = startCol;
+//		
+//		long[][] buffer = new long[chanCount][(countBytes*8/chanCount)+2];
+//
+//		inModBaseFileAudio.readFrames(buffer, startRow, countBytes*8/chanCount+2);
+//		
+//		//long-array-counter
+//		int chan = startRow;
+//		int frame = startCol;
+//		
+//		//Array modifizieren
+//		for (int i = 0; i < seekData.length; i++) {
+//			byte m = 0;
+//			
+//			//ueber 1 byte iterieren
+//			for (int j = 0; j < 8; j++) {
+//				
+//				baseFileHexList.add(getFormatedHexString(buffer[chan][frame]));
+//				
+//				if (chan < (chanCount-1)) {
+//					
+//					if ((buffer[chan][frame] % 2 == 1)) {
+//						m = (byte) ((m << 1)+1);
+//					} else if ((buffer[chan][frame] % 2 == 0)) {
+//						m = (byte) (m << 1);
+//					} 
+//					
+//				
+//					chan++;
+//				}
+//				
+//				else if (chan == (chanCount-1)){
+//					
+//					if ((buffer[chan][frame] % 2 == 1)) {
+//						m = (byte) ((m << 1)+1);
+//					} else if ((buffer[chan][frame] % 2 == 0)) {
+//						m = (byte) (m << 1);
+//					} 
+//					
+//					chan=0;
+//					frame++;
+//				}
+//				
+//			}
+//		}
+//			
+//		return seekData;
 	}
 
 	private byte[] longToByteArray(long longArr) {
@@ -259,12 +477,12 @@ public class InAudioStrategy implements SteganoStrategy {
 		return String.format(HEX_STRING_FORMAT, inValue);
 	}
 	
-	@Override
+	
 	public List<String> getFormatedBaseFileHexString() {
 		return baseFileHexList;
 	}
 
-	@Override
+	
 	public List<String> getFormatedModBaseFileHexString() {
 		return modBaseFileHexList;
 	}
