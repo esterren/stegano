@@ -16,7 +16,7 @@ public class InAudioStrategy implements SteganoStrategy {
 
 	private List<String> baseFileHexList = new LinkedList<String>();
 	private List<String> modBaseFileHexList = new LinkedList<String>();
-	
+
 	public InAudioStrategy() {
 		// super(inBaseFile, inHiddenFile);
 	}
@@ -29,7 +29,7 @@ public class InAudioStrategy implements SteganoStrategy {
 
 		WavFile wBaseFile = WavFile.openWavFile(inBaseFile);
 
-		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
+		byte[] bHeader = ProtocolHeaderFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
 				FileByteFactory.getFileLength(inHiddenFile), inPollution);
 
 		// byte[] baseFileAudio = getBytesFromFile(inBaseFile);
@@ -39,6 +39,7 @@ public class InAudioStrategy implements SteganoStrategy {
 		byte[] crc = CRCFactory.getCRC(bMsg);
 		byte[] bMsgCRC = concat2ByteArrays(bMsg, crc);
 
+<<<<<<< HEAD
 		byte[] modBaseFileArr = hideMessage(inBaseFile, bMsgCRC);
 		long[][] plainArray = new long[wBaseFile.getNumChannels()][1];
 		for (int i = 0; i < plainArray.length; i++) {
@@ -47,6 +48,13 @@ public class InAudioStrategy implements SteganoStrategy {
 		
 		WavFile wInModBaseFile = WavFile.newWavFile(inModBaseFile, wBaseFile.getNumChannels(), wBaseFile.getNumFrames(), wBaseFile.getValidBits(), wBaseFile.getSampleRate());
 //		wInModBaseFile.writeFrames(plainArray, 1);
+=======
+		long[] audioLongArr = hideMessage(wBaseFile, bMsgCRC);
+
+		WavFile wInModBaseFile = WavFile.newWavFile(inModBaseFile, wBaseFile.getNumChannels(),
+				wBaseFile.getNumFrames(), wBaseFile.getValidBits(), wBaseFile.getSampleRate());
+		wInModBaseFile.writeFrames(audioLongArr, wBaseFile.getNumChannels() * (int) wBaseFile.getNumFrames());
+>>>>>>> 1c82f33956afa756082f57e6e7bd2e6f9bf792cd
 		wInModBaseFile.close();
 		
 		FileOutputStream fos = new FileOutputStream(inModBaseFile);
@@ -74,6 +82,7 @@ public class InAudioStrategy implements SteganoStrategy {
 		
 		for (int i = 0; i < message.length; i++) {
 			byte m = message[i];
+<<<<<<< HEAD
 					for (int j = 0; j < 8; j++) {
 						
 						baseFileHexList.add(getFormatedHexString(data[dataIndex]));
@@ -101,6 +110,25 @@ public class InAudioStrategy implements SteganoStrategy {
 						m = (byte) (m >> 1);
 						dataIndex++;
 					}
+=======
+			// boolean[] mBit = new boolean[8];
+
+			for (int j = 0; j < 8; j++) {
+				baseFileHexList.add(getFormatedHexString(buffer[i * 8 + j]));
+				if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 0) {
+					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
+					m = (byte) ((m - 1) / 2);
+				} else if ((m % 2) == 1 && buffer[i * 8 + j] % 2 == 1) {
+					m = (byte) ((m - 1) / 2);
+				} else if ((m % 2) == 0 && buffer[i * 8 + j] % 2 == 0) {
+					m = (byte) ((m) / 2);
+				} else {
+					buffer[i * 8 + j] = buffer[i * 8 + j] - 1;
+				}
+				modBaseFileHexList.add(getFormatedHexString(buffer[i * 8 + j]));
+			}
+
+>>>>>>> 1c82f33956afa756082f57e6e7bd2e6f9bf792cd
 		}
 		
 		return data;
@@ -115,12 +143,17 @@ public class InAudioStrategy implements SteganoStrategy {
 		}
 //		WavFile modBaseFileAudio = WavFile.openWavFile(inModBaseFile);
 
+<<<<<<< HEAD
 		byte[] bHeader = seekMessage(inModBaseFile, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 0);
+=======
+		byte[] bHeader = seekMessage(modBaseFileAudio, 0, ProtocolHeaderFactory.HEADER_LENGTH, (byte) 0);
+>>>>>>> 1c82f33956afa756082f57e6e7bd2e6f9bf792cd
 
 		if (bHeader == null) {
 			throw new Exception(
 					"A problem was encountered during the Seek-Algorithm!\nThe modified Basefile might be corrupted!");
 		}
+<<<<<<< HEAD
 		
 		int hiddenFileByteLength = BaseFileProtocolFactory.getLengthFromHeader(bHeader);
 		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(bHeader);
@@ -131,6 +164,17 @@ public class InAudioStrategy implements SteganoStrategy {
 				baseFilePollution);
 
 		byte[] bCRCMsg = seekMessage(inModBaseFile, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
+=======
+
+		int hiddenFileByteLength = ProtocolHeaderFactory.getLengthFromHeader(bHeader);
+		byte baseFilePollution = ProtocolHeaderFactory.getPollutionFromHeader(bHeader);
+		String hiddenFileExtension = ProtocolHeaderFactory.getExtensionFromHeader(bHeader);
+
+		byte[] bHiddenFile = seekMessage(modBaseFileAudio, ProtocolHeaderFactory.HEADER_LENGTH, hiddenFileByteLength,
+				baseFilePollution);
+
+		byte[] bCRCMsg = seekMessage(modBaseFileAudio, ProtocolHeaderFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
+>>>>>>> 1c82f33956afa756082f57e6e7bd2e6f9bf792cd
 				baseFilePollution);
 		if (bHiddenFile == null || bCRCMsg == null) {
 			throw new Exception(
@@ -170,6 +214,7 @@ public class InAudioStrategy implements SteganoStrategy {
 					"Unable to seek for the Hiddenfile, due to corrupt data.\nThe modified Basefile was manipulated!");
 		}
 
+<<<<<<< HEAD
 		byte[] dataSource = new byte[(startByte + countBytes)*8];
 		byte[] data = new byte[countBytes];
 		
@@ -195,6 +240,53 @@ public class InAudioStrategy implements SteganoStrategy {
 		}
 		
 		return data;
+=======
+		// byte[] seekData = new byte[countBytes];
+		// int longArrayLength = countBytes*8;
+		// int chanCount = inModBaseFileAudio.getNumChannels();
+		// long[] audioLongArray = new
+		// long[(int)Math.floor(longArrayLength/(chanCount))*chanCount];
+		// inModBaseFileAudio.readFrames(audioLongArray,startByte*8/chanCount,
+		// (int)Math.floor(longArrayLength/(chanCount)));
+
+		byte[] seekData = new byte[countBytes];
+		int chanCount = inModBaseFileAudio.getNumChannels();
+		int longArrayMinLength = countBytes * 8; // minimale Laenge des
+													// longArray
+		int byteOffset = startByte;
+		int frameOffset = (int) Math.ceil(byteOffset / chanCount); // Offset
+																	// fuers
+																	// Einlesen
+																	// von
+																	// Audiofile
+		int frameReadOffset = byteOffset % chanCount; // Offset fuer
+														// Verarbeitung
+														// longArray ->
+														// ByteArray
+		int longArrayLength = (frameReadOffset + longArrayMinLength) + chanCount
+				- ((frameReadOffset + longArrayMinLength) % chanCount); // benoetigte
+																		// laenge
+																		// longArray
+		long[] audioLongArray = new long[longArrayLength];
+		int frameReadMaxCount = frameOffset + longArrayLength / chanCount;// Hoechster
+																			// Frameindex
+		int frameReadCount = longArrayLength / chanCount;// Anzahl zu lesende
+															// Frames
+		inModBaseFileAudio.readFrames(audioLongArray, frameOffset, frameReadCount);
+
+		for (int i = 0; i < countBytes; i++) {
+			byte m = 0;
+
+			for (int j = 0; j < 8; j++) {
+				if ((Math.abs(audioLongArray[byteOffset + i * 8 + j]) % 2) == 1) {
+					m = (byte) ((m * 2) + 1);
+				} else {
+					m = (byte) (m * 2);
+				}
+			}
+			seekData[i] = m;
+		}
+>>>>>>> 1c82f33956afa756082f57e6e7bd2e6f9bf792cd
 
 	}
 
@@ -285,8 +377,13 @@ public class InAudioStrategy implements SteganoStrategy {
 	public String getFormatedHexString(long inValue) {
 		return String.format(HEX_STRING_FORMAT, inValue);
 	}
+<<<<<<< HEAD
 	
 	
+=======
+
+	@Override
+>>>>>>> 1c82f33956afa756082f57e6e7bd2e6f9bf792cd
 	public List<String> getFormatedBaseFileHexString() {
 		return baseFileHexList;
 	}

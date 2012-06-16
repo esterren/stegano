@@ -2,7 +2,6 @@ package ch.zhaw.swp2.stegano.model;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -55,7 +54,7 @@ public class InPictureStrategy implements SteganoStrategy {
 		}
 
 		// Generate Header Information
-		byte[] bHeader = BaseFileProtocolFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
+		byte[] bHeader = ProtocolHeaderFactory.generateHeader(FileNameFactory.getExtension(inHiddenFile),
 				FileByteFactory.getFileLength(inHiddenFile), inPollution);
 
 		BufferedImage baseFileImg = ImageIO.read(inBaseFile);
@@ -71,11 +70,17 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	/**
+	 * This Method runs the Steganographic Hide Algorithm, to hide Information
+	 * in a Picture
 	 * 
 	 * @param img
+	 *            the image on which the algorithm will process
 	 * @param message
-	 * @return
+	 *            the byte-arry witch the message to hide
+	 * @return an BufferedImage with the modifications (with the hidden
+	 *         Information)
 	 * @throws Exception
+	 *             when the image has not enough space to hide the information
 	 */
 	private BufferedImage hideMessage(BufferedImage img, byte[] message) throws Exception {
 
@@ -139,6 +144,12 @@ public class InPictureStrategy implements SteganoStrategy {
 		return img;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ch.zhaw.swp2.stegano.model.SteganoStrategy#runSeek(java.io.File,
+	 * java.lang.String)
+	 */
 	@Override
 	public String runSeek(File inModBaseFile, String inHiddenFileSaveDir) throws Exception {
 		if (inModBaseFile == null || inHiddenFileSaveDir == null) {
@@ -146,20 +157,20 @@ public class InPictureStrategy implements SteganoStrategy {
 		}
 		BufferedImage modBaseFileImg = ImageIO.read(inModBaseFile);
 
-		byte[] bHeader = seekMessage(modBaseFileImg, 0, BaseFileProtocolFactory.HEADER_LENGTH, (byte) 1);
+		byte[] bHeader = seekMessage(modBaseFileImg, 0, ProtocolHeaderFactory.HEADER_LENGTH, (byte) 1);
 
 		if (bHeader == null) {
 			throw new Exception(
 					"A problem was encountered during the Seek-Algorithm!\nThe modified Basefile might be corrupted!");
 		}
-		int hiddenFileByteLength = BaseFileProtocolFactory.getLengthFromHeader(bHeader);
-		byte baseFilePollution = BaseFileProtocolFactory.getPollutionFromHeader(bHeader);
-		String hiddenFileExtension = BaseFileProtocolFactory.getExtensionFromHeader(bHeader);
+		int hiddenFileByteLength = ProtocolHeaderFactory.getLengthFromHeader(bHeader);
+		byte baseFilePollution = ProtocolHeaderFactory.getPollutionFromHeader(bHeader);
+		String hiddenFileExtension = ProtocolHeaderFactory.getExtensionFromHeader(bHeader);
 
-		byte[] bHiddenFile = seekMessage(modBaseFileImg, BaseFileProtocolFactory.HEADER_LENGTH, hiddenFileByteLength,
+		byte[] bHiddenFile = seekMessage(modBaseFileImg, ProtocolHeaderFactory.HEADER_LENGTH, hiddenFileByteLength,
 				baseFilePollution);
 
-		byte[] bCRCMsg = seekMessage(modBaseFileImg, BaseFileProtocolFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
+		byte[] bCRCMsg = seekMessage(modBaseFileImg, ProtocolHeaderFactory.HEADER_LENGTH + hiddenFileByteLength, 8,
 				baseFilePollution);
 		if (bHiddenFile == null || bCRCMsg == null) {
 			throw new Exception(
@@ -246,17 +257,6 @@ public class InPictureStrategy implements SteganoStrategy {
 						// modBaseFileHexString += getFormatedHexString(value);
 						// Aktuelles Byte ist voll
 						if (count == -1) {
-
-							// TODO Hier werden die Bytes (der Versteckten
-							// Datei)
-							// aus der modifizierten Trägerdatei ausgelesen.
-							// Die ersten drei Bytes müssen als
-							// HiddenFile-Extension
-							// zurückgegeben werden.
-							// Anschliessend 4 Bytes mit der Länge (Anzahl
-							// Bytes)
-							// der Hidden-Datei (=> Abbruchkriterium),
-							// dann folgt noch ein Byte mit der Verunreinigung.
 							bytes.add((byte) value);
 							if (bytes.size() == countBytes) {
 								byte[] bOut = new byte[bytes.size()];
@@ -280,20 +280,28 @@ public class InPictureStrategy implements SteganoStrategy {
 		return null;
 	}
 
-	// TODO is obsolet, moved to ByteArrayFactory
-	private byte[] getByteArrayFromHiddenFile(File inHiddenFile) throws IOException {
-		FileInputStream fis = new FileInputStream(inHiddenFile);
-
-		byte[] byteArrayHiddenFile = new byte[FileByteFactory.getFileLength(inHiddenFile)];
-		fis.read(byteArrayHiddenFile);
-		fis.close();
-		return byteArrayHiddenFile;
-	}
+	// // TODO is obsolet, moved to ByteArrayFactory
+	// private byte[] getByteArrayFromHiddenFile(File inHiddenFile) throws
+	// IOException {
+	// FileInputStream fis = new FileInputStream(inHiddenFile);
+	//
+	// byte[] byteArrayHiddenFile = new
+	// byte[FileByteFactory.getFileLength(inHiddenFile)];
+	// fis.read(byteArrayHiddenFile);
+	// fis.close();
+	// return byteArrayHiddenFile;
+	// }
 
 	/**
+	 * This method writes the byte-array content into a File at the absolute
+	 * path in the String
+	 * 
 	 * @param inFilePath
+	 *            String with the absolute Filepath
 	 * @param inFileContent
+	 *            byte-array with the content, which will be written to the File
 	 * @throws IOException
+	 *             if an I/O Exception occurs.
 	 */
 	private void writeFileFromByteArray(String inFilePath, byte[] inFileContent) throws IOException {
 		FileOutputStream fos = new FileOutputStream(new File(inFilePath));
@@ -303,10 +311,13 @@ public class InPictureStrategy implements SteganoStrategy {
 	}
 
 	/**
+	 * Concatenates two byte-arrays
 	 * 
 	 * @param inFirstBA
+	 *            the first byte array
 	 * @param inSecondBA
-	 * @return
+	 *            the second byte array
+	 * @return a byte array with the concatenation
 	 */
 	private byte[] concat2ByteArrays(byte[] inFirstBA, byte[] inSecondBA) {
 		int lenH = inFirstBA.length;
@@ -330,10 +341,23 @@ public class InPictureStrategy implements SteganoStrategy {
 		return String.format(HEX_STRING_FORMAT, inValue);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ch.zhaw.swp2.stegano.model.SteganoStrategy#getFormatedBaseFileHexString()
+	 */
 	public List<String> getFormatedBaseFileHexString() {
 		return baseFileHexList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ch.zhaw.swp2.stegano.model.SteganoStrategy#getFormatedModBaseFileHexString
+	 * ()
+	 */
 	public List<String> getFormatedModBaseFileHexString() {
 		return modBaseFileHexList;
 	}

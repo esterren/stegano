@@ -18,7 +18,7 @@ public class BaseFileProtocolFactoryTest {
 	@Rule
 	public ExpectedException _exception = ExpectedException.none();
 
-	private BaseFileProtocolFactory _BFPFactory;
+	private ProtocolHeaderFactory _BFPFactory;
 	private File _testHFile1;
 	private File _testBFile1;
 	private File _testHFile2;
@@ -31,7 +31,7 @@ public class BaseFileProtocolFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		_BFPFactory = new BaseFileProtocolFactory();
+		_BFPFactory = new ProtocolHeaderFactory();
 		_testHFile1 = _tmpFolder.newFile("test.txt");
 		_testBFile1 = _tmpFolder.newFile("FirstPicture.png");
 		_testHFile2 = _tmpFolder.newFile("TEST.TXT");
