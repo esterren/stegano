@@ -3,7 +3,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.zhaw.swp2</groupId>
 	<artifactId>stegano</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
 	<name>SWP2 Stegano</name>
 	<dependencies>
 		<dependency>
@@ -86,7 +85,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ch.zhaw.swp2.stegano.Controller</mainClass>
+							<mainClass>ch.zhaw.swp2.stegano.controller.Controller</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -125,4 +124,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
+ <version>1.0</version>
 </project>
